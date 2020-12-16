@@ -1,21 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Air Quality Visualization</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-        crossorigin=""/>
-    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/menu.css">
+    <link rel="stylesheet" href="./css/map.css">
+    <link rel="stylesheet" href="./css/legend.css">
+    <title>Mumbai Air Quality Visualization</title>
 </head>
+
 <body>
-    <h1>Air Quality Visualization</h1>
-    <h2>Mumbai M-ward</h2>
-    <div id="map"></div>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-        crossorigin=""></script>
-    <script src="./js/main.js"></script>
+    <div class="menu-bar">
+        <ul>
+            <li class="menu">
+                <span>File</span>
+                <div class="menu-item-container">
+                    <ul>
+                        <li id="mi-open-dataset" class="menu-item">Open Dataset</li>
+                        <li id="mi-open-polygons" class="menu-item">Open Polygons</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="menu">
+                <span>View</span>
+                <div class="menu-item-container">
+                    <ul>
+                        <li id="mi-world-map" class="menu-item">
+                            <span>World Map</span>
+                            <span class="tick"><i class="far fa-check"></i></span>
+                        </li>
+                        <li id="mi-vector-map" class="menu-item">
+                            <span>Vector Map</span>
+                            <span class="tick"><i class="far fa-check"></i></span>
+                        </li>
+                        <li id="mi-legend" class="menu-item">
+                            <span>Legend</span>
+                            <span class="tick"><i class="far fa-check"></i></span>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <div id="map">
+            <div class="title">Map</div>
+        </div>
+
+        <div id="legend-panel">
+            <div class="title">Legend</div>
+            <div class="control-container">
+                <span id="legend-add" class="control"><i class="fal fa-plus-circle"></i></span>
+            </div>
+            <div class="legend-container">
+                <!-- <div class="legend">
+                    <div class="legend-head">
+                        <span class="legend-title">Legend Title</span>
+                        <span class="legend-remove"><i class="fas fa-trash-alt"></i></span>
+                    </div>
+                    <div class="legend-body">Legend Body</div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/menu.js"></script>
+    <script src="./js/legend.js"></script>
 </body>
+
 </html>
