@@ -1,4 +1,6 @@
-const coords = [19.034597998590936, 72.92177841567673, 12];
+let currentZoom = 12;
+
+const coords = [19.034597998590936, 72.92177841567673];
 
 function getTileUrl(x, y, zoom) {
     return `https://a.tile.openstreetmap.org/${zoom}/${x}/${y}.png`;
@@ -24,13 +26,19 @@ function loadImageTiles(lat, lon, zoom) {
     document.getElementById('img9').src = getTileUrl(tile.x + 1, tile.y + 1, zoom);
 }
 
-loadImageTiles(coords[0], coords[1], coords[2]);
+function loadMap() {
+    loadImageTiles(coords[0], coords[1], currentZoom);
+}
 
-/*
+loadMap();
 
-lat_rad = math.radians(lat_deg)
-  n = 2.0 ** zoom
-  xtile = int((lon_deg + 180.0) / 360.0 * n)
-  ytile = int((1.0 - math.asinh(math.tan(lat_rad)) / math.pi) / 2.0 * n)
-  return (xtile, ytile)
-*/
+window.addEventListener('wheel', event => {
+    if (event.deltaY > 0) {
+        // scrolled down
+        currentZoom -= 1;
+    }
+    else {
+        currentZoom += 1;
+    }
+    loadMap();
+});
