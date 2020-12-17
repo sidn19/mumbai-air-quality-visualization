@@ -6,7 +6,9 @@ h1, h2 {
     text-align: center;
 }
 
-#map {
+#grey-map, #map {
     overflow: hidden;
     max-height: 100vh;
+    max-width: 100vw;
+    position: absolute;
 }
