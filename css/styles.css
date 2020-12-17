@@ -1,8 +1,12 @@
+body {
+    margin: 0rem;
+}
+
 h1, h2 {
     text-align: center;
 }
 
 #map {
     overflow: hidden;
-    max-height: 75vh;
+    max-height: 100vh;
 }

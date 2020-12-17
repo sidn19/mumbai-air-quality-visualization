@@ -33,11 +33,11 @@ function loadMap() {
 loadMap();
 
 window.addEventListener('wheel', event => {
-    if (event.deltaY > 0) {
+    if (event.deltaY > 0 && currentZoom >= 3) {
         // scrolled down
         currentZoom -= 1;
     }
-    else {
+    else if (event.deltaY < 0 && currentZoom <= 18) {
         currentZoom += 1;
     }
     loadMap();
