@@ -15,15 +15,13 @@ function coordsToTile(lat, lon, zoom) {
 
 function loadImageTiles(lat, lon, zoom) {
     const tile = coordsToTile(lat, lon, zoom);
-    document.getElementById('img1').src = getTileUrl(tile.x - 1, tile.y - 1, zoom);
-    document.getElementById('img2').src = getTileUrl(tile.x, tile.y - 1, zoom);
-    document.getElementById('img3').src = getTileUrl(tile.x + 1, tile.y - 1, zoom);
-    document.getElementById('img4').src = getTileUrl(tile.x - 1, tile.y, zoom);
-    document.getElementById('img5').src = getTileUrl(tile.x, tile.y, zoom);
-    document.getElementById('img6').src = getTileUrl(tile.x + 1, tile.y, zoom);
-    document.getElementById('img7').src = getTileUrl(tile.x - 1, tile.y + 1, zoom);
-    document.getElementById('img8').src = getTileUrl(tile.x, tile.y + 1, zoom);
-    document.getElementById('img9').src = getTileUrl(tile.x + 1, tile.y + 1, zoom);
+    const xSize = 7;
+    const ySize = 3;
+    for (let x = 1; x <= xSize; ++x) {
+        for (let y = 1; y <= ySize; ++y) {
+            document.getElementById(`img${y}${x}`).src = getTileUrl(tile.x - Math.ceil(xSize / 2) + x, tile.y - Math.ceil(ySize / 2) + y, zoom);
+        }
+    }
 }
 
 function loadMap() {
