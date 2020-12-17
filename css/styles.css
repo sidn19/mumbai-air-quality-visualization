@@ -3,5 +3,6 @@ h1, h2 {
 }
 
 #map {
-    height: 75vh;
+    overflow: hidden;
+    max-height: 75vh;
 }

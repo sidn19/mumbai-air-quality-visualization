@@ -4,18 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Air Quality Visualization</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-        crossorigin=""/>
     <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body>
     <h1>Air Quality Visualization</h1>
     <h2>Mumbai M-ward</h2>
-    <div id="map"></div>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-        crossorigin=""></script>
+    <div id="map" style="display: flex; flex-direction: column; align-items: center;">
+        <div style="display: flex; flex-direction: row;">
+            <img id="img1">
+            <img id="img2">
+            <img id="img3">
+        </div>
+        <div style="display: flex; flex-direction: row;">
+            <img id="img4">
+            <img id="img5">
+            <img id="img6">
+        </div>
+        <div style="display: flex; flex-direction: row;">
+            <img id="img7">
+            <img id="img8">
+            <img id="img9">
+        </div>
+    </div>
     <script src="./js/main.js"></script>
 </body>
 </html>
