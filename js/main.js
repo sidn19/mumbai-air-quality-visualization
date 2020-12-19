@@ -17,9 +17,11 @@ function loadImageTiles(lat, lon, zoom) {
     const tile = coordsToTile(lat, lon, zoom);
     const xSize = 7;
     const ySize = 3;
-    for (let x = 1; x <= xSize; ++x) {
-        for (let y = 1; y <= ySize; ++y) {
-            document.getElementById(`img${y}${x}`).src = getTileUrl(tile.x - Math.ceil(xSize / 2) + x, tile.y - Math.ceil(ySize / 2) + y, zoom);
+    for (let x = 0; x < xSize; ++x) {
+        for (let y = 0; y < ySize; ++y) {
+            const img = document.getElementById(`img${y}${x}`);
+            img.style.zIndex = 0;
+            img.src = getTileUrl(tile.x - Math.ceil(xSize / 2) + x, tile.y - Math.ceil(ySize / 2) + y, zoom);
         }
     }
 }
@@ -28,7 +30,42 @@ function loadMap() {
     loadImageTiles(coords[0], coords[1], currentZoom);
 }
 
-loadMap();
+function initialize() {
+    const map = document.getElementById('map');
+    const greyMap = document.getElementById('grey-map');
+    
+    for (let row = 0; row < 3; ++row) {
+        const mapRow = document.createElement('DIV');
+        const greyMapRow = document.createElement('DIV');
+        
+        mapRow.style.display = greyMapRow.style.display = 'flex';
+        mapRow.style.flexDirection = greyMapRow.style.flexDirection = 'row';
+        
+        map.appendChild(mapRow);
+        greyMap.appendChild(greyMapRow);
+        
+        for (let col = 0; col < 7; ++col) {
+            const img = document.createElement('IMG');
+            const greyImg = document.createElement('IMG');
+
+            img.id = `img${row}${col}`;
+            greyImg.id = `img${row}${col}g`;
+            greyImg.src = './images/grey.png';
+            
+            img.addEventListener('load', () => {
+                img.style.zIndex = 1;
+            });
+
+            mapRow.appendChild(img);
+            greyMapRow.appendChild(greyImg);
+        }
+    }
+    loadMap();
+}
+
+initialize();
+
+
 
 window.addEventListener('wheel', event => {
     if (event.deltaY > 0 && currentZoom >= 3) {
