@@ -1,23 +1,118 @@
 let currentZoom = 12;
-let xSize = Math.ceil(window.innerHeight / 256);
-let ySize = Math.ceil(window.innerWidth / 256);
+let endRow = Math.ceil(window.innerHeight / 256) + 2;
+let endCol = Math.ceil(window.innerWidth / 256) + 2;
+let startRow = -1;
+let startCol = -1;
+
+const map = document.getElementById('svg-map');
+
 let mouseButtonHeld = false;
 
 const coords = [19.034597998590936, 72.92177841567673];
 
 let resizeTimeout = null;
 
+let currentCoords = {
+    x: 0,
+    y: 0
+};
+
 window.addEventListener('mousedown', () => mouseButtonHeld = true);
 
 window.addEventListener('mouseup', () => mouseButtonHeld = false);
 
+let previousPosition = null;
 window.addEventListener('mousemove', event => {
-    console.log(mouseButtonHeld);
+    if (mouseButtonHeld && previousPosition !== null) {
+        const x = event.x - previousPosition.x;
+        const y = event.y - previousPosition.y;
+
+        // pan map tiles
+        for (let tile of map.children) {
+            tile.setAttributeNS(null, 'x', parseInt(tile.getAttributeNS(null, 'x')) + x);
+            tile.setAttributeNS(null, 'y', parseInt(tile.getAttributeNS(null, 'y')) + y);
+        }
+
+        currentCoords.x += x;
+        currentCoords.y += y;
+        
+        const tile = coordsToTile(coords[0], coords[1], currentZoom);
+
+        if ((window.innerWidth + Math.abs(currentCoords.x)) / 256 > endCol - startCol - 2.5) {
+            if (currentCoords.x > 0) {
+                console.log('new tile left');
+                for (let x = startRow; x < endRow - 1; ++x) {
+                    const refImg = document.getElementById(`tile${x}${startCol}`);
+
+                    const img = appendImage(
+                        parseInt(refImg.getAttributeNS(null, 'x')) - 256,
+                        parseInt(refImg.getAttributeNS(null, 'y')),
+                        `tile${x}${startCol - 1}`
+                    );
+
+                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x + startCol - 4, tile.y + x - 3, currentZoom));
+                }
+                --startCol;
+            }
+            else {
+                console.log('new tile right');
+                for (let x = startRow; x < endRow - 1; ++x) {
+                    const refImg = document.getElementById(`tile${x}${endCol - 2}`);
+                    const img = appendImage(
+                        parseInt(refImg.getAttributeNS(null, 'x')) + 256,
+                        parseInt(refImg.getAttributeNS(null, 'y')),
+                        `tile${x}${endCol - 1}`
+                    );                    
+
+                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x + endCol - 4, tile.y + x - 3, currentZoom));
+                }
+                ++endCol;
+            }
+        }
+        if ((window.innerHeight + Math.abs(currentCoords.y)) / 256 > endRow - startRow - 2.5) {
+            if (currentCoords.y > 0) {
+                console.log('new tile top');
+                for (let y = startCol; y < endCol - 1; ++y) {
+                    const refImg = document.getElementById(`tile${startRow}${y}`);
+
+                    const img = appendImage(
+                        parseInt(refImg.getAttributeNS(null, 'x')),
+                        parseInt(refImg.getAttributeNS(null, 'y')) - 256,
+                        `tile${startRow - 1}${y}`
+                    );
+
+                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x + y - 3, tile.y + startRow - 4, currentZoom));
+                }
+                --startRow;
+            }
+            else {
+                console.log('new tile bottom');
+                for (let y = startCol; y < endCol - 1; ++y) {
+                    const refImg = document.getElementById(`tile${endRow - 2}${y}`);
+
+                    const img = appendImage(
+                        parseInt(refImg.getAttributeNS(null, 'x')),
+                        parseInt(refImg.getAttributeNS(null, 'y')) + 256,
+                        `tile${endRow - 1}${y}`
+                    );
+
+                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x + y - 3, tile.y + endRow - 4, currentZoom));
+                }
+                ++endRow;
+            }
+        }
+        console.log(currentCoords);
+    }
+
+    previousPosition = {
+        x: event.x,
+        y: event.y
+    };
 });
 
 window.onresize = () => {
-    xSize = Math.ceil(window.innerHeight / 256);
-    ySize = Math.ceil(window.innerWidth / 256);
+    endRow = Math.ceil(window.innerHeight / 256);
+    endCol = Math.ceil(window.innerWidth / 256);
     
     if (resizeTimeout !== null) {
         clearTimeout(resizeTimeout);
@@ -25,6 +120,35 @@ window.onresize = () => {
     }
 
     resizeTimeout = setTimeout(() => initialize(), 100);
+}
+
+function appendImage(x, y, id) {
+    const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+    img.setAttributeNS(null, 'height', 256);
+    img.setAttributeNS(null, 'width', 256);
+    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', './images/grey.png');
+    img.setAttributeNS(null, 'x', x);
+    img.setAttributeNS(null, 'y', y);
+    img.setAttributeNS(null, 'visibility', 'visible');
+    img.setAttributeNS(null, 'id', id);
+                    
+    img.addEventListener('load', () => {
+        const greyImg = document.getElementById(`g${id}`);
+        greyImg.setAttributeNS(null, 'visibility', 'hidden');
+    });
+    map.appendChild(img);
+
+    const greyImg = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+    greyImg.setAttributeNS(null, 'height', 256);
+    greyImg.setAttributeNS(null, 'width', 256);
+    greyImg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', './images/grey.png');
+    greyImg.setAttributeNS(null, 'x', x);
+    greyImg.setAttributeNS(null, 'y', y);
+    greyImg.setAttributeNS(null, 'visibility', 'hidden');
+    greyImg.setAttributeNS(null, 'id', `g${id}`);
+    map.appendChild(greyImg);
+
+    return img;
 }
 
 function getTileUrl(x, y, zoom) {
@@ -40,13 +164,13 @@ function coordsToTile(lat, lon, zoom) {
 
 function loadImageTiles(lat, lon, zoom) {
     const tile = coordsToTile(lat, lon, zoom);
-    for (let x = 0; x < xSize; ++x) {
-        for (let y = 0; y < ySize; ++y) {
+    for (let x = startRow; x < endRow - 1; ++x) {
+        for (let y = startCol; y < endCol - 1; ++y) {
             const gTile = document.getElementById(`gtile${x}${y}`);
             gTile.setAttributeNS(null, 'visibility', 'visible');
 
             const img = document.getElementById(`tile${x}${y}`);
-            img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x - Math.ceil(ySize / 2) + y, tile.y - Math.ceil(xSize / 2) + x, zoom));
+            img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x - Math.ceil(endCol / 2) + y, tile.y - Math.ceil(endRow / 2) + x, zoom));
         }
     }
 }
@@ -56,37 +180,13 @@ function loadMap() {
 }
 
 function initialize() {
-    const map = document.getElementById('svg-map');
     while (map.lastChild) {
         map.removeChild(map.lastChild);
     }
     
-    for (let row = 0; row < xSize; ++row) {
-        for (let col = 0; col < ySize; ++col) {
-            const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-            img.setAttributeNS(null, 'height', 256);
-            img.setAttributeNS(null, 'width', 256);
-            img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', './images/grey.png');
-            img.setAttributeNS(null, 'x', col * 256);
-            img.setAttributeNS(null, 'y', row * 256);
-            img.setAttributeNS(null, 'visibility', 'visible');
-            img.setAttributeNS(null, 'id', `tile${row}${col}`);
-            
-            img.addEventListener('load', () => {
-                const greyImg = document.getElementById(`gtile${row}${col}`);
-                greyImg.setAttributeNS(null, 'visibility', 'hidden');
-            });
-            map.appendChild(img);
-
-            const greyImg = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-            greyImg.setAttributeNS(null, 'height', 256);
-            greyImg.setAttributeNS(null, 'width', 256);
-            greyImg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', './images/grey.png');
-            greyImg.setAttributeNS(null, 'x', col * 256);
-            greyImg.setAttributeNS(null, 'y', row * 256);
-            greyImg.setAttributeNS(null, 'visibility', 'hidden');
-            greyImg.setAttributeNS(null, 'id', `gtile${row}${col}`);
-            map.appendChild(greyImg);
+    for (let row = startRow; row < endRow - 1; ++row) {
+        for (let col = startCol; col < endCol - 1; ++col) {
+            appendImage(col * 256, row * 256, `tile${row}${col}`);
         }
     }
     loadMap();
