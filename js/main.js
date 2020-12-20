@@ -19,9 +19,11 @@ function loadImageTiles(lat, lon, zoom) {
     const ySize = 3;
     for (let x = 0; x < xSize; ++x) {
         for (let y = 0; y < ySize; ++y) {
-            const img = document.getElementById(`img${y}${x}`);
-            img.style.zIndex = 0;
-            img.src = getTileUrl(tile.x - Math.ceil(xSize / 2) + x, tile.y - Math.ceil(ySize / 2) + y, zoom);
+            const gTile = document.getElementById(`gtile${y}${x}`);
+            gTile.setAttributeNS(null, 'visibility', 'visible');
+
+            const img = document.getElementById(`tile${y}${x}`);
+            img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x - Math.ceil(xSize / 2) + x, tile.y - Math.ceil(ySize / 2) + y, zoom));
         }
     }
 }
@@ -31,33 +33,34 @@ function loadMap() {
 }
 
 function initialize() {
-    const map = document.getElementById('map');
-    const greyMap = document.getElementById('grey-map');
+    const map = document.getElementById('svg-map');
     
     for (let row = 0; row < 3; ++row) {
-        const mapRow = document.createElement('DIV');
-        const greyMapRow = document.createElement('DIV');
-        
-        mapRow.style.display = greyMapRow.style.display = 'flex';
-        mapRow.style.flexDirection = greyMapRow.style.flexDirection = 'row';
-        
-        map.appendChild(mapRow);
-        greyMap.appendChild(greyMapRow);
-        
         for (let col = 0; col < 7; ++col) {
-            const img = document.createElement('IMG');
-            const greyImg = document.createElement('IMG');
-
-            img.id = `img${row}${col}`;
-            greyImg.id = `img${row}${col}g`;
-            greyImg.src = './images/grey.png';
+            const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+            img.setAttributeNS(null, 'height', 256);
+            img.setAttributeNS(null, 'width', 256);
+            img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', './images/grey.png');
+            img.setAttributeNS(null, 'x', col * 256);
+            img.setAttributeNS(null, 'y', row * 256);
+            img.setAttributeNS(null, 'visibility', 'visible');
+            img.setAttributeNS(null, 'id', `tile${row}${col}`);
             
             img.addEventListener('load', () => {
-                img.style.zIndex = 1;
+                const greyImg = document.getElementById(`gtile${row}${col}`);
+                greyImg.setAttributeNS(null, 'visibility', 'hidden');
             });
+            map.appendChild(img);
 
-            mapRow.appendChild(img);
-            greyMapRow.appendChild(greyImg);
+            const greyImg = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+            greyImg.setAttributeNS(null, 'height', 256);
+            greyImg.setAttributeNS(null, 'width', 256);
+            greyImg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', './images/grey.png');
+            greyImg.setAttributeNS(null, 'x', col * 256);
+            greyImg.setAttributeNS(null, 'y', row * 256);
+            greyImg.setAttributeNS(null, 'visibility', 'hidden');
+            greyImg.setAttributeNS(null, 'id', `gtile${row}${col}`);
+            map.appendChild(greyImg);
         }
     }
     loadMap();
