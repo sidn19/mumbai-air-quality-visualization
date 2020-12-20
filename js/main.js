@@ -71,12 +71,17 @@ initialize();
 
 
 window.addEventListener('wheel', event => {
-    if (event.deltaY > 0 && currentZoom >= 3) {
+    if (event.deltaY > 0) {
         // scrolled down
-        currentZoom -= 1;
+        if (currentZoom >= 5) {
+            currentZoom -= 1;
+            loadMap();
+        }
     }
-    else if (event.deltaY < 0 && currentZoom <= 18) {
+    // scrolled up
+    else if (currentZoom <= 18) {
         currentZoom += 1;
+        loadMap();
     }
-    loadMap();
+    
 });
