@@ -50,7 +50,7 @@ window.addEventListener('mousemove', event => {
                         `tile${x}${startCol - 1}`
                     );
 
-                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x + startCol - 4, tile.y + x - 3, currentZoom));
+                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x + startCol - 5, tile.y + x - 3, currentZoom));
                 }
                 --startCol;
             }
@@ -64,7 +64,7 @@ window.addEventListener('mousemove', event => {
                         `tile${x}${endCol - 1}`
                     );                    
 
-                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x + endCol - 4, tile.y + x - 3, currentZoom));
+                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x + endCol - 5, tile.y + x - 3, currentZoom));
                 }
                 ++endCol;
             }
@@ -81,7 +81,7 @@ window.addEventListener('mousemove', event => {
                         `tile${startRow - 1}${y}`
                     );
 
-                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x + y - 3, tile.y + startRow - 4, currentZoom));
+                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x + y - 4, tile.y + startRow - 4, currentZoom));
                 }
                 --startRow;
             }
@@ -96,7 +96,7 @@ window.addEventListener('mousemove', event => {
                         `tile${endRow - 1}${y}`
                     );
 
-                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x + y - 3, tile.y + endRow - 4, currentZoom));
+                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x + y - 4, tile.y + endRow - 4, currentZoom));
                 }
                 ++endRow;
             }
