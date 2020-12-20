@@ -1,6 +1,22 @@
 let currentZoom = 12;
+let xSize = Math.ceil(window.innerHeight / 256);
+let ySize = Math.ceil(window.innerWidth / 256);
 
 const coords = [19.034597998590936, 72.92177841567673];
+
+let resizeTimeout = null;
+
+window.onresize = () => {
+    xSize = Math.ceil(window.innerHeight / 256);
+    ySize = Math.ceil(window.innerWidth / 256);
+    
+    if (resizeTimeout !== null) {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = null;
+    }
+
+    resizeTimeout = setTimeout(() => initialize(), 100);
+}
 
 function getTileUrl(x, y, zoom) {
     return `https://a.tile.openstreetmap.org/${zoom}/${x}/${y}.png`;
@@ -15,15 +31,13 @@ function coordsToTile(lat, lon, zoom) {
 
 function loadImageTiles(lat, lon, zoom) {
     const tile = coordsToTile(lat, lon, zoom);
-    const xSize = 7;
-    const ySize = 3;
     for (let x = 0; x < xSize; ++x) {
         for (let y = 0; y < ySize; ++y) {
-            const gTile = document.getElementById(`gtile${y}${x}`);
+            const gTile = document.getElementById(`gtile${x}${y}`);
             gTile.setAttributeNS(null, 'visibility', 'visible');
 
-            const img = document.getElementById(`tile${y}${x}`);
-            img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x - Math.ceil(xSize / 2) + x, tile.y - Math.ceil(ySize / 2) + y, zoom));
+            const img = document.getElementById(`tile${x}${y}`);
+            img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x - Math.ceil(ySize / 2) + y, tile.y - Math.ceil(xSize / 2) + x, zoom));
         }
     }
 }
@@ -34,9 +48,12 @@ function loadMap() {
 
 function initialize() {
     const map = document.getElementById('svg-map');
+    while (map.lastChild) {
+        map.removeChild(map.lastChild);
+    }
     
-    for (let row = 0; row < 3; ++row) {
-        for (let col = 0; col < 7; ++col) {
+    for (let row = 0; row < xSize; ++row) {
+        for (let col = 0; col < ySize; ++col) {
             const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
             img.setAttributeNS(null, 'height', 256);
             img.setAttributeNS(null, 'width', 256);
