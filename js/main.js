@@ -1,10 +1,19 @@
 let currentZoom = 12;
 let xSize = Math.ceil(window.innerHeight / 256);
 let ySize = Math.ceil(window.innerWidth / 256);
+let mouseButtonHeld = false;
 
 const coords = [19.034597998590936, 72.92177841567673];
 
 let resizeTimeout = null;
+
+window.addEventListener('mousedown', () => mouseButtonHeld = true);
+
+window.addEventListener('mouseup', () => mouseButtonHeld = false);
+
+window.addEventListener('mousemove', event => {
+    console.log(mouseButtonHeld);
+});
 
 window.onresize = () => {
     xSize = Math.ceil(window.innerHeight / 256);
