@@ -21,6 +21,7 @@
  */
 
 let map = document.getElementById('map');
+let mapPane = document.getElementById('map-pane');
 
 let viewport = {
     x: 0,
@@ -44,7 +45,8 @@ let mapBottomRight = { x: 0, y: 0 };
 let tileTopLeft = { x: 0, y: 0 };
 let tileBottomRight = { x: 0, y: 0 };
 
-document.getElementById("map-pane").style.transform = "translate(0,0)";
+let panning = false;
+
 
 function getTileUrl(x, y, zoom) {
     return `https://a.tile.openstreetmap.org/${zoom}/${x}/${y}.png`;
@@ -90,8 +92,8 @@ function getTileFromURL(url) {
 function drawMap(xTile, yTile, zoom, x, y) {
     //const tile = coordsToTile(lat, lng, zoom);
 
-    document.getElementById("map-pane").innerHTML = "";
-    document.getElementById("map-pane").style.transform = "translate(0,0)";
+    mapPane.innerHTML = "";
+    mapPane.style.transform = "translate(0,0)";
 
     let cx = x - 128;
     let cy = y - 128;
@@ -120,7 +122,7 @@ function drawMap(xTile, yTile, zoom, x, y) {
             map_tile.setAttribute("data-tile", xTileNum + ", " + yTileNum);
 
             map_tile.style.transform = "translate(" + tx + "px, " + ty + "px)";
-            document.getElementById("map-pane").appendChild(map_tile);
+            mapPane.appendChild(map_tile);
         }
     }
 
@@ -144,7 +146,7 @@ drawMap(
     viewport.height / 2
 );
 
-document.getElementById("map").addEventListener("wheel", (event) => {
+map.addEventListener("wheel", (event) => {
     event.preventDefault();
 
     let [x, y] = [event.clientX, event.clientY];
@@ -282,7 +284,7 @@ function loadVerticalTiles(xTile, tx) {
         map_tile.src = getTileUrl(xTile, yTile, currentZoom);
         map_tile.style.transform = "translate(" + tx + "px, " + ty + "px)";
         map_tile.setAttribute("data-tile", xTile + ", " + yTile);
-        document.getElementById("map-pane").appendChild(map_tile);
+        mapPane.appendChild(map_tile);
     }
 }
 
@@ -303,7 +305,7 @@ function loadHorizontalTiles(yTile, ty) {
         map_tile.src = getTileUrl(xTile, yTile, currentZoom);
         map_tile.style.transform = "translate(" + tx + "px, " + ty + "px)";
         map_tile.setAttribute("data-tile", xTile + ", " + yTile);
-        document.getElementById("map-pane").appendChild(map_tile);
+        mapPane.appendChild(map_tile);
         //console.log(yTile,ty);
     }
 }
@@ -332,11 +334,11 @@ function removeHorizontalTiles(ty) {
     }
 }
 
-let panning = false;
 
-document.getElementById("map").addEventListener("mousedown", mousedown);
 
-document.getElementById("map-pane").addEventListener("click", function (event) {
+map.addEventListener("mousedown", mousedown);
+
+mapPane.addEventListener("click", function (event) {
     let tileDOM = document.elementFromPoint(event.clientX, event.clientY);
 
     let rect = tileDOM.getBoundingClientRect();
@@ -346,7 +348,7 @@ document.getElementById("map-pane").addEventListener("click", function (event) {
     console.log(document.elementFromPoint(event.clientX, event.clientY));
 });
 
-document.getElementById("map").ondragstart = () => {
+map.ondragstart = () => {
     return false;
 };
 
