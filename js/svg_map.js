@@ -163,7 +163,8 @@ function drawMap(xLocation, yLocation, xTile, yTile, zoom) {
 }
 
 //initialize map
-drawMap(viewport.width / 2 - 100, viewport.height / 2 - 170, 5755, 3654, currentZoom);
+//Note: Rounding the locations because floating translated values create blurry tiles
+drawMap(Math.round(viewport.width / 2) - 100, Math.round(viewport.height / 2) - 170, 5755, 3654, currentZoom);
 
 
 /**
@@ -319,7 +320,9 @@ svgMap.addEventListener("wheel", function(event) {
             tileLocationY = (y + rect.y - rect.height) / 2;
         }
         currentZoom--;
-        drawMap(tileLocationX, tileLocationY, xTile, yTile, currentZoom);
+
+        //Note: Rounding the locations because floating translated values create blurry tiles
+        drawMap(Math.round(tileLocationX), Math.round(tileLocationY), xTile, yTile, currentZoom);
     } else if (event.deltaY < 0 && currentZoom <= 18) {
         //zoom in
 
@@ -362,7 +365,9 @@ svgMap.addEventListener("wheel", function(event) {
             }
         }
         currentZoom++;
-        drawMap(tileLocationX, tileLocationY, xTile, yTile, currentZoom);
+
+        //Note: Rounding the locations because floating translated values create blurry tiles
+        drawMap(Math.round(tileLocationX), Math.round(tileLocationY), xTile, yTile, currentZoom);
     }
 });
 
