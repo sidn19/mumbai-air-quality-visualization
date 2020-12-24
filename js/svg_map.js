@@ -1,7 +1,13 @@
+import regions from '../data/regions.js';
+
 const mapContainer = document.getElementById("map-container");
 const svgMap = document.getElementById("svg-map");
+const svgRegions = document.getElementById("svg-regions");
 
 const TILE_SIZE = 256;
+const ORIGIN = TILE_SIZE / 2;
+const PIXELS_PER_DEGREE = TILE_SIZE / 360;
+const PIXELS_PER_RADIAN = TILE_SIZE / (2 * Math.PI);
 
 //tileCoords represents Tile Coordinate System
 let tileCoords = {
@@ -56,6 +62,15 @@ function coordsToTile(lat, lng, zoom) {
     };
 }
 
+function tileToCoords(x, y, zoom) {
+    const z = 1 << zoom;
+    var n = Math.PI - (2 * Math.PI * y) / z;
+    return {
+        lng: (x / z) * 360 - 180,
+        lat: (180 / Math.PI) * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n))),
+    };
+}
+
 function getTileImage(xLocation, yLocation, xTile, yTile, zoom) {
     const img = document.createElementNS("http://www.w3.org/2000/svg", "image");
     img.setAttributeNS(null, "height", TILE_SIZE);
@@ -80,7 +95,7 @@ function loadVerticalTiles(xLocation, xTile) {
         yLocation < mapCoords.bottom;
         yLocation += TILE_SIZE, yTile++
     ) {
-        svgMap.appendChild(
+        svgMap.prepend(
             getTileImage(xLocation, yLocation, xTile, yTile, currentZoom)
         );
     }
@@ -95,7 +110,7 @@ function loadHorizontalTiles(yLocation, yTile) {
         xLocation < mapCoords.right;
         xLocation += TILE_SIZE, xTile++
     ) {
-        svgMap.appendChild(
+        svgMap.prepend(
             getTileImage(xLocation, yLocation, xTile, yTile, currentZoom)
         );
     }
@@ -136,14 +151,42 @@ function updateViewBox(min_x, min_y, width, height) {
     );
 }
 
+function latlngToPixelCoords(lat, lng, zoom) {
+    let worldX = ORIGIN + lng * PIXELS_PER_DEGREE;
+    let sinY = Math.sin((lat * Math.PI) / 180);
+    sinY = Math.min(Math.max(sinY, -0.9999), 0.9999);
+    let worldY =
+        ORIGIN + 0.5 * (Math.log((1 + sinY) / (1 - sinY)) * -PIXELS_PER_RADIAN);
+
+    let scale = 1 << zoom;
+    let pixelX = worldX * scale;
+    let pixelY = worldY * scale;
+    return {
+        x: pixelX,
+        y: pixelY,
+    };
+}
+
+function tileToPixelCoords(xTile, yTile, zoom) {
+    let coords = tileToCoords(xTile, yTile, zoom);
+    let pixelCoords = latlngToPixelCoords(coords.lat, coords.lng, zoom);
+    return pixelCoords;
+}
+
+function latlngToSVGCoords(lat, lng, zoom, tx, ty) {
+    const pixelCoords = latlngToPixelCoords(lat, lng, zoom);
+    return [pixelCoords.x + tx, pixelCoords.y + ty];
+}
+
 function drawMap(xLocation, yLocation, xTile, yTile, zoom) {
     //Clear map tiles if any
     //Need to loop backwards because everytime the nodes get deleted, the indexes are reorganized
-    let tiles = svgMap.getElementsByClassName('map-tile');
-    for(let i=tiles.length - 1; i >= 0; i--)
-    {
+    let tiles = svgMap.getElementsByClassName("map-tile");
+    for (let i = tiles.length - 1; i >= 0; i--) {
         tiles[i].remove();
     }
+    //Clear the svg regions
+    svgRegions.innerHTML = "";
 
     //Reset viewBox
     updateViewBox(
@@ -177,8 +220,8 @@ function drawMap(xLocation, yLocation, xTile, yTile, zoom) {
     for (; yLoc < rect.bottom; yLoc += TILE_SIZE, _yTile++) {
         xLoc = startLocationX;
         _xTile = startTileX;
-        for (; xLoc < rect.right; xLoc += TILE_SIZE, _xTile++) {            
-            svgMap.appendChild(getTileImage(xLoc, yLoc, _xTile, _yTile, zoom));
+        for (; xLoc < rect.right; xLoc += TILE_SIZE, _xTile++) {
+            svgMap.prepend(getTileImage(xLoc, yLoc, _xTile, _yTile, zoom));
         }
     }
 
@@ -187,16 +230,52 @@ function drawMap(xLocation, yLocation, xTile, yTile, zoom) {
 
     tileCoords.max_x = _xTile - 1;
     tileCoords.max_y = _yTile - 1;
+    
 
-    //console.log(mapCoords, tileCoords);
+    //Add geoJSON SVG Layer
+    let pixelCoords = tileToPixelCoords(xTile, yTile, zoom);
+    let tx = xLocation - pixelCoords.x,
+        ty = yLocation - pixelCoords.y;
 
-    /*const obj = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    obj.setAttributeNS(null, "x", xLocation);
-    obj.setAttributeNS(null, "y", yLocation);
-    obj.setAttributeNS(null, "height", TILE_SIZE);
-    obj.setAttributeNS(null, "width", TILE_SIZE);
-    obj.setAttributeNS(null, "fill", "#AA0000AA");
-    svgMap.appendChild(obj);*/
+
+    for (let feature of regions.features) {
+        let path = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path"
+        );
+        path.setAttributeNS(null, "fill", "#AA000088");
+        path.setAttributeNS(null, "stroke", "#880000AA");
+        path.setAttributeNS(null, "stroke-width", "1");
+        let properties = feature.properties;
+        let coordinates = feature.geometry.coordinates;
+
+        let pathString =
+            "M" +
+            latlngToSVGCoords(
+                coordinates[0][0][0][1],
+                coordinates[0][0][0][0],
+                zoom,
+                tx,
+                ty
+            ).join(",");
+
+
+        for (let i = 1; i < coordinates[0][0].length; i++) {
+            //console.log(coordinates[i][0], coordinates[i][1]);
+            pathString +=
+                "L" +
+                latlngToSVGCoords(
+                    coordinates[0][0][i][1],
+                    coordinates[0][0][i][0],
+                    zoom,
+                    tx,
+                    ty
+                ).join(",");
+        }
+        pathString += "Z";
+        path.setAttributeNS(null, "d", pathString);
+        svgRegions.appendChild(path);
+    }
 }
 
 //initialize map
@@ -329,13 +408,21 @@ svgMap.addEventListener("wheel", function (event) {
     //Get the Tile on which zoom was performed
 
     //Approach 1, but doesn't work when we have an overlay over map-tile
-    let tileDOM = document.elementFromPoint(x, y);
+    //let tileDOM = document.elementFromPoint(x, y);
 
     //Approach 2, Bulky but works when we have an overlay over map-tile
-    /*let tileDOM = Object.values(document.getElementsByClassName('map-tile')).filter(mapTile => {
+    let tileDOM = Object.values(
+        document.getElementsByClassName("map-tile")
+    ).filter((mapTile) => {
         let mapTileRect = mapTile.getBoundingClientRect();
-        return mapTileRect.left <= x && x <= mapTileRect.right && mapTileRect.top <= y && y <= mapTileRect.bottom;
-    })[0];*/
+        return (
+            mapTileRect.left <= x &&
+            x <= mapTileRect.right &&
+            mapTileRect.top <= y &&
+            y <= mapTileRect.bottom
+        );
+    })[0];
+
     //console.log(tileDOM);
 
     let tile = getTileFromURL(tileDOM.getAttribute("href"));
@@ -439,23 +526,3 @@ svgMap.addEventListener("wheel", function (event) {
         );
     }
 });
-
-/**
- * For Debugging
- */
-/*svgMap.addEventListener("click", function (event) {
-    let x=event.clientX,y=event.clientY;
-
-    let tileDOM = Object.values(
-        document.getElementsByClassName("map-tile")
-    ).filter((mapTile) => {
-        let mapTileRect = mapTile.getBoundingClientRect();
-        return (
-            mapTileRect.left <= x &&
-            x <= mapTileRect.right &&
-            mapTileRect.top <= y &&
-            y <= mapTileRect.bottom
-        );
-    })[0];
-    console.log(tileDOM);
-});*/
