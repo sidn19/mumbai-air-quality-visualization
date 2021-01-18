@@ -1,213 +1,462 @@
-let currentZoom = 12;
-let endRow = Math.ceil(window.innerHeight / 256) + 2;
-let endCol = Math.ceil(window.innerWidth / 256) + 2;
-let startRow = -1;
-let startCol = -1;
+"use strict";
 
-const map = document.getElementById('svg-map');
+import regions from "../data/regions.js";
+import aqv_points from "../data/aqv_points.js";
 
-let mouseButtonHeld = false;
+import { TILE_SIZE } from "./declarations.js";
+import {
+    getTileFromURL,
+    getTileImage,
+    tileToPixelCoords,
+    latlngToPixelCoords,
+    geojsonOverlay,
+} from "./modules.js";
 
-const coords = [19.034597998590936, 72.92177841567673];
+import { heatmapOverlay } from "./heatmap_layer.js";
 
-let resizeTimeout = null;
 
-let currentCoords = {
-    x: 0,
-    y: 0
+const svgMap = document.getElementById("svg-map");
+const svgMapRect = svgMap.getBoundingClientRect();
+const svgRegions = document.getElementById("svg-regions");
+
+const canvas = document.getElementById("heatmap");
+const ctx = canvas.getContext("2d");
+
+canvas.width = svgMapRect.width;
+canvas.height = svgMapRect.height;
+
+let mapping = null; //This will be the mapping function from (lat,lng) to pixel coordinates
+
+//tileCoords represents Tile Coordinate System
+let tileCoords = {
+    min_x: 0,
+    min_y: 0,
+    max_x: 0,
+    max_y: 0,
 };
 
-window.addEventListener('mousedown', () => mouseButtonHeld = true);
+//mapCoords represents the extreme positions of the map tile group
+let mapCoords = {
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+};
 
-window.addEventListener('mouseup', () => mouseButtonHeld = false);
+let viewport = {
+    min_x: svgMapRect.left,
+    min_y: svgMapRect.top,
+    width: svgMapRect.width,
+    height: svgMapRect.height,
+};
 
-let previousPosition = null;
-window.addEventListener('mousemove', event => {
-    if (mouseButtonHeld && previousPosition !== null) {
-        const x = event.x - previousPosition.x;
-        const y = event.y - previousPosition.y;
+let viewBoxCoords = {
+    min_x: svgMapRect.left,
+    min_y: svgMapRect.top,
+    width: svgMapRect.width,
+    height: svgMapRect.height,
+};
 
-        // pan map tiles
-        for (let tile of map.children) {
-            tile.setAttributeNS(null, 'x', parseInt(tile.getAttributeNS(null, 'x')) + x);
-            tile.setAttributeNS(null, 'y', parseInt(tile.getAttributeNS(null, 'y')) + y);
-        }
+//Heatmap canvas viewbox
+let canvasViewBox = {
+    top: 0,
+    left: 0,
+    width: canvas.width,
+    height: canvas.height,
+};
 
-        currentCoords.x += x;
-        currentCoords.y += y;
-        
-        const tile = coordsToTile(coords[0], coords[1], currentZoom);
+let currentZoom = 13;
 
-        if ((window.innerWidth + Math.abs(currentCoords.x)) / 256 > endCol - startCol - 2.5) {
-            if (currentCoords.x > 0) {
-                console.log('new tile left');
-                for (let x = startRow; x < endRow - 1; ++x) {
-                    const refImg = document.getElementById(`tile${x}${startCol}`);
+function loadVerticalTiles(xLocation, xTile) {
+    //yLocation ranges from mapCoords.top to mapCoords.bottom (excluding mapCoords.bottom)
+    //yTile ranges from tileCoords.min_y to tileCoords.max_y
 
-                    const img = appendImage(
-                        parseInt(refImg.getAttributeNS(null, 'x')) - 256,
-                        parseInt(refImg.getAttributeNS(null, 'y')),
-                        `tile${x}${startCol - 1}`
-                    );
-
-                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x + startCol - 5, tile.y + x - 3, currentZoom));
-                }
-                --startCol;
-            }
-            else {
-                console.log('new tile right');
-                for (let x = startRow; x < endRow - 1; ++x) {
-                    const refImg = document.getElementById(`tile${x}${endCol - 2}`);
-                    const img = appendImage(
-                        parseInt(refImg.getAttributeNS(null, 'x')) + 256,
-                        parseInt(refImg.getAttributeNS(null, 'y')),
-                        `tile${x}${endCol - 1}`
-                    );                    
-
-                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x + endCol - 5, tile.y + x - 3, currentZoom));
-                }
-                ++endCol;
-            }
-        }
-        if ((window.innerHeight + Math.abs(currentCoords.y)) / 256 > endRow - startRow - 2.5) {
-            if (currentCoords.y > 0) {
-                console.log('new tile top');
-                for (let y = startCol; y < endCol - 1; ++y) {
-                    const refImg = document.getElementById(`tile${startRow}${y}`);
-
-                    const img = appendImage(
-                        parseInt(refImg.getAttributeNS(null, 'x')),
-                        parseInt(refImg.getAttributeNS(null, 'y')) - 256,
-                        `tile${startRow - 1}${y}`
-                    );
-
-                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x + y - 4, tile.y + startRow - 4, currentZoom));
-                }
-                --startRow;
-            }
-            else {
-                console.log('new tile bottom');
-                for (let y = startCol; y < endCol - 1; ++y) {
-                    const refImg = document.getElementById(`tile${endRow - 2}${y}`);
-
-                    const img = appendImage(
-                        parseInt(refImg.getAttributeNS(null, 'x')),
-                        parseInt(refImg.getAttributeNS(null, 'y')) + 256,
-                        `tile${endRow - 1}${y}`
-                    );
-
-                    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x + y - 4, tile.y + endRow - 4, currentZoom));
-                }
-                ++endRow;
-            }
-        }
-        console.log(currentCoords);
+    for (
+        let yLocation = mapCoords.top, yTile = tileCoords.min_y;
+        yLocation < mapCoords.bottom;
+        yLocation += TILE_SIZE, yTile++
+    ) {
+        svgMap.prepend(
+            getTileImage(xLocation, yLocation, xTile, yTile, currentZoom)
+        );
     }
-
-    previousPosition = {
-        x: event.x,
-        y: event.y
-    };
-});
-
-window.onresize = () => {
-    endRow = Math.ceil(window.innerHeight / 256);
-    endCol = Math.ceil(window.innerWidth / 256);
-    
-    if (resizeTimeout !== null) {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = null;
-    }
-
-    resizeTimeout = setTimeout(() => initialize(), 100);
 }
 
-function appendImage(x, y, id) {
-    const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-    img.setAttributeNS(null, 'height', 256);
-    img.setAttributeNS(null, 'width', 256);
-    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', './images/grey.png');
-    img.setAttributeNS(null, 'x', x);
-    img.setAttributeNS(null, 'y', y);
-    img.setAttributeNS(null, 'visibility', 'visible');
-    img.setAttributeNS(null, 'id', id);
-                    
-    img.addEventListener('load', () => {
-        const greyImg = document.getElementById(`g${id}`);
-        greyImg.setAttributeNS(null, 'visibility', 'hidden');
+function loadHorizontalTiles(yLocation, yTile) {
+    //xLocation ranges from mapCoords.left to mapCoords.right (excluding mapCoords.right)
+    //yTile ranges from tileCoords.min_y to tileCoords.max_y
+
+    for (
+        let xLocation = mapCoords.left, xTile = tileCoords.min_x;
+        xLocation < mapCoords.right;
+        xLocation += TILE_SIZE, xTile++
+    ) {
+        svgMap.prepend(
+            getTileImage(xLocation, yLocation, xTile, yTile, currentZoom)
+        );
+    }
+}
+
+function removeVerticalTiles(xLocation) {
+    //yLocation ranges from mapCoords.top to mapCoords.bottom
+    const imgList = Object.values(
+        svgMap.getElementsByClassName("map-tile")
+    ).filter((img) => {
+        return +img.getAttribute("x") === xLocation;
     });
-    map.appendChild(img);
-
-    const greyImg = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-    greyImg.setAttributeNS(null, 'height', 256);
-    greyImg.setAttributeNS(null, 'width', 256);
-    greyImg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', './images/grey.png');
-    greyImg.setAttributeNS(null, 'x', x);
-    greyImg.setAttributeNS(null, 'y', y);
-    greyImg.setAttributeNS(null, 'visibility', 'hidden');
-    greyImg.setAttributeNS(null, 'id', `g${id}`);
-    map.appendChild(greyImg);
-
-    return img;
+    for (let img of imgList) {
+        svgMap.removeChild(img);
+    }
 }
 
-function getTileUrl(x, y, zoom) {
-    return `https://a.tile.openstreetmap.org/${zoom}/${x}/${y}.png`;
+function removeHorizontalTiles(yLocation) {
+    //xLocation ranges from mapCoords.left to mapCoords.right
+    const imgList = Object.values(
+        svgMap.getElementsByClassName("map-tile")
+    ).filter((img) => {
+        return +img.getAttribute("y") === yLocation;
+    });
+    for (let img of imgList) {
+        svgMap.removeChild(img);
+    }
 }
 
-function coordsToTile(lat, lon, zoom) {
-    return {
-        x: (Math.floor((lon + 180) / 360 * Math.pow(2, zoom))),
-        y: (Math.floor((1 - Math.log(Math.tan(lat * Math.PI / 180) + 1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2 * Math.pow(2, zoom)))
-    };
+function updateViewBox(min_x, min_y, width, height) {
+    viewBoxCoords.min_x = min_x;
+    viewBoxCoords.min_y = min_y;
+    viewBoxCoords.width = width;
+    viewBoxCoords.height = height;
+    svgMap.setAttribute(
+        "viewBox",
+        min_x + " " + min_y + " " + width + " " + height
+    );
 }
 
-function loadImageTiles(lat, lon, zoom) {
-    const tile = coordsToTile(lat, lon, zoom);
-    for (let x = startRow; x < endRow - 1; ++x) {
-        for (let y = startCol; y < endCol - 1; ++y) {
-            const gTile = document.getElementById(`gtile${x}${y}`);
-            gTile.setAttributeNS(null, 'visibility', 'visible');
+function drawMap(locationX, locationY, tileX, tileY, zoom) {
+    //Clear map tiles if any
+    //Need to loop backwards because everytime the nodes get deleted, the indexes are reorganized
+    let tiles = svgMap.getElementsByClassName("map-tile");
+    for (let i = tiles.length - 1; i >= 0; i--) {
+        tiles[i].remove();
+    }
+    //Clear the svg regions
+    svgRegions.innerHTML = "";
 
-            const img = document.getElementById(`tile${x}${y}`);
-            img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getTileUrl(tile.x - Math.ceil(endCol / 2) + y, tile.y - Math.ceil(endRow / 2) + x, zoom));
+    //Reset viewBox
+    updateViewBox(
+        viewport.min_x,
+        viewport.min_y,
+        viewport.width,
+        viewport.height
+    );
+
+    let startLocationX =
+        locationX -
+        Math.ceil((locationX - svgMapRect.left) / TILE_SIZE) * TILE_SIZE;
+    let startLocationY =
+        locationY -
+        Math.ceil((locationY - svgMapRect.top) / TILE_SIZE) * TILE_SIZE;
+
+    let startTileX =
+        tileX - Math.ceil((locationX - svgMapRect.left) / TILE_SIZE);
+    let startTileY =
+        tileY - Math.ceil((locationY - svgMapRect.top) / TILE_SIZE);
+
+    mapCoords.left = startLocationX;
+    mapCoords.top = startLocationY;
+
+    tileCoords.min_x = startTileX;
+    tileCoords.min_y = startTileY;
+
+    let currentLocationY = startLocationY,
+        currentTileY = startTileY;
+    let currentLocationX = startLocationX,
+        currentTileX = startTileX;
+
+    for (
+        ;
+        currentLocationY < svgMapRect.bottom;
+        currentLocationY += TILE_SIZE, currentTileY++
+    ) {
+        currentLocationX = startLocationX;
+        currentTileX = startTileX;
+        for (
+            ;
+            currentLocationX < svgMapRect.right;
+            currentLocationX += TILE_SIZE, currentTileX++
+        ) {
+            svgMap.prepend(
+                getTileImage(
+                    currentLocationX,
+                    currentLocationY,
+                    currentTileX,
+                    currentTileY,
+                    zoom
+                )
+            );
         }
     }
-}
 
-function loadMap() {
-    loadImageTiles(coords[0], coords[1], currentZoom);
-}
+    mapCoords.right = currentLocationX;
+    mapCoords.bottom = currentLocationY;
 
-function initialize() {
-    while (map.lastChild) {
-        map.removeChild(map.lastChild);
+    tileCoords.max_x = currentTileX - 1;
+    tileCoords.max_y = currentTileY - 1;
+
+    //Add geoJSON SVG Layer
+    let pixelCoords = tileToPixelCoords(tileX, tileY, zoom);
+    let tx = locationX - pixelCoords.x;
+    let ty = locationY - pixelCoords.y;
+
+    mapping = (lat, lng) => {
+        let pixelCoords = latlngToPixelCoords(lat, lng, zoom);
+        return {
+            x: pixelCoords.x + tx,
+            y: pixelCoords.y + ty,
+        };
     }
+
+    geojsonOverlay(regions, mapping, svgRegions);
+
+    //Add Heat Map
+    //console.log("calling heatmap overlay");
+    ctx.translate(canvasViewBox.left, canvasViewBox.top);
+    canvasViewBox.left = 0;
+    canvasViewBox.top = 0;
+    heatmapOverlay(aqv_points, mapping, ctx, canvasViewBox);
+}
+
+//initialize map
+//Note: Rounding the locations because floating translated values create blurry tiles
+drawMap(
+    Math.round(viewport.width / 2) - 100,
+    Math.round(viewport.height / 2) - 170,
+    5755,
+    3654,
+    currentZoom
+);
+
+/**
+ * Panning Functionality
+ */
+svgMap.addEventListener("mousedown", mousedown);
+
+function mousedown(event) {
+
+    svgMap.style.cursor = "grabbing";
+    window.addEventListener("mousemove", mousemove);
+    window.addEventListener("mouseup", mouseup);
+
+    let prevX = event.clientX,
+        prevY = event.clientY;
+
+    function mousemove(event) {
+
+        let newX = event.clientX,
+            newY = event.clientY;
+        let dx = newX - prevX,
+            dy = newY - prevY;
+
+        canvasViewBox.left -= dx;
+        canvasViewBox.top -= dy;
+        ctx.translate(dx, dy);
+        //console.log("calling heatmap overlay");
+        heatmapOverlay(aqv_points, mapping, ctx, canvasViewBox);
+        
+        updateViewBox(
+            viewBoxCoords.min_x - dx,
+            viewBoxCoords.min_y - dy,
+            viewBoxCoords.width,
+            viewBoxCoords.height
+        );
+
+        //Logic for on-demand tile loading
+        if (viewBoxCoords.min_x < mapCoords.left) {
+            //console.log("load left tiles");
+            mapCoords.left -= TILE_SIZE;
+            tileCoords.min_x--;
+            loadVerticalTiles(mapCoords.left, tileCoords.min_x);
+        }
+
+        if (viewBoxCoords.min_y < mapCoords.top) {
+            //console.log("load top tiles");
+            mapCoords.top -= TILE_SIZE;
+            tileCoords.min_y--;
+            loadHorizontalTiles(mapCoords.top, tileCoords.min_y);
+        }
+
+        if (viewBoxCoords.min_x + viewBoxCoords.width > mapCoords.right) {
+            //console.log("load right tiles");
+            tileCoords.max_x++;
+            loadVerticalTiles(mapCoords.right, tileCoords.max_x);
+            mapCoords.right += TILE_SIZE;
+        }
+
+        if (viewBoxCoords.min_y + viewBoxCoords.height > mapCoords.bottom) {
+            //console.log("load bottom tiles");
+            tileCoords.max_y++;
+            loadHorizontalTiles(mapCoords.bottom, tileCoords.max_y);
+            mapCoords.bottom += TILE_SIZE;
+        }
+
+        //Logic for on demand tile removal
+        if (viewBoxCoords.min_x > mapCoords.left + TILE_SIZE) {
+            //console.log("remove left tiles");
+            removeVerticalTiles(mapCoords.left);
+            mapCoords.left += TILE_SIZE;
+            tileCoords.min_x++;
+        }
+
+        if (viewBoxCoords.min_y > mapCoords.top + TILE_SIZE) {
+            //console.log("remove top tiles");
+            removeHorizontalTiles(mapCoords.top);
+            mapCoords.top += TILE_SIZE;
+            tileCoords.min_y++;
+        }
+
+        if (
+            viewBoxCoords.min_x + viewBoxCoords.width <
+            mapCoords.right - TILE_SIZE
+        ) {
+            //console.log("remove right tiles");
+            mapCoords.right -= TILE_SIZE;
+            tileCoords.max_x--;
+            removeVerticalTiles(mapCoords.right);
+        }
+
+        if (
+            viewBoxCoords.min_y + viewBoxCoords.height <
+            mapCoords.bottom - TILE_SIZE
+        ) {
+            //console.log("remove bottom tiles");
+            mapCoords.bottom -= TILE_SIZE;
+            tileCoords.max_y--;
+            removeHorizontalTiles(mapCoords.bottom);
+        }
+
+        prevX = newX;
+        prevY = newY;
+    }
+
+    function mouseup() {
+        svgMap.style.cursor = "grab";
+        window.removeEventListener("mousemove", mousemove);
+        window.removeEventListener("mouseup", mouseup);
+    }
+}
+
+/**
+ * Zooming Functionality
+ */
+svgMap.addEventListener("wheel", function (event) {
     
-    for (let row = startRow; row < endRow - 1; ++row) {
-        for (let col = startCol; col < endCol - 1; ++col) {
-            appendImage(col * 256, row * 256, `tile${row}${col}`);
+    event.preventDefault();
+
+    let [x, y] = [event.clientX, event.clientY];
+
+    //Get the Tile on which zoom was performed
+    let tileDOM = document.elementsFromPoint(event.clientX, event.clientY).filter((dom) => {
+        return dom.getAttribute("class") === "map-tile";
+    })[0];
+
+    let tile = getTileFromURL(tileDOM.getAttribute("href"));
+
+    let rect = tileDOM.getBoundingClientRect();
+
+    let xTile, yTile, tileLocationX, tileLocationY;
+
+    if (event.deltaY > 0 && currentZoom >= 3) {
+        //zoom out
+
+        xTile = Math.floor(tile.x / 2);
+        yTile = Math.floor(tile.y / 2);
+
+        //Get the main tile of which this is a sub-tile and identify the position of this sub-tile in main tile
+        if ((tile.x & 1) === 0 && (tile.y & 1) === 0) {
+            //Sub-tile is top left of the main tile
+
+            //Calculate the location of the main tile
+            tileLocationX = (x + rect.x) / 2;
+            tileLocationY = (y + rect.y) / 2;
+        } else if ((tile.x & 1) === 1 && (tile.y & 1) === 0) {
+            //Sub-tile is top right of the main tile
+
+            //Calculate the location of the main tile
+            tileLocationX = (x + rect.x - rect.width) / 2;
+            tileLocationY = (y + rect.y) / 2;
+        } else if ((tile.x & 1) === 0 && (tile.y & 1) === 1) {
+            //Sub-tile is bottom left of the main tile
+
+            //Calculate the location of the main tile
+            tileLocationX = (x + rect.x) / 2;
+            tileLocationY = (y + rect.y - rect.height) / 2;
+        } else if ((tile.x & 1) === 1 && (tile.y & 1) === 1) {
+            //Sub-tile is bottom right of the main tile
+
+            //Calculate the location of the main tile
+            tileLocationX = (x + rect.x - rect.width) / 2;
+            tileLocationY = (y + rect.y - rect.height) / 2;
         }
-    }
-    loadMap();
-}
+        currentZoom--;
 
-initialize();
+        //Note: Rounding the locations because floating point translated values create blurry tiles
+        drawMap(
+            Math.round(tileLocationX),
+            Math.round(tileLocationY),
+            xTile,
+            yTile,
+            currentZoom
+        );
+    } else if (event.deltaY < 0 && currentZoom <= 18) {
+        //zoom in
 
+        //Get the required sub-tile on which zoom is performed
+        if (rect.top <= y && y < rect.top + rect.height / 2) {
+            if (rect.left <= x && x < rect.left + rect.width / 2) {
+                //Top Left sub-tile
+                xTile = 2 * tile.x;
+                yTile = 2 * tile.y;
 
+                //Calculate the location of the subtile
+                tileLocationX = 2 * rect.x - x;
+                tileLocationY = 2 * rect.y - y;
+            } else if (rect.left + rect.width / 2 <= x && x < rect.right) {
+                //Top Right sub-tile
+                xTile = 2 * tile.x + 1;
+                yTile = 2 * tile.y;
 
-window.addEventListener('wheel', event => {
-    if (event.deltaY > 0) {
-        // scrolled down
-        if (currentZoom >= 5) {
-            currentZoom -= 1;
-            loadMap();
+                //Calculate the location of the subtile
+                tileLocationX = 2 * rect.x - x + rect.width;
+                tileLocationY = 2 * rect.y - y;
+            }
+        } else if (rect.top + rect.height / 2 <= y && y < rect.bottom) {
+            if (rect.left <= x && x < rect.left + rect.width / 2) {
+                //Bottom Left sub-tile
+                xTile = 2 * tile.x;
+                yTile = 2 * tile.y + 1;
+
+                //Calculate the location of the subtile
+                tileLocationX = 2 * rect.x - x;
+                tileLocationY = 2 * rect.y - y + rect.height;
+            } else if (rect.left + rect.width / 2 <= x && x < rect.right) {
+                //Bottom Right sub-tile
+                xTile = 2 * tile.x + 1;
+                yTile = 2 * tile.y + 1;
+
+                //Calculate the location of the subtile
+                tileLocationX = 2 * rect.x - x + rect.width;
+                tileLocationY = 2 * rect.y - y + rect.height;
+            }
         }
+        currentZoom++;
+
+        //Note: Rounding the locations because floating point translated values create blurry tiles
+        drawMap(
+            Math.round(tileLocationX),
+            Math.round(tileLocationY),
+            xTile,
+            yTile,
+            currentZoom
+        );
     }
-    // scrolled up
-    else if (currentZoom <= 18) {
-        currentZoom += 1;
-        loadMap();
-    }
-    
 });
