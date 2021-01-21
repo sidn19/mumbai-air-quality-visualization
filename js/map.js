@@ -9,11 +9,10 @@ import {
     getTileImage,
     tileToPixelCoords,
     latlngToPixelCoords,
-    geojsonOverlay,
 } from "./modules.js";
 
+import { geojsonOverlay } from "./svg_layer.js";
 import { heatmapOverlay } from "./heatmap_layer.js";
-
 
 const svgMap = document.getElementById("svg-map");
 const svgMapRect = svgMap.getBoundingClientRect();
@@ -214,7 +213,7 @@ function drawMap(locationX, locationY, tileX, tileY, zoom) {
             x: pixelCoords.x + tx,
             y: pixelCoords.y + ty,
         };
-    }
+    };
 
     geojsonOverlay(regions, mapping, svgRegions);
 
@@ -242,7 +241,6 @@ drawMap(
 svgMap.addEventListener("mousedown", mousedown);
 
 function mousedown(event) {
-
     svgMap.style.cursor = "grabbing";
     window.addEventListener("mousemove", mousemove);
     window.addEventListener("mouseup", mouseup);
@@ -251,7 +249,6 @@ function mousedown(event) {
         prevY = event.clientY;
 
     function mousemove(event) {
-
         let newX = event.clientX,
             newY = event.clientY;
         let dx = newX - prevX,
@@ -262,7 +259,7 @@ function mousedown(event) {
         ctx.translate(dx, dy);
         //console.log("calling heatmap overlay");
         heatmapOverlay(aqv_points, mapping, ctx, canvasViewBox);
-        
+
         updateViewBox(
             viewBoxCoords.min_x - dx,
             viewBoxCoords.min_y - dy,
@@ -276,6 +273,7 @@ function mousedown(event) {
             mapCoords.left -= TILE_SIZE;
             tileCoords.min_x--;
             loadVerticalTiles(mapCoords.left, tileCoords.min_x);
+            console.log(viewBoxCoords, mapCoords);
         }
 
         if (viewBoxCoords.min_y < mapCoords.top) {
@@ -283,6 +281,7 @@ function mousedown(event) {
             mapCoords.top -= TILE_SIZE;
             tileCoords.min_y--;
             loadHorizontalTiles(mapCoords.top, tileCoords.min_y);
+            console.log(viewBoxCoords, mapCoords);
         }
 
         if (viewBoxCoords.min_x + viewBoxCoords.width > mapCoords.right) {
@@ -290,6 +289,7 @@ function mousedown(event) {
             tileCoords.max_x++;
             loadVerticalTiles(mapCoords.right, tileCoords.max_x);
             mapCoords.right += TILE_SIZE;
+            console.log(viewBoxCoords, mapCoords);
         }
 
         if (viewBoxCoords.min_y + viewBoxCoords.height > mapCoords.bottom) {
@@ -297,6 +297,7 @@ function mousedown(event) {
             tileCoords.max_y++;
             loadHorizontalTiles(mapCoords.bottom, tileCoords.max_y);
             mapCoords.bottom += TILE_SIZE;
+            console.log(viewBoxCoords, mapCoords);
         }
 
         //Logic for on demand tile removal
@@ -349,15 +350,17 @@ function mousedown(event) {
  * Zooming Functionality
  */
 svgMap.addEventListener("wheel", function (event) {
-    
     event.preventDefault();
 
-    let [x, y] = [event.clientX, event.clientY];
+    let x = event.clientX;
+    let y = event.clientY;
 
     //Get the Tile on which zoom was performed
-    let tileDOM = document.elementsFromPoint(event.clientX, event.clientY).filter((dom) => {
-        return dom.getAttribute("class") === "map-tile";
-    })[0];
+    let tileDOM = document
+        .elementsFromPoint(event.clientX, event.clientY)
+        .filter((dom) => {
+            return dom.getAttribute("class") === "map-tile";
+        })[0];
 
     let tile = getTileFromURL(tileDOM.getAttribute("href"));
 
@@ -371,32 +374,9 @@ svgMap.addEventListener("wheel", function (event) {
         xTile = Math.floor(tile.x / 2);
         yTile = Math.floor(tile.y / 2);
 
-        //Get the main tile of which this is a sub-tile and identify the position of this sub-tile in main tile
-        if ((tile.x & 1) === 0 && (tile.y & 1) === 0) {
-            //Sub-tile is top left of the main tile
+        tileLocationX = (x + rect.x - (tile.x & 1) * rect.width) / 2;
+        tileLocationY = (y + rect.y - (tile.y & 1) * rect.height) / 2;
 
-            //Calculate the location of the main tile
-            tileLocationX = (x + rect.x) / 2;
-            tileLocationY = (y + rect.y) / 2;
-        } else if ((tile.x & 1) === 1 && (tile.y & 1) === 0) {
-            //Sub-tile is top right of the main tile
-
-            //Calculate the location of the main tile
-            tileLocationX = (x + rect.x - rect.width) / 2;
-            tileLocationY = (y + rect.y) / 2;
-        } else if ((tile.x & 1) === 0 && (tile.y & 1) === 1) {
-            //Sub-tile is bottom left of the main tile
-
-            //Calculate the location of the main tile
-            tileLocationX = (x + rect.x) / 2;
-            tileLocationY = (y + rect.y - rect.height) / 2;
-        } else if ((tile.x & 1) === 1 && (tile.y & 1) === 1) {
-            //Sub-tile is bottom right of the main tile
-
-            //Calculate the location of the main tile
-            tileLocationX = (x + rect.x - rect.width) / 2;
-            tileLocationY = (y + rect.y - rect.height) / 2;
-        }
         currentZoom--;
 
         //Note: Rounding the locations because floating point translated values create blurry tiles
@@ -411,43 +391,16 @@ svgMap.addEventListener("wheel", function (event) {
         //zoom in
 
         //Get the required sub-tile on which zoom is performed
-        if (rect.top <= y && y < rect.top + rect.height / 2) {
-            if (rect.left <= x && x < rect.left + rect.width / 2) {
-                //Top Left sub-tile
-                xTile = 2 * tile.x;
-                yTile = 2 * tile.y;
+        //(xFactor, yFactor) => (0,0) top left subtile, (1,0) top right subtile, (0,1) bottom left subtile, (1,1) bottom right subtile
+        let xFactor = Math.round((x - rect.left) / rect.width);
+        let yFactor = Math.round((y - rect.top) / rect.height);
 
-                //Calculate the location of the subtile
-                tileLocationX = 2 * rect.x - x;
-                tileLocationY = 2 * rect.y - y;
-            } else if (rect.left + rect.width / 2 <= x && x < rect.right) {
-                //Top Right sub-tile
-                xTile = 2 * tile.x + 1;
-                yTile = 2 * tile.y;
+        xTile = 2 * tile.x + xFactor;
+        yTile = 2 * tile.y + yFactor;
 
-                //Calculate the location of the subtile
-                tileLocationX = 2 * rect.x - x + rect.width;
-                tileLocationY = 2 * rect.y - y;
-            }
-        } else if (rect.top + rect.height / 2 <= y && y < rect.bottom) {
-            if (rect.left <= x && x < rect.left + rect.width / 2) {
-                //Bottom Left sub-tile
-                xTile = 2 * tile.x;
-                yTile = 2 * tile.y + 1;
+        tileLocationX = 2 * rect.x - x + xFactor * rect.width;
+        tileLocationY = 2 * rect.y - y + yFactor * rect.height;
 
-                //Calculate the location of the subtile
-                tileLocationX = 2 * rect.x - x;
-                tileLocationY = 2 * rect.y - y + rect.height;
-            } else if (rect.left + rect.width / 2 <= x && x < rect.right) {
-                //Bottom Right sub-tile
-                xTile = 2 * tile.x + 1;
-                yTile = 2 * tile.y + 1;
-
-                //Calculate the location of the subtile
-                tileLocationX = 2 * rect.x - x + rect.width;
-                tileLocationY = 2 * rect.y - y + rect.height;
-            }
-        }
         currentZoom++;
 
         //Note: Rounding the locations because floating point translated values create blurry tiles

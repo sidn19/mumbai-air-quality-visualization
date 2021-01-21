@@ -8,7 +8,6 @@ import {
 } from "./declarations.js";
 
 
-
 export function getTileUrl(tileX, tileY, zoom) {
     return `https://a.tile.openstreetmap.org/${zoom}/${tileX}/${tileY}.png`;
 }
@@ -85,47 +84,5 @@ export function tileToPixelCoords(tileX, tileY, zoom) {
     return pixelCoords;
 }
 
-export function geojsonOverlay(geojsonData, mapping, container) {
-    for (let feature of geojsonData.features) {
-        let path = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "path"
-        );
-
-        let color = [0xaa, 0, 0];
-        path.setAttributeNS(
-            null,
-            "fill",
-            `rgb(${color[0]}, ${color[1]}, ${color[2]}, 0.5)`
-        );
-        path.setAttributeNS(
-            null,
-            "stroke",
-            `rgb(${color[0]}, ${color[1]}, ${color[2]}, 1)`
-        );
-        path.setAttributeNS(null, "stroke-width", "1");
-        let properties = feature.properties;
-        let coordinates = feature.geometry.coordinates;
-
-        let pixelCoords = mapping(
-            coordinates[0][0][0][1],
-            coordinates[0][0][0][0]
-        );
-
-        let pathString = `M${pixelCoords.x},${pixelCoords.y}`;
-
-        for (let i = 1; i < coordinates[0][0].length; i++) {
-            pixelCoords = mapping(
-                coordinates[0][0][i][1],
-                coordinates[0][0][i][0]
-            );
-            pathString += `L${pixelCoords.x}, ${pixelCoords.y}`;
-        }
-        pathString += "Z";
-        path.setAttributeNS(null, "d", pathString);
-
-        container.appendChild(path);
-    }
-}
 
 
