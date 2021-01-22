@@ -12,15 +12,6 @@ export function getTileUrl(tileX, tileY, zoom) {
     return `https://a.tile.openstreetmap.org/${zoom}/${tileX}/${tileY}.png`;
 }
 
-export function getTileFromURL(url) {
-    let regex = /\/([0-9]+)\/([0-9]+).png$/;
-    let result = url.match(regex);
-    return {
-        x: +result[1],
-        y: +result[2],
-    };
-}
-
 export function coordsToTile(lat, lng, zoom) {
     let z = 1 << zoom;
     return {
@@ -54,6 +45,7 @@ export function getTileImage(xLocation, yLocation, tileX, tileY, zoom) {
     img.setAttributeNS(null, "class", "map-tile");
     img.setAttributeNS(null, "x", xLocation);
     img.setAttributeNS(null, "y", yLocation);
+    img.setAttributeNS(null, "id", tileX + "," + tileY); //Store Tile Coordinates in ID
     img.setAttributeNS(
         "http://www.w3.org/1999/xlink",
         "href",
@@ -77,12 +69,3 @@ export function latlngToPixelCoords(lat, lng, zoom) {
         y: pixelY,
     };
 }
-
-export function tileToPixelCoords(tileX, tileY, zoom) {
-    let coords = tileToCoords(tileX, tileY, zoom);
-    let pixelCoords = latlngToPixelCoords(coords.lat, coords.lng, zoom);
-    return pixelCoords;
-}
-
-
-

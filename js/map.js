@@ -5,9 +5,7 @@ import aqv_points from "../data/aqv_points.js";
 
 import { TILE_SIZE } from "./declarations.js";
 import {
-    getTileFromURL,
     getTileImage,
-    tileToPixelCoords,
     latlngToPixelCoords,
 } from "./modules.js";
 
@@ -16,6 +14,8 @@ import { heatmapOverlay } from "./heatmap_layer.js";
 
 const svgMap = document.getElementById("svg-map");
 const svgMapRect = svgMap.getBoundingClientRect();
+
+const svgMapTiles = document.getElementById("map-tiles");
 const svgRegions = document.getElementById("svg-regions");
 
 const canvas = document.getElementById("heatmap");
@@ -75,7 +75,7 @@ function loadVerticalTiles(xLocation, xTile) {
         yLocation < mapCoords.bottom;
         yLocation += TILE_SIZE, yTile++
     ) {
-        svgMap.prepend(
+        svgMapTiles.appendChild(
             getTileImage(xLocation, yLocation, xTile, yTile, currentZoom)
         );
     }
@@ -90,7 +90,7 @@ function loadHorizontalTiles(yLocation, yTile) {
         xLocation < mapCoords.right;
         xLocation += TILE_SIZE, xTile++
     ) {
-        svgMap.prepend(
+        svgMapTiles.appendChild(
             getTileImage(xLocation, yLocation, xTile, yTile, currentZoom)
         );
     }
@@ -99,24 +99,24 @@ function loadHorizontalTiles(yLocation, yTile) {
 function removeVerticalTiles(xLocation) {
     //yLocation ranges from mapCoords.top to mapCoords.bottom
     const imgList = Object.values(
-        svgMap.getElementsByClassName("map-tile")
+        svgMapTiles.getElementsByClassName("map-tile")
     ).filter((img) => {
         return +img.getAttribute("x") === xLocation;
     });
     for (let img of imgList) {
-        svgMap.removeChild(img);
+        svgMapTiles.removeChild(img);
     }
 }
 
 function removeHorizontalTiles(yLocation) {
     //xLocation ranges from mapCoords.left to mapCoords.right
     const imgList = Object.values(
-        svgMap.getElementsByClassName("map-tile")
+        svgMapTiles.getElementsByClassName("map-tile")
     ).filter((img) => {
         return +img.getAttribute("y") === yLocation;
     });
     for (let img of imgList) {
-        svgMap.removeChild(img);
+        svgMapTiles.removeChild(img);
     }
 }
 
@@ -132,13 +132,8 @@ function updateViewBox(min_x, min_y, width, height) {
 }
 
 function drawMap(locationX, locationY, tileX, tileY, zoom) {
-    //Clear map tiles if any
-    //Need to loop backwards because everytime the nodes get deleted, the indexes are reorganized
-    let tiles = svgMap.getElementsByClassName("map-tile");
-    for (let i = tiles.length - 1; i >= 0; i--) {
-        tiles[i].remove();
-    }
-    //Clear the svg regions
+    //Clear map tiles and svg overlay
+    svgMapTiles.innerHTML = "";
     svgRegions.innerHTML = "";
 
     //Reset viewBox
@@ -149,42 +144,28 @@ function drawMap(locationX, locationY, tileX, tileY, zoom) {
         viewport.height
     );
 
-    let startLocationX =
+    mapCoords.left =
         locationX -
         Math.ceil((locationX - svgMapRect.left) / TILE_SIZE) * TILE_SIZE;
-    let startLocationY =
+    mapCoords.top =
         locationY -
         Math.ceil((locationY - svgMapRect.top) / TILE_SIZE) * TILE_SIZE;
 
-    let startTileX =
+    tileCoords.min_x =
         tileX - Math.ceil((locationX - svgMapRect.left) / TILE_SIZE);
-    let startTileY =
+    tileCoords.min_y =
         tileY - Math.ceil((locationY - svgMapRect.top) / TILE_SIZE);
 
-    mapCoords.left = startLocationX;
-    mapCoords.top = startLocationY;
+    let currentLocationY = mapCoords.top,
+        currentTileY = tileCoords.min_y;
+    let currentLocationX = mapCoords.left,
+        currentTileX = tileCoords.min_x;
 
-    tileCoords.min_x = startTileX;
-    tileCoords.min_y = startTileY;
-
-    let currentLocationY = startLocationY,
-        currentTileY = startTileY;
-    let currentLocationX = startLocationX,
-        currentTileX = startTileX;
-
-    for (
-        ;
-        currentLocationY < svgMapRect.bottom;
-        currentLocationY += TILE_SIZE, currentTileY++
-    ) {
-        currentLocationX = startLocationX;
-        currentTileX = startTileX;
-        for (
-            ;
-            currentLocationX < svgMapRect.right;
-            currentLocationX += TILE_SIZE, currentTileX++
-        ) {
-            svgMap.prepend(
+    while (currentLocationY < svgMapRect.bottom) {
+        currentLocationX = mapCoords.left;
+        currentTileX = tileCoords.min_x;
+        while (currentLocationX < svgMapRect.right) {
+            svgMapTiles.appendChild(
                 getTileImage(
                     currentLocationX,
                     currentLocationY,
@@ -193,7 +174,11 @@ function drawMap(locationX, locationY, tileX, tileY, zoom) {
                     zoom
                 )
             );
+            currentLocationX += TILE_SIZE;
+            currentTileX++;
         }
+        currentLocationY += TILE_SIZE;
+        currentTileY++;
     }
 
     mapCoords.right = currentLocationX;
@@ -202,23 +187,20 @@ function drawMap(locationX, locationY, tileX, tileY, zoom) {
     tileCoords.max_x = currentTileX - 1;
     tileCoords.max_y = currentTileY - 1;
 
-    //Add geoJSON SVG Layer
-    let pixelCoords = tileToPixelCoords(tileX, tileY, zoom);
-    let tx = locationX - pixelCoords.x;
-    let ty = locationY - pixelCoords.y;
 
+    //Set up mapping function
     mapping = (lat, lng) => {
         let pixelCoords = latlngToPixelCoords(lat, lng, zoom);
         return {
-            x: pixelCoords.x + tx,
-            y: pixelCoords.y + ty,
+            x: pixelCoords.x + locationX - tileX * TILE_SIZE,
+            y: pixelCoords.y + locationY - tileY * TILE_SIZE,
         };
     };
-
+    
+    //Add geoJSON SVG Layer
     geojsonOverlay(regions, mapping, svgRegions);
 
-    //Add Heat Map
-    //console.log("calling heatmap overlay");
+    //Add Heat Map Overlay
     ctx.translate(canvasViewBox.left, canvasViewBox.top);
     canvasViewBox.left = 0;
     canvasViewBox.top = 0;
@@ -256,8 +238,8 @@ function mousedown(event) {
 
         canvasViewBox.left -= dx;
         canvasViewBox.top -= dy;
+
         ctx.translate(dx, dy);
-        //console.log("calling heatmap overlay");
         heatmapOverlay(aqv_points, mapping, ctx, canvasViewBox);
 
         updateViewBox(
@@ -273,7 +255,14 @@ function mousedown(event) {
             mapCoords.left -= TILE_SIZE;
             tileCoords.min_x--;
             loadVerticalTiles(mapCoords.left, tileCoords.min_x);
-            console.log(viewBoxCoords, mapCoords);
+        } else if (
+            viewBoxCoords.min_x + viewBoxCoords.width >
+            mapCoords.right
+        ) {
+            //console.log("load right tiles");
+            tileCoords.max_x++;
+            loadVerticalTiles(mapCoords.right, tileCoords.max_x);
+            mapCoords.right += TILE_SIZE;
         }
 
         if (viewBoxCoords.min_y < mapCoords.top) {
@@ -281,23 +270,14 @@ function mousedown(event) {
             mapCoords.top -= TILE_SIZE;
             tileCoords.min_y--;
             loadHorizontalTiles(mapCoords.top, tileCoords.min_y);
-            console.log(viewBoxCoords, mapCoords);
-        }
-
-        if (viewBoxCoords.min_x + viewBoxCoords.width > mapCoords.right) {
-            //console.log("load right tiles");
-            tileCoords.max_x++;
-            loadVerticalTiles(mapCoords.right, tileCoords.max_x);
-            mapCoords.right += TILE_SIZE;
-            console.log(viewBoxCoords, mapCoords);
-        }
-
-        if (viewBoxCoords.min_y + viewBoxCoords.height > mapCoords.bottom) {
+        } else if (
+            viewBoxCoords.min_y + viewBoxCoords.height >
+            mapCoords.bottom
+        ) {
             //console.log("load bottom tiles");
             tileCoords.max_y++;
             loadHorizontalTiles(mapCoords.bottom, tileCoords.max_y);
             mapCoords.bottom += TILE_SIZE;
-            console.log(viewBoxCoords, mapCoords);
         }
 
         //Logic for on demand tile removal
@@ -306,16 +286,7 @@ function mousedown(event) {
             removeVerticalTiles(mapCoords.left);
             mapCoords.left += TILE_SIZE;
             tileCoords.min_x++;
-        }
-
-        if (viewBoxCoords.min_y > mapCoords.top + TILE_SIZE) {
-            //console.log("remove top tiles");
-            removeHorizontalTiles(mapCoords.top);
-            mapCoords.top += TILE_SIZE;
-            tileCoords.min_y++;
-        }
-
-        if (
+        } else if (
             viewBoxCoords.min_x + viewBoxCoords.width <
             mapCoords.right - TILE_SIZE
         ) {
@@ -325,7 +296,12 @@ function mousedown(event) {
             removeVerticalTiles(mapCoords.right);
         }
 
-        if (
+        if (viewBoxCoords.min_y > mapCoords.top + TILE_SIZE) {
+            //console.log("remove top tiles");
+            removeHorizontalTiles(mapCoords.top);
+            mapCoords.top += TILE_SIZE;
+            tileCoords.min_y++;
+        } else if (
             viewBoxCoords.min_y + viewBoxCoords.height <
             mapCoords.bottom - TILE_SIZE
         ) {
@@ -362,20 +338,20 @@ svgMap.addEventListener("wheel", function (event) {
             return dom.getAttribute("class") === "map-tile";
         })[0];
 
-    let tile = getTileFromURL(tileDOM.getAttribute("href"));
+    let [oldTileX, oldTileY] = tileDOM.getAttribute("id").split(",");
 
     let rect = tileDOM.getBoundingClientRect();
 
-    let xTile, yTile, tileLocationX, tileLocationY;
+    let newTileX, newTileY, tileLocationX, tileLocationY;
 
     if (event.deltaY > 0 && currentZoom >= 3) {
         //zoom out
 
-        xTile = Math.floor(tile.x / 2);
-        yTile = Math.floor(tile.y / 2);
+        newTileX = Math.floor(oldTileX / 2);
+        newTileY = Math.floor(oldTileY / 2);
 
-        tileLocationX = (x + rect.x - (tile.x & 1) * rect.width) / 2;
-        tileLocationY = (y + rect.y - (tile.y & 1) * rect.height) / 2;
+        tileLocationX = (x + rect.x - (oldTileX & 1) * rect.width) / 2;
+        tileLocationY = (y + rect.y - (oldTileY & 1) * rect.height) / 2;
 
         currentZoom--;
 
@@ -383,8 +359,8 @@ svgMap.addEventListener("wheel", function (event) {
         drawMap(
             Math.round(tileLocationX),
             Math.round(tileLocationY),
-            xTile,
-            yTile,
+            newTileX,
+            newTileY,
             currentZoom
         );
     } else if (event.deltaY < 0 && currentZoom <= 18) {
@@ -395,8 +371,8 @@ svgMap.addEventListener("wheel", function (event) {
         let xFactor = Math.round((x - rect.left) / rect.width);
         let yFactor = Math.round((y - rect.top) / rect.height);
 
-        xTile = 2 * tile.x + xFactor;
-        yTile = 2 * tile.y + yFactor;
+        newTileX = 2 * oldTileX + xFactor;
+        newTileY = 2 * oldTileY + yFactor;
 
         tileLocationX = 2 * rect.x - x + xFactor * rect.width;
         tileLocationY = 2 * rect.y - y + yFactor * rect.height;
@@ -407,8 +383,8 @@ svgMap.addEventListener("wheel", function (event) {
         drawMap(
             Math.round(tileLocationX),
             Math.round(tileLocationY),
-            xTile,
-            yTile,
+            newTileX,
+            newTileY,
             currentZoom
         );
     }

@@ -73,7 +73,7 @@ function getMultiPolygonPath(multiPolygon, mapping) {
 
     let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
-    let color = [0xaa, 0, 0xaa];
+    let color = [0xaa, 0, 0];
     path.setAttributeNS(
         null,
         "fill",
