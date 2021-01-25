@@ -23,6 +23,8 @@ canvas.height = svgMapRect.height;
 
 let mapping = null; //This will be the mapping function from (lat,lng) to pixel coordinates
 
+const BUFFER_TILES = 1; //Number of extra layer of tiles to be loaded around the visible area tiles
+
 //tileCoords represents Tile Coordinate System
 let tileCoords = {
     min_x: 0,
@@ -85,7 +87,7 @@ function removeVerticalTiles(xLocation) {
     //yLocation ranges from mapCoords.top to mapCoords.bottom
     let tiles = svgMapTiles.getElementsByClassName("map-tile");
     for (let i = tiles.length - 1; i >= 0; i--) {
-        if(tiles[i].getAttribute("x") == xLocation) {            
+        if (tiles[i].getAttribute("x") == xLocation) {
             tiles[i].remove();
         }
     }
@@ -95,7 +97,7 @@ function removeHorizontalTiles(yLocation) {
     //xLocation ranges from mapCoords.left to mapCoords.right
     let tiles = svgMapTiles.getElementsByClassName("map-tile");
     for (let i = tiles.length - 1; i >= 0; i--) {
-        if(tiles[i].getAttribute("y") == yLocation) {
+        if (tiles[i].getAttribute("y") == yLocation) {
             tiles[i].remove();
         }
     }
@@ -117,21 +119,21 @@ function drawMap(locationX, locationY, tileX, tileY, zoom) {
     //Reset viewBox
     updateViewBox(viewport.min_x, viewport.min_y, viewport.width, viewport.height);
 
-    mapCoords.left = locationX - Math.ceil((locationX - svgMapRect.left) / TILE_SIZE) * TILE_SIZE;
-    mapCoords.top = locationY - Math.ceil((locationY - svgMapRect.top) / TILE_SIZE) * TILE_SIZE;
+    mapCoords.left = locationX - Math.ceil((locationX - svgMapRect.left) / TILE_SIZE) * TILE_SIZE - BUFFER_TILES * TILE_SIZE;
+    mapCoords.top = locationY - Math.ceil((locationY - svgMapRect.top) / TILE_SIZE) * TILE_SIZE - BUFFER_TILES * TILE_SIZE;
 
-    tileCoords.min_x = tileX - Math.ceil((locationX - svgMapRect.left) / TILE_SIZE);
-    tileCoords.min_y = tileY - Math.ceil((locationY - svgMapRect.top) / TILE_SIZE);
+    tileCoords.min_x = tileX - Math.ceil((locationX - svgMapRect.left) / TILE_SIZE) - BUFFER_TILES;
+    tileCoords.min_y = tileY - Math.ceil((locationY - svgMapRect.top) / TILE_SIZE) - BUFFER_TILES;
 
     let currentLocationY = mapCoords.top,
         currentTileY = tileCoords.min_y;
     let currentLocationX = mapCoords.left,
         currentTileX = tileCoords.min_x;
 
-    while (currentLocationY < svgMapRect.bottom) {
+    while (currentLocationY < svgMapRect.bottom + BUFFER_TILES * TILE_SIZE) {
         currentLocationX = mapCoords.left;
         currentTileX = tileCoords.min_x;
-        while (currentLocationX < svgMapRect.right) {
+        while (currentLocationX < svgMapRect.right + BUFFER_TILES * TILE_SIZE) {
             svgMapTiles.appendChild(getTileImage(currentLocationX, currentLocationY, currentTileX, currentTileY, zoom));
             currentLocationX += TILE_SIZE;
             currentTileX++;
@@ -196,24 +198,24 @@ function mousedown(event) {
         updateViewBox(viewBoxCoords.min_x - dx, viewBoxCoords.min_y - dy, viewBoxCoords.width, viewBoxCoords.height);
 
         //Logic for on-demand tile loading
-        if (viewBoxCoords.min_x < mapCoords.left) {
+        if (viewBoxCoords.min_x < mapCoords.left + BUFFER_TILES * TILE_SIZE) {
             //console.log("load left tiles");
             mapCoords.left -= TILE_SIZE;
             tileCoords.min_x--;
             loadVerticalTiles(mapCoords.left, tileCoords.min_x);
-        } else if (viewBoxCoords.min_x + viewBoxCoords.width > mapCoords.right) {
+        } else if (viewBoxCoords.min_x + viewBoxCoords.width > mapCoords.right - BUFFER_TILES * TILE_SIZE) {
             //console.log("load right tiles");
             tileCoords.max_x++;
             loadVerticalTiles(mapCoords.right, tileCoords.max_x);
             mapCoords.right += TILE_SIZE;
         }
 
-        if (viewBoxCoords.min_y < mapCoords.top) {
+        if (viewBoxCoords.min_y < mapCoords.top + BUFFER_TILES * TILE_SIZE) {
             //console.log("load top tiles");
             mapCoords.top -= TILE_SIZE;
             tileCoords.min_y--;
             loadHorizontalTiles(mapCoords.top, tileCoords.min_y);
-        } else if (viewBoxCoords.min_y + viewBoxCoords.height > mapCoords.bottom) {
+        } else if (viewBoxCoords.min_y + viewBoxCoords.height > mapCoords.bottom - BUFFER_TILES * TILE_SIZE) {
             //console.log("load bottom tiles");
             tileCoords.max_y++;
             loadHorizontalTiles(mapCoords.bottom, tileCoords.max_y);
@@ -221,24 +223,24 @@ function mousedown(event) {
         }
 
         //Logic for on demand tile removal
-        if (viewBoxCoords.min_x > mapCoords.left + TILE_SIZE) {
+        if (viewBoxCoords.min_x > mapCoords.left + TILE_SIZE + BUFFER_TILES * TILE_SIZE) {
             //console.log("remove left tiles");
             removeVerticalTiles(mapCoords.left);
             mapCoords.left += TILE_SIZE;
             tileCoords.min_x++;
-        } else if (viewBoxCoords.min_x + viewBoxCoords.width < mapCoords.right - TILE_SIZE) {
+        } else if (viewBoxCoords.min_x + viewBoxCoords.width < mapCoords.right - TILE_SIZE - BUFFER_TILES * TILE_SIZE) {
             //console.log("remove right tiles");
             mapCoords.right -= TILE_SIZE;
             tileCoords.max_x--;
             removeVerticalTiles(mapCoords.right);
         }
 
-        if (viewBoxCoords.min_y > mapCoords.top + TILE_SIZE) {
+        if (viewBoxCoords.min_y > mapCoords.top + TILE_SIZE + BUFFER_TILES * TILE_SIZE) {
             //console.log("remove top tiles");
             removeHorizontalTiles(mapCoords.top);
             mapCoords.top += TILE_SIZE;
             tileCoords.min_y++;
-        } else if (viewBoxCoords.min_y + viewBoxCoords.height < mapCoords.bottom - TILE_SIZE) {
+        } else if (viewBoxCoords.min_y + viewBoxCoords.height < mapCoords.bottom - TILE_SIZE - BUFFER_TILES * TILE_SIZE) {
             //console.log("remove bottom tiles");
             mapCoords.bottom -= TILE_SIZE;
             tileCoords.max_y--;
