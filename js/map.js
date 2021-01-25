@@ -4,7 +4,7 @@ import regions from "../data/regions.js";
 import aqv_points from "../data/aqv_points.js";
 
 import { TILE_SIZE } from "./declarations.js";
-import { getTileImage, latlngToPixelCoords } from "./modules.js";
+import { getTileImage, latlngToPixelCoords, mod } from "./modules.js";
 
 import { geojsonOverlay } from "./svg_layer.js";
 import { heatmapOverlay } from "./heatmap_layer.js";
@@ -24,6 +24,7 @@ canvas.height = svgMapRect.height;
 let mapping = null; //This will be the mapping function from (lat,lng) to pixel coordinates
 
 const BUFFER_TILES = 1; //Number of extra layer of tiles to be loaded around the visible area tiles
+
 
 //tileCoords represents Tile Coordinate System
 let tileCoords = {
@@ -63,13 +64,27 @@ let canvasViewBox = {
     height: canvas.height,
 };
 
+
 let currentZoom = 13;
+
+let minZoom = 0;
+let maxZoom = 18;
+
+for(let zoom = 0; zoom <= maxZoom; zoom++) {
+    if((1 << zoom) * TILE_SIZE > viewport.width && (1 << zoom) * TILE_SIZE > viewport.height) {
+        minZoom = zoom;
+        break;
+    }
+}
+
 
 function loadVerticalTiles(xLocation, xTile) {
     //yLocation ranges from mapCoords.top to mapCoords.bottom (excluding mapCoords.bottom)
     //yTile ranges from tileCoords.min_y to tileCoords.max_y
 
-    for (let yLocation = mapCoords.top, yTile = tileCoords.min_y; yLocation < mapCoords.bottom; yLocation += TILE_SIZE, yTile++) {
+    let numberOfTiles = 1 << currentZoom;
+
+    for (let yLocation = mapCoords.top, yTile = tileCoords.min_y; yLocation < mapCoords.bottom; yLocation += TILE_SIZE, yTile = (yTile + 1) % numberOfTiles) {
         svgMapTiles.appendChild(getTileImage(xLocation, yLocation, xTile, yTile, currentZoom));
     }
 }
@@ -78,7 +93,9 @@ function loadHorizontalTiles(yLocation, yTile) {
     //xLocation ranges from mapCoords.left to mapCoords.right (excluding mapCoords.right)
     //yTile ranges from tileCoords.min_y to tileCoords.max_y
 
-    for (let xLocation = mapCoords.left, xTile = tileCoords.min_x; xLocation < mapCoords.right; xLocation += TILE_SIZE, xTile++) {
+    let numberOfTiles = 1 << currentZoom;
+
+    for (let xLocation = mapCoords.left, xTile = tileCoords.min_x; xLocation < mapCoords.right; xLocation += TILE_SIZE, xTile = (xTile + 1) % numberOfTiles) {
         svgMapTiles.appendChild(getTileImage(xLocation, yLocation, xTile, yTile, currentZoom));
     }
 }
@@ -119,11 +136,13 @@ function drawMap(locationX, locationY, tileX, tileY, zoom) {
     //Reset viewBox
     updateViewBox(viewport.min_x, viewport.min_y, viewport.width, viewport.height);
 
+    let numberOfTiles = 1 << zoom;
+
     mapCoords.left = locationX - Math.ceil((locationX - svgMapRect.left) / TILE_SIZE) * TILE_SIZE - BUFFER_TILES * TILE_SIZE;
     mapCoords.top = locationY - Math.ceil((locationY - svgMapRect.top) / TILE_SIZE) * TILE_SIZE - BUFFER_TILES * TILE_SIZE;
 
-    tileCoords.min_x = tileX - Math.ceil((locationX - svgMapRect.left) / TILE_SIZE) - BUFFER_TILES;
-    tileCoords.min_y = tileY - Math.ceil((locationY - svgMapRect.top) / TILE_SIZE) - BUFFER_TILES;
+    tileCoords.min_x = mod(tileX - Math.ceil((locationX - svgMapRect.left) / TILE_SIZE) - BUFFER_TILES, numberOfTiles);
+    tileCoords.min_y = mod(tileY - Math.ceil((locationY - svgMapRect.top) / TILE_SIZE) - BUFFER_TILES, numberOfTiles);
 
     let currentLocationY = mapCoords.top,
         currentTileY = tileCoords.min_y;
@@ -136,17 +155,17 @@ function drawMap(locationX, locationY, tileX, tileY, zoom) {
         while (currentLocationX < svgMapRect.right + BUFFER_TILES * TILE_SIZE) {
             svgMapTiles.appendChild(getTileImage(currentLocationX, currentLocationY, currentTileX, currentTileY, zoom));
             currentLocationX += TILE_SIZE;
-            currentTileX++;
+            currentTileX = (currentTileX + 1) % numberOfTiles;
         }
         currentLocationY += TILE_SIZE;
-        currentTileY++;
+        currentTileY = (currentTileY + 1) % numberOfTiles;
     }
 
     mapCoords.right = currentLocationX;
     mapCoords.bottom = currentLocationY;
 
-    tileCoords.max_x = currentTileX - 1;
-    tileCoords.max_y = currentTileY - 1;
+    tileCoords.max_x = mod(currentTileX - 1, numberOfTiles);
+    tileCoords.max_y = mod(currentTileY - 1, numberOfTiles);
 
     //Set up mapping function
     mapping = (lat, lng) => {
@@ -197,15 +216,16 @@ function mousedown(event) {
 
         updateViewBox(viewBoxCoords.min_x - dx, viewBoxCoords.min_y - dy, viewBoxCoords.width, viewBoxCoords.height);
 
+        let numberOfTiles = 1 << currentZoom;
         //Logic for on-demand tile loading
         if (viewBoxCoords.min_x < mapCoords.left + BUFFER_TILES * TILE_SIZE) {
             //console.log("load left tiles");
             mapCoords.left -= TILE_SIZE;
-            tileCoords.min_x--;
+            tileCoords.min_x = mod(tileCoords.min_x - 1, numberOfTiles);
             loadVerticalTiles(mapCoords.left, tileCoords.min_x);
         } else if (viewBoxCoords.min_x + viewBoxCoords.width > mapCoords.right - BUFFER_TILES * TILE_SIZE) {
             //console.log("load right tiles");
-            tileCoords.max_x++;
+            tileCoords.max_x = (tileCoords.max_x + 1) % numberOfTiles;
             loadVerticalTiles(mapCoords.right, tileCoords.max_x);
             mapCoords.right += TILE_SIZE;
         }
@@ -213,11 +233,11 @@ function mousedown(event) {
         if (viewBoxCoords.min_y < mapCoords.top + BUFFER_TILES * TILE_SIZE) {
             //console.log("load top tiles");
             mapCoords.top -= TILE_SIZE;
-            tileCoords.min_y--;
+            tileCoords.min_y = mod(tileCoords.min_y - 1, numberOfTiles);
             loadHorizontalTiles(mapCoords.top, tileCoords.min_y);
         } else if (viewBoxCoords.min_y + viewBoxCoords.height > mapCoords.bottom - BUFFER_TILES * TILE_SIZE) {
             //console.log("load bottom tiles");
-            tileCoords.max_y++;
+            tileCoords.max_y = (tileCoords.max_y + 1) % numberOfTiles;
             loadHorizontalTiles(mapCoords.bottom, tileCoords.max_y);
             mapCoords.bottom += TILE_SIZE;
         }
@@ -227,11 +247,11 @@ function mousedown(event) {
             //console.log("remove left tiles");
             removeVerticalTiles(mapCoords.left);
             mapCoords.left += TILE_SIZE;
-            tileCoords.min_x++;
+            tileCoords.min_x = (tileCoords.min_x + 1) % numberOfTiles;
         } else if (viewBoxCoords.min_x + viewBoxCoords.width < mapCoords.right - TILE_SIZE - BUFFER_TILES * TILE_SIZE) {
             //console.log("remove right tiles");
             mapCoords.right -= TILE_SIZE;
-            tileCoords.max_x--;
+            tileCoords.max_x = mod(tileCoords.max_x - 1, numberOfTiles);
             removeVerticalTiles(mapCoords.right);
         }
 
@@ -239,11 +259,11 @@ function mousedown(event) {
             //console.log("remove top tiles");
             removeHorizontalTiles(mapCoords.top);
             mapCoords.top += TILE_SIZE;
-            tileCoords.min_y++;
+            tileCoords.min_y = (tileCoords.min_y + 1) % numberOfTiles;
         } else if (viewBoxCoords.min_y + viewBoxCoords.height < mapCoords.bottom - TILE_SIZE - BUFFER_TILES * TILE_SIZE) {
             //console.log("remove bottom tiles");
             mapCoords.bottom -= TILE_SIZE;
-            tileCoords.max_y--;
+            tileCoords.max_y = mod(tileCoords.max_y - 1, numberOfTiles);
             removeHorizontalTiles(mapCoords.bottom);
         }
 
@@ -281,7 +301,7 @@ svgMap.addEventListener("wheel", function (event) {
 
     let rect = tileDOM.getBoundingClientRect();
 
-    if (event.deltaY > 0 && currentZoom >= 3) {
+    if (event.deltaY > 0 && currentZoom > minZoom) {
         //zoom out
 
         let newTileX = oldTileX >>> 1;
@@ -293,7 +313,7 @@ svgMap.addEventListener("wheel", function (event) {
         currentZoom--;
 
         drawMap(tileLocationX, tileLocationY, newTileX, newTileY, currentZoom);
-    } else if (event.deltaY < 0 && currentZoom <= 18) {
+    } else if (event.deltaY < 0 && currentZoom < maxZoom) {
         //zoom in
 
         let newTileX = oldTileX << 1;

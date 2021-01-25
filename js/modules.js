@@ -69,3 +69,7 @@ export function latlngToPixelCoords(lat, lng, zoom) {
         y: pixelY,
     };
 }
+
+export function mod(a, b) {
+    return ((a % b) + b) % b;
+}
