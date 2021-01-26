@@ -1,9 +1,6 @@
 "use strict";
 
 export const TILE_SIZE = 256;
-export const ORIGIN = TILE_SIZE / 2;
-export const PIXELS_PER_DEGREE = TILE_SIZE / 360;
-export const PIXELS_PER_RADIAN = TILE_SIZE / (2 * Math.PI);
 
 //Gradients
 //Must define for value 0 and 1, otherwise intermediate gradients may not work

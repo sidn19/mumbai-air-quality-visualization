@@ -1,12 +1,6 @@
 "use strict";
 
-import {
-    TILE_SIZE,
-    ORIGIN,
-    PIXELS_PER_DEGREE,
-    PIXELS_PER_RADIAN,
-} from "./declarations.js";
-
+import { TILE_SIZE } from "./declarations.js";
 
 export function getTileUrl(tileX, tileY, zoom) {
     return `https://a.tile.openstreetmap.org/${zoom}/${tileX}/${tileY}.png`;
@@ -16,16 +10,7 @@ export function coordsToTile(lat, lng, zoom) {
     let z = 1 << zoom;
     return {
         x: Math.floor(((lng + 180) / 360) * z),
-        y: Math.floor(
-            ((1 -
-                Math.log(
-                    Math.tan((lat * Math.PI) / 180) +
-                        1 / Math.cos((lat * Math.PI) / 180)
-                ) /
-                    Math.PI) /
-                2) *
-                z
-        ),
+        y: Math.floor(((1 - Math.log(Math.tan((lat * Math.PI) / 180) + 1 / Math.cos((lat * Math.PI) / 180)) / Math.PI) / 2) * z),
     };
 }
 
@@ -46,24 +31,16 @@ export function getTileImage(xLocation, yLocation, tileX, tileY, zoom) {
     img.setAttributeNS(null, "x", xLocation);
     img.setAttributeNS(null, "y", yLocation);
     img.setAttributeNS(null, "id", tileX + "," + tileY); //Store Tile Coordinates in ID
-    img.setAttributeNS(
-        "http://www.w3.org/1999/xlink",
-        "href",
-        getTileUrl(tileX, tileY, zoom)
-    );
+    img.setAttributeNS("http://www.w3.org/1999/xlink", "href", getTileUrl(tileX, tileY, zoom));
     return img;
 }
 
-export function latlngToPixelCoords(lat, lng, zoom) {
-    let worldX = ORIGIN + lng * PIXELS_PER_DEGREE;
-    let sinY = Math.sin((lat * Math.PI) / 180);
-    sinY = Math.min(Math.max(sinY, -0.9999), 0.9999);
-    let worldY =
-        ORIGIN + 0.5 * (Math.log((1 + sinY) / (1 - sinY)) * -PIXELS_PER_RADIAN);
+export function latlngToPixelCoords(latitude, longitude, zoom) {
+    let z = 1 << zoom;
+    var sinLatitude = Math.sin((latitude * Math.PI) / 180);
+    var pixelX = ((longitude + 180) / 360) * TILE_SIZE * z;
+    var pixelY = (0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI)) * TILE_SIZE * z;
 
-    let scale = 1 << zoom;
-    let pixelX = worldX * scale;
-    let pixelY = worldY * scale;
     return {
         x: pixelX,
         y: pixelY,
