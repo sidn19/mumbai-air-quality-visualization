@@ -4,7 +4,7 @@ import regions from "../data/regions.js";
 import aqv_points from "../data/aqv_points.js";
 
 import { TILE_SIZE } from "./declarations.js";
-import { getTileImage, latlngToPixelCoords, mod } from "./modules.js";
+import { getTileImage, latlngToPixelCoords } from "./modules.js";
 
 import { geojsonOverlay } from "./svg_layer.js";
 import { heatmapOverlay } from "./heatmap_layer.js";
@@ -231,7 +231,6 @@ function mousedown(event) {
 
         updateViewBox(viewBoxCoords.min_x - dx, viewBoxCoords.min_y - dy, viewBoxCoords.width, viewBoxCoords.height);
 
-        let maxTiles = 1 << currentZoom;
         //Logic for on-demand tile loading
         if (viewBoxCoords.min_x < mapCoords.left + BUFFER_TILES * TILE_SIZE) {
             //console.log("load left tiles");
