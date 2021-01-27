@@ -47,6 +47,3 @@ export function latlngToPixelCoords(latitude, longitude, zoom) {
     };
 }
 
-export function mod(a, b) {
-    return ((a % b) + b) % b;
-}
