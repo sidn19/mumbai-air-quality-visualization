@@ -7,7 +7,7 @@ import { TILE_SIZE } from "./declarations.js";
 import { getTileImage, latlngToPixelCoords } from "./modules.js";
 
 import { geojsonOverlay } from "./svg_layer.js";
-import { heatmapOverlay, loadVerticalCanvasTiles, loadHorizontalCanvasTiles, removeVerticalCanvasTiles, removeHorizontalCanvasTiles } from "./heatmap_layer.js";
+import { heatmapOverlay, removeVerticalCanvasTiles, removeHorizontalCanvasTiles } from "./heatmap_layer.js";
 
 const svgMap = document.getElementById("svg-map");
 const svgMapRect = svgMap.getBoundingClientRect();
@@ -195,7 +195,7 @@ function drawMap(locationX, locationY, tileX, tileY, zoom) {
     heatmapLayerCoords.left = 0;
     heatmapLayerCoords.top = 0;
     heatmapLayer.style.transform = `translate(0px, 0px)`;
-    heatmapOverlay(dataRefined, heatmapLayer, mapCoords);
+    heatmapOverlay(dataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.right, mapCoords.bottom);
 }
 
 //initialize map
@@ -233,12 +233,14 @@ function mousedown(event) {
             mapCoords.left -= TILE_SIZE;
             tileCoords.min_x--;
             loadVerticalTiles(mapCoords.left, tileCoords.min_x);
-            loadVerticalCanvasTiles(dataRefined, heatmapLayer, mapCoords, mapCoords.left);
+            //loadVerticalCanvasTiles(dataRefined, heatmapLayer, mapCoords, mapCoords.left);
+            heatmapOverlay(dataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.left + TILE_SIZE, mapCoords.bottom);
         } else if (viewBoxCoords.min_x + viewBoxCoords.width > mapCoords.right - BUFFER_TILES * TILE_SIZE) {
             //console.log("load right tiles");
             tileCoords.max_x++;
             loadVerticalTiles(mapCoords.right, tileCoords.max_x);
-            loadVerticalCanvasTiles(dataRefined, heatmapLayer, mapCoords, mapCoords.right);
+            //loadVerticalCanvasTiles(dataRefined, heatmapLayer, mapCoords, mapCoords.right);
+            heatmapOverlay(dataRefined, heatmapLayer, mapCoords.right, mapCoords.top, mapCoords.right + TILE_SIZE, mapCoords.bottom);
             mapCoords.right += TILE_SIZE;
         }
 
@@ -247,12 +249,14 @@ function mousedown(event) {
             mapCoords.top -= TILE_SIZE;
             tileCoords.min_y--;
             loadHorizontalTiles(mapCoords.top, tileCoords.min_y);
-            loadHorizontalCanvasTiles(dataRefined, heatmapLayer, mapCoords, mapCoords.top);
+            //loadHorizontalCanvasTiles(dataRefined, heatmapLayer, mapCoords, mapCoords.top);
+            heatmapOverlay(dataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.right, mapCoords.top + TILE_SIZE);
         } else if (viewBoxCoords.min_y + viewBoxCoords.height > mapCoords.bottom - BUFFER_TILES * TILE_SIZE) {
             //console.log("load bottom tiles");
             tileCoords.max_y++;
             loadHorizontalTiles(mapCoords.bottom, tileCoords.max_y);
-            loadHorizontalCanvasTiles(dataRefined, heatmapLayer, mapCoords, mapCoords.bottom);
+            //loadHorizontalCanvasTiles(dataRefined, heatmapLayer, mapCoords, mapCoords.bottom);
+            heatmapOverlay(dataRefined, heatmapLayer, mapCoords.left, mapCoords.bottom, mapCoords.right, mapCoords.bottom + TILE_SIZE);
             mapCoords.bottom += TILE_SIZE;
         }
 

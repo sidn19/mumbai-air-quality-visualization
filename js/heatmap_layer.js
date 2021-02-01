@@ -31,6 +31,7 @@ const brushRadius = brushSize + brushBlurSize;
 
 const brushCanvas = createBrush(brushSize, brushBlurSize);
 
+//Change RHS to desired gradient profile (profiles are imported)
 const gradientColors = gradientIncandescent;
 
 let gradientCanvas = document.createElement("canvas");
@@ -50,11 +51,11 @@ gradientCanvasContext.fillRect(0, 0, 1, 256);
 
 const gradientDataArray = gradientCanvasContext.getImageData(0, 0, 1, 256).data;
 
-export function heatmapOverlay(data, container, mapCoords) {
+export function heatmapOverlay(data, container, min_x, min_y, max_x, max_y) {
     console.time("draw");
 
-    for (let currentLocationY = mapCoords.top; currentLocationY < mapCoords.bottom; currentLocationY += TILE_SIZE) {
-        for (let currentLocationX = mapCoords.left; currentLocationX < mapCoords.right; currentLocationX += TILE_SIZE) {
+    for (let currentLocationY = min_y; currentLocationY < max_y; currentLocationY += TILE_SIZE) {
+        for (let currentLocationX = min_x; currentLocationX < max_x; currentLocationX += TILE_SIZE) {
             let canvasTile = document.createElement("canvas");
             let canvasContext = canvasTile.getContext("2d");
             canvasTile.width = TILE_SIZE;
@@ -99,100 +100,9 @@ export function heatmapOverlay(data, container, mapCoords) {
     
                 container.appendChild(canvasTile);
             }
-
-            
         }
     }
-
     console.timeEnd("draw");
-}
-
-export function loadHorizontalCanvasTiles(data, container, mapCoords, yLocation) {
-    for (let xLocation = mapCoords.left; xLocation < mapCoords.right; xLocation += TILE_SIZE) {
-        let canvasTile = document.createElement("canvas");
-        let canvasContext = canvasTile.getContext("2d");
-        canvasTile.width = TILE_SIZE;
-        canvasTile.height = TILE_SIZE;
-        canvasTile.setAttribute("class", "canvas-tile");
-        canvasTile.setAttribute("data-tx", xLocation);
-        canvasTile.setAttribute("data-ty", yLocation);
-        canvasTile.style.transform = `translate(${xLocation}px, ${yLocation}px)`;
-
-        let noPointsToPlot = true;
-
-        for (let point of data) {
-            if (point[0] > xLocation - brushRadius && point[0] < xLocation + TILE_SIZE + brushRadius && point[1] > yLocation - brushRadius && point[1] < yLocation + TILE_SIZE + brushRadius) {
-                noPointsToPlot = false;
-                canvasContext.globalAlpha = point[2];
-                canvasContext.drawImage(brushCanvas, point[0] - xLocation - brushRadius, point[1] - yLocation - brushRadius);
-            }
-        }
-
-        if(!noPointsToPlot) {
-            let imageData = canvasContext.getImageData(0, 0, TILE_SIZE, TILE_SIZE);
-            let pixels = imageData.data;
-            let len = pixels.length;
-            for (let i = 0; i < len; i += 4) {
-                //Skip processing transparent regions
-                if (pixels[i + 3] === 0) {
-                    continue;
-                }
-    
-                let index = pixels[i + 3] << 2;
-                pixels[i] = gradientDataArray[index];
-                pixels[i + 1] = gradientDataArray[index + 1];
-                pixels[i + 2] = gradientDataArray[index + 2];
-            }
-    
-            canvasContext.putImageData(imageData, 0, 0);
-    
-            container.appendChild(canvasTile);
-        }
-    }
-}
-
-export function loadVerticalCanvasTiles(data, container, mapCoords, xLocation) {
-    for (let yLocation = mapCoords.top; yLocation < mapCoords.bottom; yLocation += TILE_SIZE) {
-        let canvasTile = document.createElement("canvas");
-        let canvasContext = canvasTile.getContext("2d");
-        canvasTile.width = TILE_SIZE;
-        canvasTile.height = TILE_SIZE;
-        canvasTile.setAttribute("class", "canvas-tile");
-        canvasTile.setAttribute("data-tx", xLocation);
-        canvasTile.setAttribute("data-ty", yLocation);
-        canvasTile.style.transform = `translate(${xLocation}px, ${yLocation}px)`;
-
-        let noPointsToPlot = true;
-
-        for (let point of data) {
-            if (point[0] > xLocation - brushRadius && point[0] < xLocation + TILE_SIZE + brushRadius && point[1] > yLocation - brushRadius && point[1] < yLocation + TILE_SIZE + brushRadius) {
-                noPointsToPlot = false;
-                canvasContext.globalAlpha = point[2];
-                canvasContext.drawImage(brushCanvas, point[0] - xLocation - brushRadius, point[1] - yLocation - brushRadius);
-            }
-        }
-
-        if(!noPointsToPlot) {
-            let imageData = canvasContext.getImageData(0, 0, TILE_SIZE, TILE_SIZE);
-            let pixels = imageData.data;
-            let len = pixels.length;
-            for (let i = 0; i < len; i += 4) {
-                //Skip processing transparent regions
-                if (pixels[i + 3] === 0) {
-                    continue;
-                }
-    
-                let index = pixels[i + 3] << 2;
-                pixels[i] = gradientDataArray[index];
-                pixels[i + 1] = gradientDataArray[index + 1];
-                pixels[i + 2] = gradientDataArray[index + 2];
-            }
-    
-            canvasContext.putImageData(imageData, 0, 0);
-    
-            container.appendChild(canvasTile);
-        }
-    }
 }
 
 export function removeHorizontalCanvasTiles(heatmapLayer, yLocation) {
