@@ -1,12 +1,6 @@
 "use strict";
 
-import {
-    gradientBlackAquaWhite,
-    gradientIncandescent,
-    gradientHeatedMetal,
-    gradientVisibleSpectrum,
-    gradientCustom,
-} from "./declarations.js";
+import { gradientBlackAquaWhite, gradientIncandescent, gradientHeatedMetal, gradientVisibleSpectrum, gradientCustom, TILE_SIZE } from "./declarations.js";
 
 function createBrush(brushSize, brushBlurSize) {
     let brushCanvas = document.createElement("canvas");
@@ -31,94 +25,99 @@ function createBrush(brushSize, brushBlurSize) {
     return brushCanvas;
 }
 
+function createGradientData(gradientColors) {
+    let gradientCanvas = document.createElement("canvas");
+    let gradientCanvasContext = gradientCanvas.getContext("2d");
+    
+    let gradient = gradientCanvasContext.createLinearGradient(0, 0, 0, 256);
+    
+    for (let color of gradientColors) {
+        gradient.addColorStop(color.value, color.color);
+    }
+    
+    gradientCanvas.width = 1;
+    gradientCanvas.height = 256;
+    
+    gradientCanvasContext.fillStyle = gradient;
+    gradientCanvasContext.fillRect(0, 0, 1, 256);
+    
+    return gradientCanvasContext.getImageData(0, 0, 1, 256).data;
+}
+
 const brushSize = 15;
 const brushBlurSize = 25;
 const brushRadius = brushSize + brushBlurSize;
 
 const brushCanvas = createBrush(brushSize, brushBlurSize);
-// const brush = new Image();
-// brush.src = brushCanvas.toDataURL();
 
-const gradientColors = gradientIncandescent;
+const gradientDataArray = createGradientData(gradientIncandescent);
 
-function getColorValue(value, color_value_gradient_map) {
-    //Pending: get boundaries of value efficiently
 
-    for (let i = 0; i < color_value_gradient_map.length - 1; i++) {
-        if (
-            color_value_gradient_map[i].value <= value &&
-            value <= color_value_gradient_map[i + 1].value
-        ) {
-            let value1 = color_value_gradient_map[i].value;
-            let value2 = color_value_gradient_map[i + 1].value;
-            let color1 = color_value_gradient_map[i].color;
-            let color2 = color_value_gradient_map[i + 1].color;
+export function addHeatmapTiles(data, container, min_x, min_y, max_x, max_y) {
+    //console.time("draw");
 
-            let percent = (value - value1) / (value2 - value1);
+    for (let currentLocationY = min_y; currentLocationY < max_y; currentLocationY += TILE_SIZE) {
+        for (let currentLocationX = min_x; currentLocationX < max_x; currentLocationX += TILE_SIZE) {
+            let canvasTile, canvasContext;
 
-            let color1red = (color1 >> 16) & 0xff;
-            let color1green = (color1 >> 8) & 0xff;
-            let color1blue = color1 & 0xff;
+            for (let point of data) {
+                if (
+                    point[0] > currentLocationX - brushRadius &&
+                    point[0] < currentLocationX + TILE_SIZE + brushRadius &&
+                    point[1] > currentLocationY - brushRadius &&
+                    point[1] < currentLocationY + TILE_SIZE + brushRadius
+                ) {
+                    //Since there is a point to plot on this region, create a canvas if not created yet
+                    if (canvasTile === undefined) {
+                        canvasTile = document.createElement("canvas");
+                        canvasContext = canvasTile.getContext("2d");
+                        canvasTile.width = TILE_SIZE;
+                        canvasTile.height = TILE_SIZE;
+                        canvasTile.setAttribute("class", "canvas-tile");
+                        canvasTile.setAttribute("data-tx", currentLocationX);
+                        canvasTile.setAttribute("data-ty", currentLocationY);
+                        canvasTile.style.transform = `translate(${currentLocationX}px, ${currentLocationY}px)`;
+                    }
+                    canvasContext.globalAlpha = point[2];
+                    canvasContext.drawImage(brushCanvas, point[0] - currentLocationX - brushRadius, point[1] - currentLocationY - brushRadius);
+                }
+            }
 
-            return {
-                red:
-                    (color1red +
-                        percent * (((color2 >> 16) & 0xff) - color1red)) |
-                    0,
-                green:
-                    (color1green +
-                        percent * (((color2 >> 8) & 0xff) - color1green)) |
-                    0,
-                blue:
-                    (color1blue + percent * ((color2 & 0xff) - color1blue)) | 0,
-            };
+            //If canvas was created for this region, then colorize the canvas
+            if (canvasTile !== undefined) {
+                let imageData = canvasContext.getImageData(0, 0, TILE_SIZE, TILE_SIZE);
+                let pixels = imageData.data;
+                let len = pixels.length;
+                for (let i = 0; i < len; i += 4) {
+                    //Skip processing transparent regions
+                    if (pixels[i + 3] === 0) {
+                        continue;
+                    }
+
+                    let index = pixels[i + 3] << 2;
+                    pixels[i] = gradientDataArray[index];
+                    pixels[i + 1] = gradientDataArray[index + 1];
+                    pixels[i + 2] = gradientDataArray[index + 2];
+                }
+
+                canvasContext.putImageData(imageData, 0, 0);
+
+                container.appendChild(canvasTile);
+            }
         }
     }
+    //console.timeEnd("draw");
 }
 
-export function heatmapOverlay(data, mapping, context, canvasViewBox) {
-    context.clearRect(
-        canvasViewBox.left,
-        canvasViewBox.top,
-        canvasViewBox.width,
-        canvasViewBox.height
-    );
-
-    //console.log("heatmapOverlay called");
-
-    for (let point of data) {
-        context.globalAlpha = point[2];
-        const pixelCoords = mapping(point[1], point[0]);
-
-        //console.log(pixelCoords, point[2]);
-        context.drawImage(
-            brushCanvas,
-            pixelCoords.x - brushRadius,
-            pixelCoords.y - brushRadius
-        );
+export function removeHeatmapTiles(container, min_x, min_y, max_x, max_y) {
+    //console.time("removeCanvasTiles");
+    let tiles = container.getElementsByClassName("canvas-tile");
+    for (let i = tiles.length - 1; i >= 0; i--) {
+        let tx = +tiles[i].getAttribute("data-tx");
+        let ty = +tiles[i].getAttribute("data-ty");
+        if (tx >= min_x && tx < max_x && ty >= min_y && ty < max_y) {
+            tiles[i].remove();
+        }
     }
-
-    context.globalAlpha = 1;
-
-    let imageData = context.getImageData(
-        0,
-        0,
-        canvasViewBox.width,
-        canvasViewBox.height
-    );
-    let pixels = imageData.data;
-    let len = pixels.length;
-    for (let i = 0; i < len; i += 4) {
-        //Skip processing transparent regions
-        if (pixels[i + 3] === 0) continue;
-
-        let colorValue = getColorValue(pixels[i + 3] / 256, gradientColors);
-        pixels[i] = colorValue.red;
-        pixels[i + 1] = colorValue.green;
-        pixels[i + 2] = colorValue.blue;
-
-        //Change opacity of heatmap after colorizing
-        //pixels[i + 3] = 255;
-    }
-    context.putImageData(imageData, 0, 0);
+    //console.timeEnd("removeCanvasTiles");
 }

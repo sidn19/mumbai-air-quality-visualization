@@ -4,6 +4,10 @@ html, body {
     height: 100%;
 }
 
+body {
+    background-color: #ddd;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -12,6 +16,8 @@ html, body {
     /* border: 2px solid blueviolet; */
     width: 100%;
     height: 100%;
+    position: relative;
+    overflow: hidden; /* Important */
 }
 
 #svg-map {
@@ -21,9 +27,18 @@ html, body {
     cursor: grab;
 }
 
-#heatmap {
-    /* border: 1px solid red; */
+#heatmap-layer {
+    /* border: 1px solid blue; */
     pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.canvas-tile {
+    /* border: 1px solid red; */
     position: absolute;
     top: 0;
     left: 0;
