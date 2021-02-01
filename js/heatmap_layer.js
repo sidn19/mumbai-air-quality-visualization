@@ -51,7 +51,7 @@ gradientCanvasContext.fillRect(0, 0, 1, 256);
 
 const gradientDataArray = gradientCanvasContext.getImageData(0, 0, 1, 256).data;
 
-export function heatmapOverlay(data, container, min_x, min_y, max_x, max_y) {
+export function addHeatmapTiles(data, container, min_x, min_y, max_x, max_y) {
     console.time("draw");
 
     for (let currentLocationY = min_y; currentLocationY < max_y; currentLocationY += TILE_SIZE) {
@@ -105,20 +105,15 @@ export function heatmapOverlay(data, container, min_x, min_y, max_x, max_y) {
     console.timeEnd("draw");
 }
 
-export function removeHorizontalCanvasTiles(heatmapLayer, yLocation) {
-    let tiles = heatmapLayer.getElementsByClassName("canvas-tile");
+export function removeHeatmapTiles(container, min_x, min_y, max_x, max_y) {
+    console.time("removeCanvasTiles");
+    let tiles = container.getElementsByClassName("canvas-tile");
     for (let i = tiles.length - 1; i >= 0; i--) {
-        if (tiles[i].getAttribute("data-ty") == yLocation) {
+        let tx = +tiles[i].getAttribute("data-tx");
+        let ty = +tiles[i].getAttribute("data-ty");
+        if (tx >= min_x && tx < max_x && ty >= min_y && ty < max_y) {
             tiles[i].remove();
         }
     }
-}
-
-export function removeVerticalCanvasTiles(heatmapLayer, xLocation) {
-    let tiles = heatmapLayer.getElementsByClassName("canvas-tile");
-    for (let i = tiles.length - 1; i >= 0; i--) {
-        if (tiles[i].getAttribute("data-tx") == xLocation) {
-            tiles[i].remove();
-        }
-    }
+    console.timeEnd("removeCanvasTiles");
 }
