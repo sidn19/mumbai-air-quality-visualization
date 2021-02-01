@@ -4,7 +4,7 @@ import regions from "../data/regions.js";
 import aqv_points from "../data/aqv_points.js";
 
 import { TILE_SIZE } from "./declarations.js";
-import { getTileImage, latlngToPixelCoords, loadHorizontalTiles, loadVerticalTiles, addMapTiles, removeMapTiles } from "./modules.js";
+import { getTileImage, latlngToPixelCoords, addMapTiles, removeMapTiles } from "./tile_layer.js";
 
 import { geojsonOverlay } from "./svg_layer.js";
 import { addHeatmapTiles, removeHeatmapTiles } from "./heatmap_layer.js";
@@ -178,13 +178,11 @@ function mousedown(event) {
             //console.log("load left tiles");
             mapCoords.left -= TILE_SIZE;
             tileCoords.min_x--;
-            //loadVerticalTiles(svgMapTiles, mapCoords, tileCoords, mapCoords.left, tileCoords.min_x, currentZoom);
             addMapTiles(svgMapTiles, mapCoords.left, mapCoords.top, mapCoords.left + TILE_SIZE, mapCoords.bottom, tileCoords.min_x, tileCoords.min_y, currentZoom);
             addHeatmapTiles(dataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.left + TILE_SIZE, mapCoords.bottom);
         } else if (viewBoxCoords.min_x + viewBoxCoords.width > mapCoords.right - BUFFER_TILES * TILE_SIZE) {
             //console.log("load right tiles");
             tileCoords.max_x++;
-            //loadVerticalTiles(svgMapTiles, mapCoords, tileCoords, mapCoords.right, tileCoords.max_x, currentZoom);
             addMapTiles(svgMapTiles, mapCoords.right, mapCoords.top, mapCoords.right + TILE_SIZE, mapCoords.bottom, tileCoords.max_x, tileCoords.min_y, currentZoom);
             addHeatmapTiles(dataRefined, heatmapLayer, mapCoords.right, mapCoords.top, mapCoords.right + TILE_SIZE, mapCoords.bottom);
             mapCoords.right += TILE_SIZE;
@@ -194,13 +192,11 @@ function mousedown(event) {
             //console.log("load top tiles");
             mapCoords.top -= TILE_SIZE;
             tileCoords.min_y--;
-            //loadHorizontalTiles(svgMapTiles, mapCoords, tileCoords, mapCoords.top, tileCoords.min_y, currentZoom);
             addMapTiles(svgMapTiles, mapCoords.left, mapCoords.top, mapCoords.right, mapCoords.top + TILE_SIZE, tileCoords.min_x, tileCoords.min_y, currentZoom);
             addHeatmapTiles(dataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.right, mapCoords.top + TILE_SIZE);
         } else if (viewBoxCoords.min_y + viewBoxCoords.height > mapCoords.bottom - BUFFER_TILES * TILE_SIZE) {
             //console.log("load bottom tiles");
             tileCoords.max_y++;
-            //loadHorizontalTiles(svgMapTiles, mapCoords, tileCoords, mapCoords.bottom, tileCoords.max_y, currentZoom);
             addMapTiles(svgMapTiles, mapCoords.left, mapCoords.bottom, mapCoords.right, mapCoords.bottom + TILE_SIZE, tileCoords.min_x, tileCoords.max_y, currentZoom);
             addHeatmapTiles(dataRefined, heatmapLayer, mapCoords.left, mapCoords.bottom, mapCoords.right, mapCoords.bottom + TILE_SIZE);
             mapCoords.bottom += TILE_SIZE;
