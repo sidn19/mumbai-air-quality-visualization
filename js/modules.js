@@ -47,3 +47,71 @@ export function latlngToPixelCoords(latitude, longitude, zoom) {
     };
 }
 
+export function addMapTiles(container, min_x, min_y, max_x, max_y, minTileX, minTileY, zoom) {    
+    let maxTiles = 1 << zoom;
+
+    console.time("addMapTiles");
+
+    for(let currentLocationY = min_y, currentTileY = minTileY; currentLocationY < max_y; currentLocationY += TILE_SIZE, currentTileY++) {
+        for(let currentLocationX = min_x, currentTileX = minTileX; currentLocationX < max_x; currentLocationX += TILE_SIZE, currentTileX++) {
+            if (currentTileX >= 0 && currentTileX < maxTiles && currentTileY >= 0 && currentTileY < maxTiles) {
+                container.appendChild(getTileImage(currentLocationX, currentLocationY, currentTileX, currentTileY, zoom));
+            }
+        }
+    }
+    console.timeEnd("addMapTiles");
+}
+
+export function loadVerticalTiles(container, mapCoords, tileCoords, xLocation, xTile, zoom) {
+    let maxTiles = 1 << zoom;
+
+    if (xTile < 0 || xTile >= maxTiles) {
+        return;
+    }
+
+    console.time("loadVerticalTiles")
+
+    //yLocation ranges from mapCoords.top to mapCoords.bottom (excluding mapCoords.bottom)
+    //yTile ranges from tileCoords.min_y to tileCoords.max_y
+
+    for (let yLocation = mapCoords.top, yTile = tileCoords.min_y; yLocation < mapCoords.bottom; yLocation += TILE_SIZE, yTile++) {
+        if (yTile >= 0 && yTile < maxTiles) {
+            container.appendChild(getTileImage(xLocation, yLocation, xTile, yTile, zoom));
+        }
+    }
+    console.timeEnd("loadVerticalTiles")
+}
+
+export function loadHorizontalTiles(container, mapCoords, tileCoords, yLocation, yTile, zoom) {
+    let maxTiles = 1 << zoom;
+
+    if (yTile < 0 || yTile >= maxTiles) {
+        return;
+    }
+
+    console.time("loadHorizontalTiles")
+
+    //xLocation ranges from mapCoords.left to mapCoords.right (excluding mapCoords.right)
+    //yTile ranges from tileCoords.min_y to tileCoords.max_y
+
+    for (let xLocation = mapCoords.left, xTile = tileCoords.min_x; xLocation < mapCoords.right; xLocation += TILE_SIZE, xTile++) {
+        if (xTile >= 0 && xTile < maxTiles) {
+            container.appendChild(getTileImage(xLocation, yLocation, xTile, yTile, zoom));
+        }
+    }
+    console.timeEnd("loadHorizontalTiles")
+}
+
+export function removeMapTiles(container, min_x, min_y, max_x, max_y) {
+    console.time("removeMapTiles");
+    let tiles = container.getElementsByClassName("map-tile");
+    for (let i = tiles.length - 1; i >= 0; i--) {
+        let x = +tiles[i].getAttribute("x");
+        let y = +tiles[i].getAttribute("y");
+        if (x >= min_x && x < max_x && y >= min_y && y < max_y) {
+            tiles[i].remove();
+        }
+    }
+    console.timeEnd("removeMapTiles");
+}
+

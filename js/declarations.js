@@ -3,7 +3,6 @@
 export const TILE_SIZE = 256;
 
 //Gradients
-//Must define for value 0 and 1, otherwise intermediate gradients may not work
 export const gradientBlackAquaWhite = [
     {
         value: 0,
