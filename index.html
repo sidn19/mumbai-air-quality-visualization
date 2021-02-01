@@ -1,19 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Air Quality Visualization</title>
-    <link rel="stylesheet" href="./css/styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
     <div id="map-container">
-        <canvas id="heatmap"></canvas>
-        <svg id="svg-map">
-            <g id="map-tiles"></g>
-            <g id="svg-regions"></g>
-        </svg>
+      <!-- Map -->
+      <canvas id="heatmap"></canvas>
+      <svg id="svg-map">
+        <g id="map-tiles"></g>
+        <g id="svg-regions"></g>
+      </svg>
+
+      <div id="left">
+        <!-- Top left demographic details -->
+        <div id="demo-data">
+          <h4 id="region-name">Kharghar</h4>
+          <p id="region-data">
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+            Doloremque, veniam!
+          </p>
+        </div>
+        <!-- parameters -->
+        <div id="parameter-div"><p>Lorem ipsum dolor sit amet.</p></div>
+      </div>
+
+      <!-- Top-Right options -->
+      <div id="right">
+        <!-- Info toggle -->
+        <div id="info-toggle">
+          <label for="showInfo" id="info-label">Show info</label>
+          <label class="switch">
+            <input
+              type="checkbox"
+              id="showInfo"
+              onclick="toggleDemoData()"
+              checked
+            />
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <!-- Info toggle ends -->
+        <!-- Gradient selector -->
+        <div id="gradient">Gradient here</div>
+      </div>
+
+      <!-- Bottom -->
+      <div id="bottom">
+        <!-- Heatmap toggle -->
+        <div id="showHeatmap-div">
+          <label class="switch">
+            <input
+              type="checkbox"
+              id="showHeatmap"
+              onclick="toggleHeatmap()"
+              checked
+            />
+            <span class="slider round"></span>
+          </label>
+          <label for="showHeatmap" id="heatmap-label">Show heatmap</label>
+        </div>
+        <!-- Heatmap ends -->
+
+        <!-- Sliders -->
+        <div id="slider-div">
+          <!-- Radius -->
+          <div id="radius-div">
+            <label for="radius">Radius</label>
+            <input type="range" id="radius" class="range-slider" />
+          </div>
+          <!-- Radius ends -->
+          <!-- Time -->
+          <div id="time-div">
+            <label for="time">Time</label>
+            <input type="range" id="time" class="range-slider" />
+          </div>
+          <!-- Time ends -->
+        </div>
+        <!-- Slider ends -->
+      </div>
+      <!-- Bottom ends -->
+      <!-- Zoom buttons -->
+      <div id="zoom-div">
+        <button class="zoom">+</button>
+        <button class="zoom">-</button>
+      </div>
     </div>
     <script type="module" src="./js/map.js"></script>
-</body>
+    <script src="./js/interface.js"></script>
+  </body>
 </html>
