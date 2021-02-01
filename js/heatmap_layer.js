@@ -54,7 +54,7 @@ const gradientDataArray = createGradientData(gradientIncandescent);
 
 
 export function addHeatmapTiles(data, container, min_x, min_y, max_x, max_y) {
-    console.time("draw");
+    //console.time("draw");
 
     for (let currentLocationY = min_y; currentLocationY < max_y; currentLocationY += TILE_SIZE) {
         for (let currentLocationX = min_x; currentLocationX < max_x; currentLocationX += TILE_SIZE) {
@@ -106,11 +106,11 @@ export function addHeatmapTiles(data, container, min_x, min_y, max_x, max_y) {
             }
         }
     }
-    console.timeEnd("draw");
+    //console.timeEnd("draw");
 }
 
 export function removeHeatmapTiles(container, min_x, min_y, max_x, max_y) {
-    console.time("removeCanvasTiles");
+    //console.time("removeCanvasTiles");
     let tiles = container.getElementsByClassName("canvas-tile");
     for (let i = tiles.length - 1; i >= 0; i--) {
         let tx = +tiles[i].getAttribute("data-tx");
@@ -119,5 +119,5 @@ export function removeHeatmapTiles(container, min_x, min_y, max_x, max_y) {
             tiles[i].remove();
         }
     }
-    console.timeEnd("removeCanvasTiles");
+    //console.timeEnd("removeCanvasTiles");
 }
