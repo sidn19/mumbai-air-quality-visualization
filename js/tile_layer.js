@@ -47,6 +47,41 @@ export function latlngToPixelCoords(latitude, longitude, zoom) {
     };
 }
 
-export function mod(a, b) {
-    return ((a % b) + b) % b;
+export function pixelCoordsToLatLng(pixelX, pixelY, zoom) {
+    let z = 1 << zoom;
+    let lng = (pixelX * 360) / (TILE_SIZE * z) - 180;
+    let x = Math.exp(4 * Math.PI * (0.5 - pixelY / (TILE_SIZE * z)));
+    let lat = (Math.asin((x - 1) / (x + 1)) * 180) / Math.PI;
+    return {
+        lat: lat,
+        lng: lng
+    }
+}
+
+export function addMapTiles(container, min_x, min_y, max_x, max_y, minTileX, minTileY, zoom) {
+    let maxTiles = 1 << zoom;
+
+    //console.time("addMapTiles");
+
+    for (let currentLocationY = min_y, currentTileY = minTileY; currentLocationY < max_y; currentLocationY += TILE_SIZE, currentTileY++) {
+        for (let currentLocationX = min_x, currentTileX = minTileX; currentLocationX < max_x; currentLocationX += TILE_SIZE, currentTileX++) {
+            if (currentTileX >= 0 && currentTileX < maxTiles && currentTileY >= 0 && currentTileY < maxTiles) {
+                container.appendChild(getTileImage(currentLocationX, currentLocationY, currentTileX, currentTileY, zoom));
+            }
+        }
+    }
+    //console.timeEnd("addMapTiles");
+}
+
+export function removeMapTiles(container, min_x, min_y, max_x, max_y) {
+    //console.time("removeMapTiles");
+    let tiles = container.getElementsByClassName("map-tile");
+    for (let i = tiles.length - 1; i >= 0; i--) {
+        let x = +tiles[i].getAttribute("x");
+        let y = +tiles[i].getAttribute("y");
+        if (x >= min_x && x < max_x && y >= min_y && y < max_y) {
+            tiles[i].remove();
+        }
+    }
+    //console.timeEnd("removeMapTiles");
 }
