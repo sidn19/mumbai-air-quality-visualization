@@ -34,31 +34,88 @@ body {
 /* Interface */
 #left {
   position: absolute;
-  left: 2rem;
-  top: 2rem;
-  max-width: 20rem;
-  /* display: none; */
+  left: 1rem;
+  top: 1rem;
+  width: 24rem;
+}
+
+#demoData {
+  display: flex;
+  flex-direction: column;
+  outline: 0.1rem solid #ccc;
+  outline-offset: -0.5rem;
+}
+
+#regionName {
+  font-size: 2rem;
+}
+
+#regionDir {
+  font-size: 1.5rem;
+  margin: 0.2rem;
+}
+
+.content {
+  display: flex;
+  margin: 0.3rem;
+}
+
+.tab {
+  width: 30%;
+  height: auto;
+}
+
+.tab button {
+  display: block;
+  color: black;
+  padding: 0.4rem;
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 0.8rem;
+}
+
+.tab button:hover {
+  background-color: #2196f3;
+  color: white;
+}
+
+.tab button.active {
+  background-color: #ccc;
+}
+
+.tabContentDiv {
+  padding: 0.5rem 0.8rem;
+  border: 1px solid #ccc;
+  width: 70%;
+  border-left: none;
 }
 
 #left > * {
   background-color: white;
   padding: 1rem;
   margin: 1rem;
-  border: 1px solid red;
 }
 
-#parameter-div {
-  /* width: 8rem; */
+#parameterDiv {
+  outline: 0.1rem solid #ccc;
+  outline-offset: -0.5rem;
 }
 
 #right {
   background-color: white;
   position: absolute;
+  padding: 1rem;
   right: 2rem;
   top: 2rem;
   max-width: 20rem;
   display: flex;
   flex-direction: column;
+  outline: 0.1rem solid #ccc;
+  outline-offset: -0.5rem;
 }
 
 #info-toggle {
@@ -79,8 +136,9 @@ body {
   bottom: 1rem;
   left: 12rem;
   right: 12rem;
-  height: 4rem;
-  /* border: 1px solid blue; */
+  height: 5rem;
+  outline: 0.1rem solid #ccc;
+  outline-offset: -0.5rem;
   background-color: white;
   display: flex;
   justify-content: space-evenly;
@@ -122,17 +180,26 @@ body {
 }
 
 #zoom-div {
-  border: 1px solid black;
   position: absolute;
-  right: 8rem;
+  right: 9rem;
   bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-  height: 4rem;
+  background-color: white;
 }
 
-.zoom {
-  height: 2rem;
+#zoom-div i {
+  width: 2rem;
+  height: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #2196f3;
+  cursor: pointer;
+}
+
+#zoom-div i:hover {
+  transition: 0.3s;
+  background-color: #ccc;
 }
 
 /* Toggle CSS */
