@@ -1,19 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Air Quality Visualization</title>
-    <link rel="stylesheet" href="./css/styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body onload="init()">
     <div id="map-container">
-        <div id="heatmap-layer"></div>
-        <svg id="svg-map">
-            <g id="map-tiles"></g>
-            <g id="svg-regions"></g>
-        </svg>
+      <!-- Map -->
+      <div id="heatmap-layer"></div>
+      <svg id="svg-map">
+        <g id="map-tiles"></g>
+        <g id="svg-regions"></g>
+      </svg>
+
+      <div id="left">
+        <!-- Top left demographic details -->
+        <div id="demoData">
+          <span id="regionName">Region name</span>
+          <span id="regionDir">M Ward East/West</span>
+
+          <!-- Vertical tabs -->
+          <section class="content">
+            <div class="tab">
+              <button
+                class="tabLink"
+                id="defaultOpen"
+                onclick="openData('population')"
+              >
+                Population
+              </button>
+              <button class="tabLink" onclick="openData('family')">
+                Family
+              </button>
+              <button class="tabLink" onclick="openData('education')">
+                Education
+              </button>
+              <button class="tabLink" onclick="openData('religion')">
+                Religion and Language
+              </button>
+              <button class="tabLink" onclick="openData('occupation')">
+                Occupation
+              </button>
+              <button class="tabLink" onclick="openData('healthindi')">
+                Health Indicators
+              </button>
+              <button class="tabLink" onclick="openData('diseases')">
+                Diseases
+              </button>
+              <button class="tabLink" onclick="openData('healthinfra')">
+                Health Infrastructure
+              </button>
+            </div>
+            <!-- Tab content -->
+            <div class="tabContentDiv">
+              <div class="tabContent" id="population">Population</div>
+              <div class="tabContent" id="family">Family</div>
+              <div class="tabContent" id="education">Education</div>
+              <div class="tabContent" id="religion">Religion and Language</div>
+              <div class="tabContent" id="occupation">Occupation</div>
+              <div class="tabContent" id="healthindi">Health Indicators</div>
+              <div class="tabContent" id="diseases">Diseases</div>
+              <div class="tabContent" id="healthinfra">
+                Health Infrastructure
+              </div>
+            </div>
+            <!-- End of tab content -->
+          </section>
+          <!-- End of tab -->
+        </div>
+        <!-- parameters -->
+        <div id="parameterDiv"><p>Parameters here.</p></div>
+      </div>
+
+      <!-- Top-Right options -->
+      <div id="right">
+        <!-- Info toggle -->
+        <div id="info-toggle">
+          <label for="showInfo" id="info-label">Show info</label>
+          <label class="switch">
+            <input
+              type="checkbox"
+              id="showInfo"
+              onclick="toggleDemoData()"
+              checked
+            />
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <!-- Info toggle ends -->
+        <!-- Gradient selector -->
+        <div id="gradient">Gradient here</div>
+      </div>
+
+      <!-- Bottom -->
+      <div id="bottom">
+        <!-- Heatmap toggle -->
+        <div id="showHeatmap-div">
+          <label class="switch">
+            <input
+              type="checkbox"
+              id="showHeatmap"
+              onclick="toggleHeatmap()"
+              checked
+            />
+            <span class="slider round"></span>
+          </label>
+          <label for="showHeatmap" id="heatmap-label">Show heatmap</label>
+        </div>
+        <!-- Heatmap ends -->
+
+        <!-- Sliders -->
+        <div id="slider-div">
+          <!-- Radius -->
+          <div id="radius-div">
+            <label for="radius">Radius</label>
+            <input type="range" id="radius" class="range-slider" />
+          </div>
+          <!-- Radius ends -->
+          <!-- Time -->
+          <div id="time-div">
+            <label for="time">Time</label>
+            <input type="range" id="time" class="range-slider" />
+          </div>
+          <!-- Time ends -->
+        </div>
+        <!-- Slider ends -->
+      </div>
+      <!-- Bottom ends -->
+      <!-- Zoom buttons -->
+      <div id="zoom-div">
+        <i class="fa fa-plus" onclick="zoom(1)"></i>
+        <i class="fa fa-minus" onclick="zoom(0)"></i>
+      </div>
     </div>
     <script type="module" src="./js/map.js"></script>
-</body>
+    <script src="./js/interface.js"></script>
+  </body>
 </html>
