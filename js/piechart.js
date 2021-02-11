@@ -5,7 +5,7 @@
  * @param {{ type: string, value: number, color: string }[]} categories 
  * @param {number} size - Width and Height of the piechart
  * @param {boolean} clockwise - Whether piechart should show data in clockwise direction else in anti-clockwise direction
- * @param {string} startingAngle - Angle from which piechart should start (angle is in degrees)
+ * @param {number} startingAngle - Angle from which piechart should start (angle is in degrees)
  */
 
 export function createPieChart(categories, size, clockwise = true, startingAngle = 0) {
