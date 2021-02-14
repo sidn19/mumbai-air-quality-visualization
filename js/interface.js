@@ -2,19 +2,6 @@ const init = () => {
   document.getElementById("defaultOpen").click();
 };
 
-const toggleDemoData = () => {
-  let infoToggle = document.getElementById("showInfo").checked;
-  if (infoToggle) {
-    document.getElementById("left").style.display = "block";
-  } else {
-    document.getElementById("left").style.display = "none";
-  }
-};
-
-const toggleHeatmap = () => {
-  console.log("hello");
-};
-
 const openData = (category) => {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabContent");
@@ -35,4 +22,17 @@ const zoom = (x) => {
   // x = 1 if zoom in, 0 if out
   console.log(x);
   // connect to zoom functionality
+};
+
+// use jquery to add className activeIcon
+const changeToolbarIcon = (icon) => {
+  let toolbarIcons = document.getElementsByClassName("toolbarIcon");
+  for (i = 0; i < toolbarIcons.length; i++) {
+    toolbarIcons[i].className = toolbarIcons[i].className.replace(
+      " activeIcon",
+      ""
+    );
+  }
+  let activeIcon = document.getElementById(icon);
+  activeIcon.className += " activeIcon";
 };

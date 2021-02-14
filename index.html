@@ -74,69 +74,81 @@
           </section>
           <!-- End of tab -->
         </div>
-        <!-- parameters -->
-        <div id="parameterDiv"><p>Parameters here.</p></div>
       </div>
 
-      <!-- Top-Right options -->
-      <div id="right">
-        <!-- Info toggle -->
-        <div id="info-toggle">
-          <label for="showInfo" id="info-label">Show info</label>
-          <label class="switch">
-            <input
-              type="checkbox"
-              id="showInfo"
-              onclick="toggleDemoData()"
-              checked
-            />
-            <span class="slider round"></span>
-          </label>
-        </div>
-        <!-- Info toggle ends -->
-        <!-- Gradient selector -->
-        <div id="gradient">Gradient here</div>
-      </div>
+      <!-- Right-->
+      <div class="right">
+        <!-- Gradient -->
+        <div class="gradient">Gradient here</div>
 
-      <!-- Bottom -->
-      <div id="bottom">
-        <!-- Heatmap toggle -->
-        <div id="showHeatmap-div">
-          <label class="switch">
-            <input
-              type="checkbox"
-              id="showHeatmap"
-              onclick="toggleHeatmap()"
-              checked
-            />
-            <span class="slider round"></span>
-          </label>
-          <label for="showHeatmap" id="heatmap-label">Show heatmap</label>
-        </div>
-        <!-- Heatmap ends -->
-
-        <!-- Sliders -->
-        <div id="slider-div">
-          <!-- Radius -->
-          <div id="radius-div">
-            <label for="radius">Radius</label>
-            <input type="range" id="radius" class="range-slider" />
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <div
+            class="toolbarIcon activeIcon"
+            id="databaseIcon"
+            onclick="changeToolbarIcon('databaseIcon')"
+          >
+            <span title="Database"
+              ><img src="./assets/icons/database.svg" alt=""
+            /></span>
           </div>
-          <!-- Radius ends -->
-          <!-- Time -->
-          <div id="time-div">
-            <label for="time">Time</label>
-            <input type="range" id="time" class="range-slider" />
+
+          <div
+            class="toolbarIcon"
+            id="demographicDataIcon"
+            onclick="changeToolbarIcon('demographicDataIcon')"
+          >
+            <span title="Toggle Demographic Data"
+              ><img src="./assets/icons/demographics.svg" alt=""
+            /></span>
           </div>
-          <!-- Time ends -->
+
+          <div
+            class="toolbarIcon"
+            id="downloadIcon"
+            onclick="changeToolbarIcon('downloadIcon')"
+          >
+            <span title="Download Data"
+              ><img src="./assets/icons/download.svg" alt=""
+            /></span>
+          </div>
+
+          <div
+            class="toolbarIcon"
+            id="parameterIcon"
+            onclick="changeToolbarIcon('parameterIcon')"
+          >
+            <span title="Toggle Parameters"
+              ><img src="./assets/icons/parameters.svg" alt=""
+            /></span>
+          </div>
+
+          <div
+            class="toolbarIcon"
+            id="datasheetIcon"
+            onclick="changeToolbarIcon('datasheetIcon')"
+          >
+            <span title="Datasheet"
+              ><img src="./assets/icons/datasheet.svg" alt=""
+            /></span>
+          </div>
+
+          <div
+            class="toolbarIcon"
+            id="heatmapIcon"
+            onclick="changeToolbarIcon('heatmapIcon')"
+          >
+            <span title="Toggle Heatmap"
+              ><img src="./assets/icons/heatmap.svg" alt=""
+            /></span>
+          </div>
         </div>
-        <!-- Slider ends -->
-      </div>
-      <!-- Bottom ends -->
-      <!-- Zoom buttons -->
-      <div id="zoom-div">
-        <i class="fa fa-plus" onclick="zoom(1)"></i>
-        <i class="fa fa-minus" onclick="zoom(0)"></i>
+        <!-- Toolbar ends -->
+        <!-- Zoom -->
+        <div class="zoom">
+          <i class="fa fa-plus" onclick="zoom(1)"></i>
+          <i class="fa fa-minus" onclick="zoom(0)"></i>
+        </div>
       </div>
     </div>
     <script type="module" src="./js/map.js"></script>
