@@ -25,9 +25,9 @@
           position: relative;
           background-color: #fefefe;
           margin: auto;
-          padding: 0;
+          padding: 10px;
           border: 1px solid #888;
-          width: 80%;
+          width: 50%;
           box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
           -webkit-animation-name: animatetop;
           -webkit-animation-duration: 0.4s;
@@ -46,7 +46,7 @@
         }
 
         .downloadButton{
-          background:url(./assets/icons/download.svg) no-repeat;
+          background:url(./download.svg) no-repeat;
           cursor:pointer;
           border:none;
           width: 40px;
@@ -55,7 +55,7 @@
         }
 
         .deleteButton{
-          background:url(./assets/icons/delete.svg) no-repeat;
+          background:url(./delete.svg) no-repeat;
           cursor:pointer;
           border:none;
           width: 40px;
@@ -66,8 +66,11 @@
         .downloadsample, .datasetupload, .close {
           color: black;
           float: bottom;
-          font-size: 20px;
+          font-size: 15px;
           font-weight: bold;
+          height: 40px;
+          width: 200px;
+          padding: 10px;
         }
 
         .aqvdata, .demodata {
@@ -79,6 +82,8 @@
           color: black;
           font-size: 20px;
           font-weight: bold;
+          width: 45%;
+          cursor: pointer;
         }
 
         .aqvdata:active, .demodata:active {
@@ -109,6 +114,8 @@
 
         .modal-body {
           padding: 2px 16px;
+          max-height: calc(100vh - 450px);
+          overflow-y: auto;
         }
 
         .modal-footer {
@@ -130,6 +137,20 @@
             </center>
           </div>
           <div class="modal-body">
+            <div>
+              <button class="downloadButton"></button>
+              <button class="deleteButton"></button>
+              <p>Dataset File Name</p>
+              <p>Added On: DD/MM/YYYY</p>
+            </div>
+            <br/>
+            <div>
+              <button class="downloadButton"></button>
+              <button class="deleteButton"></button>
+              <p>Dataset File Name</p>
+              <p>Added On: DD/MM/YYYY</p>
+            </div>
+            <br/>
             <div>
               <button class="downloadButton"></button>
               <button class="deleteButton"></button>
@@ -179,3 +200,4 @@
 
     </body>
   </html>
+
