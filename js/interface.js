@@ -36,3 +36,36 @@ const changeToolbarIcon = (icon) => {
   let activeIcon = document.getElementById(icon);
   activeIcon.className += " activeIcon";
 };
+
+const openDataSheetModal = () => {
+  const datasetModal = document.getElementById('datasetModal');
+
+  datasetModal.style.display = 'flex';
+
+  var clickEvent = event => {
+    if (event.target.id === 'datasetModal' || event.target.id === 'close-dataset-modal') {
+      datasetModal.style.display = 'none';
+      datasetModal.removeEventListener('click', clickEvent);
+    }
+  }
+  
+  datasetModal.addEventListener('click', clickEvent);
+}
+
+const changeDatasetModalTab = (event, type) => {
+  for (let tab of document.getElementsByClassName('dataset-tab')) {
+    tab.className = tab.className.replace(' active', '');
+  }
+
+  for (let tab of document.getElementsByClassName('dataset-list')) {
+    tab.className = tab.className.replace(' active', '');
+  }
+  event.target.className += ' active';
+
+  if (type === 'demographic') {
+    document.getElementById('demo-dataset-list').className += ' active';
+  }
+  else {
+    document.getElementById('aq-dataset-list').className += ' active';
+  }
+}

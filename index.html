@@ -126,7 +126,7 @@
           <div
             class="toolbarIcon"
             id="datasheetIcon"
-            onclick="changeToolbarIcon('datasheetIcon')"
+            onclick="openDataSheetModal()"
           >
             <span title="Datasheet"
               ><img src="./assets/icons/datasheet.svg" alt=""
@@ -151,6 +151,66 @@
         </div>
       </div>
     </div>
+
+    <!-- Modals -->
+    <div class="modal" id="datasetModal">
+      <div class="modal-content" style="width: 25rem;">
+        <div class="flex-tab">
+          <button class="tab-link active dataset-tab" onclick="changeDatasetModalTab(event, 'air-quality')">Air Quality</button>
+          <button class="tab-link dataset-tab" onclick="changeDatasetModalTab(event, 'demographic')">Demographic</button>
+        </div>
+        <div id="aq-dataset-list" class="dataset-list active">
+          <div class="dataset-item">
+            <div class="dataset-text">
+              <div>Dataset 1</div>
+              <div>Added on: Jan 21 2000</div>
+            </div>
+            <div>
+              <button class="download-button"></button>
+              <button class="delete-button"></button>
+            </div>
+          </div>
+          <div class="dataset-item">
+            <div class="dataset-text">
+              <div>Dataset 2</div>
+              <div>Added on: Jan 21 2020</div>
+            </div>
+            <div>
+              <button class="download-button"></button>
+              <button class="delete-button"></button>
+            </div>
+          </div>
+        </div>
+        <div id="demo-dataset-list" class="dataset-list">
+          <div class="dataset-item">
+            <div class="dataset-text">
+              <div>Dataset 1123</div>
+              <div>Added on: Jan 21 1000</div>
+            </div>
+            <div>
+              <button class="download-button"></button>
+              <button class="delete-button"></button>
+            </div>
+          </div>
+          <div class="dataset-item">
+            <div class="dataset-text">
+              <div>Dataset 2142</div>
+              <div>Added on: Jan 24 2420</div>
+            </div>
+            <div>
+              <button class="download-button"></button>
+              <button class="delete-button"></button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button>Download Sample</button>
+          <button>Upload Dataset</button>
+          <button id="close-dataset-modal">Close</button>
+        </div>
+      </div>
+    </div>
+
     <script type="module" src="./js/map.js"></script>
     <script src="./js/interface.js"></script>
   </body>
