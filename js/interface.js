@@ -118,46 +118,46 @@ function exportCSVFile(headers, data, fileName) {
 }
 
 function download(){
-var headers = {
-  date: 'Date',
-  latitude: "Latitude",
-  longitude: "Longtitude",
-  chemicalA: "Chemical A",
-  chemicalB: "Chemical B"
-};
+  var headers = {
+    date: 'Date',
+    latitude: "Latitude",
+    longitude: "Longtitude",
+    chemicalA: "Chemical A",
+    chemicalB: "Chemical B"
+  };
 
-aqvdatanotFormatted = [
-  {
-      date: '01-02-2021',
-      latitude: '45.8',
-      longitude: '80.2',
-      chemicalA: '30',
-      chemicalB: '22'
-  },
-  {
-      date: '02-02-2021',
-      latitude: '46.3',
-      longitude: '67',
-      chemicalA: '18',
-      chemicalB: '29'
-  }
-];
+  aqvdatanotFormatted = [
+    {
+        date: '01-02-2021',
+        latitude: '45.8',
+        longitude: '80.2',
+        chemicalA: '30',
+        chemicalB: '22'
+    },
+    {
+        date: '02-02-2021',
+        latitude: '46.3',
+        longitude: '67',
+        chemicalA: '18',
+        chemicalB: '29'
+    }
+  ];
 
-var aqvdataFormatted = [];
+  var aqvdataFormatted = [];
 
-aqvdatanotFormatted.forEach((data) => {
-  aqvdataFormatted.push({
-      date: data.date,  
-      latitude: data.latitude,
-      longitude: data.longitude,
-      chemicalA: data.chemicalA,
-      chemicalB: data.chemicalB
+  aqvdatanotFormatted.forEach((data) => {
+    aqvdataFormatted.push({
+        date: data.date,  
+        latitude: data.latitude,
+        longitude: data.longitude,
+        chemicalA: data.chemicalA,
+        chemicalB: data.chemicalB
+    });
   });
-});
 
-var fileName = 'Mumbai M ward AQV data';
+  var fileName = 'Mumbai M ward AQV data';
 
-exportCSVFile(headers, aqvdataFormatted, fileName);
+  exportCSVFile(headers, aqvdataFormatted, fileName);
 }
 
 var csvfile = document.getElementById("upload-dataset")
