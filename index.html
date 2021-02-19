@@ -204,9 +204,15 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button>Download Sample</button>
-          <button>Upload Dataset</button>
+          <button id="download-sample-dataset" onclick="download()">Download Sample</button>
+          <button type="button">
+            <label for="upload-dataset" class="custom-file-upload">Upload Dataset</label>
+          </button>
+          <input id="upload-dataset" type="file"/>
           <button id="close-dataset-modal">Close</button>
+        </div>
+        <div>
+          <pre id="jsonoutput"></pre>
         </div>
       </div>
     </div>
