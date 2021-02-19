@@ -49,16 +49,14 @@ body {
 /* Interface */
 #left {
   position: absolute;
-  left: 1rem;
-  top: 1rem;
+  left: 0.1rem;
+  top: 0.1rem;
   width: 24rem;
 }
 
 #demoData {
   display: flex;
   flex-direction: column;
-  outline: 0.1rem solid #ccc;
-  outline-offset: -0.5rem;
 }
 
 #regionName {
@@ -75,12 +73,17 @@ body {
   margin: 0.3rem;
 }
 
+.flex-tab {
+  display: flex;
+  flex-direction: row;
+}
+
 .tab {
   width: 30%;
   height: auto;
 }
 
-.tab button {
+.tab button, .flex-tab button {
   display: block;
   color: black;
   padding: 0.4rem;
@@ -93,18 +96,22 @@ body {
   font-size: 0.8rem;
 }
 
-.tab button:hover {
+.flex-tab button {
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.flex-tab button:hover, .tab button:hover {
   background-color: #2196f3;
   color: white;
 }
 
-.tab button.active {
+.flex-tab button.active, .tab button.active {
   background-color: #ccc;
 }
 
 .tabContentDiv {
   padding: 0.5rem 0.8rem;
-  border: 1px solid #ccc;
   width: 70%;
   border-left: none;
 }
@@ -115,165 +122,193 @@ body {
   margin: 1rem;
 }
 
-#parameterDiv {
-  outline: 0.1rem solid #ccc;
-  outline-offset: -0.5rem;
-}
-
-#right {
-  background-color: white;
-  position: absolute;
-  padding: 1rem;
-  right: 2rem;
-  top: 2rem;
-  max-width: 20rem;
+.right {
+  position: fixed;
+  top: 1rem;
+  bottom: 1rem;
+  right: 0.1rem;
   display: flex;
   flex-direction: column;
-  outline: 0.1rem solid #ccc;
-  outline-offset: -0.5rem;
+  align-items: flex-end;
 }
 
-#info-toggle {
-  display: flex;
+.right > * {
+  margin: 0.5rem;
+}
+
+.gradient {
+  height: 2rem;
   width: 8rem;
-  justify-content: space-around;
-  align-items: center;
-  height: 2rem;
-}
-
-#gradient {
-  height: 2rem;
-  text-align: center;
-}
-
-#bottom {
-  position: absolute;
-  bottom: 1rem;
-  left: 12rem;
-  right: 12rem;
-  height: 5rem;
-  outline: 0.1rem solid #ccc;
-  outline-offset: -0.5rem;
   background-color: white;
+}
+
+.toolbar {
+  background-color: white;
+  width: 4rem;
+  height: 70%;
   display: flex;
+  flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
 }
 
-#showHeatmap-div {
-  /* border: 1px solid red; */
+.toolbarIcon {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  text-align: center;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: auto;
 }
 
-#showHeatmap-div > * {
-  padding: 0.3rem;
+.toolbarIcon img {
+  width: 2.5rem;
 }
 
-#slider-div {
-  /* border: 1px solid black; */
+.toolbarIcon:hover {
+  background-color: rgb(233, 233, 233);
+}
+
+.activeIcon {
+  background-color: rgb(233, 233, 233);
+}
+
+.zoom {
+  position: absolute;
+  bottom: 0.1rem;
+  right: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  width: 75%;
-}
-
-#radius-div,
-#time-div {
-  display: flex;
-  /* border: 1px solid purple; */
-  justify-content: space-between;
-  width: 100%;
-}
-
-.range-slider {
-  width: 90%;
-}
-
-#zoom-div {
-  position: absolute;
-  right: 9rem;
-  bottom: 1rem;
   background-color: white;
 }
 
-#zoom-div i {
+.zoom i {
   width: 2rem;
   height: 2.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #2196f3;
+  color: black;
   cursor: pointer;
 }
 
-#zoom-div i:hover {
+.zoom i:hover {
   transition: 0.3s;
   background-color: #ccc;
 }
 
-/* Toggle CSS */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 40px;
-  height: 17px;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
 }
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 13px;
-  width: 13px;
-  left: 2px;
-  bottom: 2px;
-  background-color: white;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+.modal .modal-content {
+  position: relative;
+  background-color: #fefefe;
+  border-radius: 0.3rem;
+  margin: auto;
+  padding: 1rem;
+  max-width: 920px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  -webkit-animation-name: animate-top;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animate-top;
+  animation-duration: 0.4s
 }
 
-input:checked + .slider {
-  background-color: #2196f3;
+.modal .modal-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196f3;
+.modal .modal-footer button {
+  font-size: 1rem;
+  padding: 0.3rem 0.6rem;
 }
 
-input:checked + .slider:before {
-  -webkit-transform: translateX(23px);
-  -ms-transform: translateX(23px);
-  transform: translateX(23px);
+@-webkit-keyframes animate-top {
+  from {top:-300px; opacity:0} 
+  to {top:0; opacity:1}
 }
 
-/* Rounded sliders */
-.slider.round {
-  border-radius: 17px;
+@keyframes animate-top {
+  from {top:-300px; opacity:0}
+  to {top:0; opacity:1}
 }
 
-.slider.round:before {
-  border-radius: 50%;
+.responsive-table {
+  overflow-x: auto;
+}
+
+.responsive-table table {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.responsive-table td {
+  text-align: center;
+}
+
+.responsive-table td:first-child {
+  text-align: left;
+}
+
+.responsive-table input[type=number] {
+  width: 3rem;
+}
+
+.parameter-box, .dataset-list {
+  max-height: 300px;
+  overflow: auto;
+  margin: 0.6rem 0rem;
+  display: none;
+}
+
+.parameter-box.active, .dataset-list.active {
+  display: block;
+}
+
+.dataset-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 1rem 0rem;
+}
+
+.dataset-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.download-button {
+  background: inherit;
+  background-image: url('/assets/icons/download.svg');
+  background-repeat: no-repeat;
+  padding: 1rem;
+  border: 0;
+  cursor: pointer;
+}
+
+.delete-button {
+  background: inherit;
+  background-image: url('/assets/icons/delete.svg');
+  background-repeat: no-repeat;
+  padding: 1rem;
+  border: 0;
+  cursor: pointer;
+}
+
+input[type="file"] {
+  display: none;
 }
