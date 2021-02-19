@@ -247,14 +247,35 @@ body {
   to {top:0; opacity:1}
 }
 
-.dataset-list {
-  max-height: 250px;
+.responsive-table {
+  overflow-x: auto;
+}
+
+.responsive-table table {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.responsive-table td {
+  text-align: center;
+}
+
+.responsive-table td:first-child {
+  text-align: left;
+}
+
+.responsive-table input[type=number] {
+  width: 3rem;
+}
+
+.parameter-box, .dataset-list {
+  max-height: 300px;
   overflow: auto;
   margin: 0.6rem 0rem;
   display: none;
 }
 
-.dataset-list.active {
+.parameter-box.active, .dataset-list.active {
   display: block;
 }
 

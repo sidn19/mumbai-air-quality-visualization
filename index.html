@@ -116,7 +116,7 @@
           <div
             class="toolbarIcon"
             id="parameterIcon"
-            onclick="changeToolbarIcon('parameterIcon')"
+            onclick="openModal('parameterModal', 'close-parameter-modal')"
           >
             <span title="Toggle Parameters"
               ><img src="./assets/icons/parameters.svg" alt=""
@@ -126,7 +126,7 @@
           <div
             class="toolbarIcon"
             id="datasheetIcon"
-            onclick="openDataSheetModal()"
+            onclick="openModal('datasetModal', 'close-dataset-modal')"
           >
             <span title="Datasheet"
               ><img src="./assets/icons/datasheet.svg" alt=""
@@ -153,66 +153,171 @@
     </div>
 
     <!-- Modals -->
+    <div class="modal" id="parameterModal">
+      <div class="modal-content" style="width: 35rem;">
+        <div class="flex-tab">
+          <button class="tab-link active parameter-tab" onclick="changeModalTab(event, 'aq-parameters', ['parameter-tab', 'parameter-box'])">Air Quality</button>
+          <button class="tab-link parameter-tab" onclick="changeModalTab(event, 'demo-parameters', ['parameter-tab', 'parameter-box'])">Demographic</button>
+        </div>
+        <div id="aq-parameters" class="parameter-box active">
+          <form>
+            <div class="responsive-table">
+              <table>
+                <tr>
+                  <th>Enable</th>
+                  <th>Excellent</th>
+                  <th>Fine</th>
+                  <th>Moderate</th>
+                  <th>Poor</th>
+                  <th>Very Poor</th>
+                </tr>
+                <tr>
+                  <td>
+                    <label>
+                      <input type="checkbox" id="o3-enable">O<sub>3</sub>
+                    </label>
+                  </td>
+                  <td><input type="number" id="o3-0"></td>
+                  <td><input type="number" id="o3-1"></td>
+                  <td><input type="number" id="o3-2"></td>
+                  <td><input type="number" id="o3-3"></td>
+                  <td><input type="number" id="o3-4"></td>
+                </tr>
+                <tr>
+                  <td>
+                    <label>
+                      <input type="checkbox" id="pm25-enable">PM 2.5
+                    </label>
+                  </td>
+                  <td><input type="number" id="pm25-0"></td>
+                  <td><input type="number" id="pm25-1"></td>
+                  <td><input type="number" id="pm25-2"></td>
+                  <td><input type="number" id="pm25-3"></td>
+                  <td><input type="number" id="pm25-4"></td>
+                </tr>
+                <tr>
+                  <td>
+                    <label>
+                      <input type="checkbox" id="pm10-enable">PM 10
+                    </label>
+                  </td>
+                  <td><input type="number" id="pm10-0"></td>
+                  <td><input type="number" id="pm10-1"></td>
+                  <td><input type="number" id="pm10-2"></td>
+                  <td><input type="number" id="pm10-3"></td>
+                  <td><input type="number" id="pm10-4"></td>
+                </tr>
+                <tr>
+                  <td>
+                    <label>
+                      <input type="checkbox" id="no2-enable">NO<sub>2</sub>
+                    </label>
+                  </td>
+                  <td><input type="number" id="no2-0"></td>
+                  <td><input type="number" id="no2-1"></td>
+                  <td><input type="number" id="no2-2"></td>
+                  <td><input type="number" id="no2-3"></td>
+                  <td><input type="number" id="no2-4"></td>
+                </tr>
+                <tr>
+                  <td>
+                    <label>
+                      <input type="checkbox" id="so2-enable">SO<sub>2</sub>
+                    </label>
+                  </td>
+                  <td><input type="number" id="so2-0"></td>
+                  <td><input type="number" id="so2-1"></td>
+                  <td><input type="number" id="so2-2"></td>
+                  <td><input type="number" id="so2-3"></td>
+                  <td><input type="number" id="so2-4"></td>
+                </tr>
+                <tr>
+                  <td>
+                    <label>
+                      <input type="checkbox" id="co-enable">CO
+                    </label>
+                  </td>
+                  <td><input type="number" id="co-0"></td>
+                  <td><input type="number" id="co-1"></td>
+                  <td><input type="number" id="co-2"></td>
+                  <td><input type="number" id="co-3"></td>
+                  <td><input type="number" id="co-4"></td>
+                </tr>
+                <tr>
+                  <td>
+                    <label>
+                      <input type="checkbox" id="nh3-enable">NH<sub>3</sub>
+                    </label>
+                  </td>
+                  <td><input type="number" id="nh3-0"></td>
+                  <td><input type="number" id="nh3-1"></td>
+                  <td><input type="number" id="nh3-2"></td>
+                  <td><input type="number" id="nh3-3"></td>
+                  <td><input type="number" id="nh3-4"></td>
+                </tr>
+              </table>
+            </div>
+          </form>
+          <div class="modal-footer">
+            <button>Apply Changes</button>
+            <button class="close-parameter-modal">Close</button>
+          </div>
+        </div>
+        <div id="demo-parameters" class="parameter-box">
+          
+          <div class="modal-footer">
+            <button>Apply Changes</button>
+            <button class="close-parameter-modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal" id="datasetModal">
       <div class="modal-content" style="width: 25rem;">
         <div class="flex-tab">
-          <button class="tab-link active dataset-tab" onclick="changeDatasetModalTab(event, 'air-quality')">Air Quality</button>
-          <button class="tab-link dataset-tab" onclick="changeDatasetModalTab(event, 'demographic')">Demographic</button>
+          <button class="tab-link active dataset-tab" onclick="changeModalTab(event, 'aq-dataset-list', ['dataset-tab', 'dataset-list'])">Air Quality</button>
+          <button class="tab-link dataset-tab" onclick="changeModalTab(event, 'demo-dataset-list', ['dataset-tab', 'dataset-list'])">Demographic</button>
         </div>
         <div id="aq-dataset-list" class="dataset-list active">
           <div class="dataset-item">
             <div class="dataset-text">
-              <div>Dataset 1</div>
-              <div>Added on: Jan 21 2000</div>
+              <div>Demo Dataset</div>
+              <div>Added on: Jan 21 2021</div>
             </div>
             <div>
               <button class="download-button"></button>
               <button class="delete-button"></button>
             </div>
           </div>
-          <div class="dataset-item">
-            <div class="dataset-text">
-              <div>Dataset 2</div>
-              <div>Added on: Jan 21 2020</div>
-            </div>
-            <div>
-              <button class="download-button"></button>
-              <button class="delete-button"></button>
-            </div>
+          <div class="modal-footer">
+            <button id="download-aq-sample-dataset" onclick="downloadAQSample()">Download Sample</button>
+            <button type="button">
+              <label for="aq-upload-dataset" class="custom-file-upload">Upload Dataset</label>
+            </button>
+            <input id="aq-upload-dataset" type="file"/>
+            <button class="close-dataset-modal">Close</button>
           </div>
         </div>
         <div id="demo-dataset-list" class="dataset-list">
           <div class="dataset-item">
             <div class="dataset-text">
-              <div>Dataset 1123</div>
-              <div>Added on: Jan 21 1000</div>
+              <div>Demo Dataset</div>
+              <div>Added on: Jan 22 2021</div>
             </div>
             <div>
               <button class="download-button"></button>
               <button class="delete-button"></button>
             </div>
           </div>
-          <div class="dataset-item">
-            <div class="dataset-text">
-              <div>Dataset 2142</div>
-              <div>Added on: Jan 24 2420</div>
-            </div>
-            <div>
-              <button class="download-button"></button>
-              <button class="delete-button"></button>
-            </div>
+          <div class="modal-footer">
+            <button id="download-demo-sample-dataset" onclick="downloadDemoSample()">Download Sample</button>
+            <button type="button">
+              <label for="demo-upload-dataset" class="custom-file-upload">Upload Dataset</label>
+            </button>
+            <input id="demo-upload-dataset" type="file"/>
+            <button class="close-dataset-modal">Close</button>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button id="download-sample-dataset" onclick="download()">Download Sample</button>
-          <button type="button">
-            <label for="upload-dataset" class="custom-file-upload">Upload Dataset</label>
-          </button>
-          <input id="upload-dataset" type="file"/>
-          <button id="close-dataset-modal">Close</button>
-        </div>
-        <div>
-          <pre id="jsonoutput"></pre>
         </div>
       </div>
     </div>
