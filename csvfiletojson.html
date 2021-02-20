@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+    <html>
+        <body>
+            <p>Select a CSV file</p>
+            <input id="csv" type="file">
+                <pre id="jsonoutput"></pre>
+        </body>
+        <script>
+            var csvfile = document.getElementById("csv")
+            readCSVfile = function () {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    document.getElementById('jsonoutput').innerHTML = reader.result;
+                };
+                reader.readAsBinaryString(csvfile.files[0]);
+                };
+                csvfile.addEventListener('change', readCSVfile);
+        </script>
+    </html>
