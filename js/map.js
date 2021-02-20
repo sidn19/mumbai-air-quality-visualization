@@ -489,16 +489,13 @@ svgMap.addEventListener("wheel", function (event) {
 });
 
 //Testing mappingPixelCoordsToLatLng function
-svgMap.addEventListener("click", function (event) {
-  let x = event.clientX;
-  let y = event.clientY;
+// svgMap.addEventListener("click", function(event) {
+//     let x = event.clientX;
+//     let y = event.clientY;
 
-  // console.log(x + viewBoxCoords.min_x, y + viewBoxCoords.min_y)
-  let latlng = mappingPixelCoordsToLatLng(
-    x + viewBoxCoords.min_x,
-    y + viewBoxCoords.min_y
-  );
-  // console.log(latlng.lat, latlng.lng);
-  let pixelCoords = mappingLatLngToPixelCoords(latlng.lat, latlng.lng);
-  // console.log(pixelCoords.x, pixelCoords.y);
-});
+//     console.log(x + viewBoxCoords.min_x, y + viewBoxCoords.min_y)
+//     let latlng = mappingPixelCoordsToLatLng(x + viewBoxCoords.min_x, y + viewBoxCoords.min_y);
+//     console.log(latlng.lat, latlng.lng);
+//     let pixelCoords = mappingLatLngToPixelCoords(latlng.lat, latlng.lng);
+//     console.log(pixelCoords.x, pixelCoords.y);
+// });
