@@ -1,26 +1,8 @@
-let airQualityDatasets = localStorage.getItem("air-quality-datasets");
-
-if (airQualityDatasets !== null) {
-  airQualityDatasets = JSON.parse(airQualityDatasets);
-} else {
-  // initialize with demo data
-}
-
-let demographicDatasets = localStorage.getItem("demographic-datasets");
-
-if (demographicDatasets !== null) {
-  demographicDatasets = JSON.parse(demographicDatasets);
-} else {
-  // initialize with demo data
-}
-
-let airQualityParameters = localStorage.getItem("air-quality-parameters");
-
-if (airQualityParameters !== null) {
-  airQualityParameters = JSON.parse(airQualityParameters);
-} else {
-  // initialize with default parameters
-  airQualityParameters = {
+/*
+* Defaults
+*/
+const defaultParameters = {
+  airQuality: {
     o3: {
       enable: true,
       ranges: [33, 65, 120, 180, 240],
@@ -49,35 +31,91 @@ if (airQualityParameters !== null) {
       enable: true,
       ranges: [3, 7.5, 37.5, 15000, 150000],
     },
-  };
+  },
+  demographic: {
 
-  localStorage.setItem(
-    "air-quality-parameters",
-    JSON.stringify(airQualityParameters)
-  );
+  }
 }
 
-let demographicParameters = localStorage.getItem("demographic-parameters");
+/*
+* Initializing datasets and parameters
+*/
+let datasets = {
+  airQuality: localStorage.getItem("air-quality-datasets"),
+  demographic: localStorage.getItem('demographic-datasets')
+};
 
-if (demographicParameters !== null) {
-  demographicParameters = JSON.parse(demographicParameters);
-} else {
-  // initialize with default parameters
+for (let dataset in datasets) {
+  if (datasets[dataset] !== null) {
+    datasets[dataset] = JSON.parse(datasets[dataset]);
+  }
+  else {
+    // initialize with default data
+  }
+}
+
+let parameters = {
+  airQuality: localStorage.getItem("air-quality-parameters"),
+  demographic: localStorage.getItem('demographic-parameters')
+}
+
+for (let parameter in parameters) {
+  if (parameters[parameter] !== null) {
+    parameters[parameter] = JSON.parse(parameters[parameter]);
+  }
+  else {
+    // initialize with default data
+    parameters[parameter] = defaultParameters[parameter];
+  }
 }
 
 const init = () => {
   document.getElementById("defaultOpen").click();
 
   // load air quality parameters
-  for (let pollutant in airQualityParameters) {
-    document.getElementById(`${pollutant}-enable`).checked =
-      airQualityParameters[pollutant].enable;
-    for (let i = 0; i < airQualityParameters[pollutant].ranges.length; ++i) {
-      document.getElementById(`${pollutant}-${i}`).value =
-        airQualityParameters[pollutant].ranges[i];
+  loadAirQualityParametersToForm();
+};
+
+/*
+* Interface Functions
+*/
+
+const saveAirQualityParameters = event => {
+  event.preventDefault();
+  // apply air quality parameters
+  for (let pollutant in parameters.airQuality) {
+    parameters.airQuality[pollutant].enable = document.getElementById(`${pollutant}-enable`).checked;
+    for (let i = 0; i < parameters.airQuality[pollutant].ranges.length; ++i) {
+      parameters.airQuality[pollutant].ranges[i] = document.getElementById(`${pollutant}-${i}`).value;
     }
   }
-};
+  localStorage.setItem(
+    "air-quality-parameters",
+    JSON.stringify(parameters.airQuality)
+  );
+}
+
+function resetAirQualityParametersToDefault() {
+  parameters.airQuality = defaultParameters.airQuality
+  
+  localStorage.setItem(
+    "air-quality-parameters",
+    JSON.stringify(parameters.airQuality)
+  );
+
+  loadAirQualityParametersToForm();
+}
+
+function loadAirQualityParametersToForm() {
+  for (let pollutant in parameters.airQuality) {
+    document.getElementById(`${pollutant}-enable`).checked =
+      parameters.airQuality[pollutant].enable;
+    for (let i = 0; i < parameters.airQuality[pollutant].ranges.length; ++i) {
+      document.getElementById(`${pollutant}-${i}`).value =
+        parameters.airQuality[pollutant].ranges[i];
+    }
+  }
+}
 
 const openData = (category) => {
   var i, tabcontent, tablinks;
@@ -156,6 +194,10 @@ const changeModalTab = (event, activateId, activeClasses) => {
   event.target.className += " active";
   document.getElementById(activateId).className += " active";
 };
+
+/*
+* CSV Functions
+*/
 
 function convertToCSV(objArray) {
   var array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;
