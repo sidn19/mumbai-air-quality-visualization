@@ -81,69 +81,73 @@
         <!-- Gradient -->
         <div class="gradient">Gradient here</div>
 
-        <!-- Toolbar -->
-        <div class="toolbar">
-          <div
-            class="toolbarIcon activeIcon"
-            id="databaseIcon"
-            onclick="changeToolbarIcon('databaseIcon')"
-          >
-            <span title="Database"
-              ><img src="./assets/icons/database.svg" alt=""
-            /></span>
-          </div>
+        <div class="toolbarSecondaryContainer">
+          <!-- Toolbar -->
+          <div class="toolbar">
+            <button
+              class="toolbarIcon activeIcon"
+              id="databaseIcon"
+              onclick="changeToolbarIcon('databaseIcon')"
+            >
+              <span title="Database"
+                ><img src="./assets/icons/database.svg" alt=""
+              /></span>
+            </button>
 
-          <div
-            class="toolbarIcon"
-            id="demographicDataIcon"
-            onclick="changeToolbarIcon('demographicDataIcon')"
-          >
-            <span title="Toggle Demographic Data"
-              ><img src="./assets/icons/demographics.svg" alt=""
-            /></span>
-          </div>
+            <button
+              class="toolbarIcon"
+              id="demographicDataIcon"
+              onclick="changeToolbarIcon('demographicDataIcon')"
+            >
+              <span title="Toggle Demographic Data"
+                ><img src="./assets/icons/demographics.svg" alt=""
+              /></span>
+            </button>
 
-          <div
-            class="toolbarIcon"
-            id="downloadIcon"
-            onclick="changeToolbarIcon('downloadIcon')"
-          >
-            <span title="Download Data"
-              ><img src="./assets/icons/download.svg" alt=""
-            /></span>
-          </div>
+            <button
+              class="toolbarIcon"
+              id="downloadIcon"
+              onclick="changeToolbarIcon('downloadIcon')"
+            >
+              <span title="Download Data"
+                ><img src="./assets/icons/download.svg" alt=""
+              /></span>
+            </button>
 
-          <div
-            class="toolbarIcon"
-            id="parameterIcon"
-            onclick="changeToolbarIcon('parameterIcon')"
-          >
-            <span title="Toggle Parameters"
-              ><img src="./assets/icons/parameters.svg" alt=""
-            /></span>
-          </div>
+            <button
+              class="toolbarIcon"
+              id="parameterIcon"
+              onclick="changeToolbarIcon('parameterIcon')"
+            >
+              <span title="Toggle Parameters"
+                ><img src="./assets/icons/parameters.svg" alt=""
+              /></span>
+            </button>
 
-          <div
-            class="toolbarIcon"
-            id="datasheetIcon"
-            onclick="changeToolbarIcon('datasheetIcon')"
-          >
-            <span title="Datasheet"
-              ><img src="./assets/icons/datasheet.svg" alt=""
-            /></span>
-          </div>
+            <button
+              class="toolbarIcon"
+              id="datasheetIcon"
+              onclick="changeToolbarIcon('datasheetIcon')"
+            >
+              <span title="Datasheet"
+                ><img src="./assets/icons/datasheet.svg" alt=""
+              /></span>
+            </button>
 
-          <div
-            class="toolbarIcon"
-            id="heatmapIcon"
-            onclick="changeToolbarIcon('heatmapIcon')"
-          >
-            <span title="Toggle Heatmap"
-              ><img src="./assets/icons/heatmap.svg" alt=""
-            /></span>
+            <button
+              class="toolbarIcon"
+              id="heatmapIcon"
+              onclick="changeToolbarIcon('heatmapIcon')"
+            >
+              <span title="Toggle Heatmap"
+                ><img src="./assets/icons/heatmap.svg" alt=""
+              /></span>
+            </button>
           </div>
+          <!-- Toolbar ends -->
+          <div id="secondaryDiv">secondary div</div>
         </div>
-        <!-- Toolbar ends -->
+
         <!-- Zoom -->
         <div class="zoom">
           <i class="fa fa-plus" onclick="zoom(1)"></i>

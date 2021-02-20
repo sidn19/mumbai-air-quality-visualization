@@ -24,7 +24,6 @@ const zoom = (x) => {
   // connect to zoom functionality
 };
 
-// use jquery to add className activeIcon
 const changeToolbarIcon = (icon) => {
   let toolbarIcons = document.getElementsByClassName("toolbarIcon");
   for (i = 0; i < toolbarIcons.length; i++) {
@@ -35,4 +34,14 @@ const changeToolbarIcon = (icon) => {
   }
   let activeIcon = document.getElementById(icon);
   activeIcon.className += " activeIcon";
+
+  switch (icon) {
+    case "demographicDataIcon":
+      if (document.getElementById("left").style.display === "none") {
+        document.getElementById("left").style.display = "block";
+      } else {
+        document.getElementById("left").style.display = "none";
+      }
+    case "parameterIcon":
+  }
 };
