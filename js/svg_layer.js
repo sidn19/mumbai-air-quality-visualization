@@ -102,6 +102,8 @@ export function geojsonOverlay(geojsonData, mapping, container) {
         }
         else if(feature.geometry.type === "MultiPolygon") {
             let path = getMultiPolygonPath(feature.geometry.coordinates, mapping);
+            path.setAttributeNS(null, "gid", feature.properties.gid);
+            path.setAttributeNS(null, "gname", feature.properties.name);
             container.appendChild(path);
         }
     }

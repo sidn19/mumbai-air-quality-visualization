@@ -20,7 +20,6 @@ export function createPieChart(categories, size, clockwise = true, startingAngle
     }, 0);
 
     for (let category of categories) {
-        //if (category.type === "male" || category.type === "others") continue;
         let angle = (360 * category.value) / total;
         let newX = Math.cos((angle * Math.PI) / 180);
         let newY = Math.sin((angle * Math.PI) / 180);
