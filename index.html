@@ -10,7 +10,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
   </head>
-  <body onload="init()">
+  <body>
     <div id="map-container">
       <!-- Map -->
       <div id="heatmap-layer"></div>
@@ -29,37 +29,36 @@
           <section class="content">
             <div class="tab">
               <button
-                class="tabLink"
-                id="defaultOpen"
-                onclick="openData('population')"
+                class="tabLink active openData"
+                data-open="population"
               >
                 Population
               </button>
-              <button class="tabLink" onclick="openData('family')">
+              <button class="tabLink openData" data-open="family">
                 Family
               </button>
-              <button class="tabLink" onclick="openData('education')">
+              <button class="tabLink openData" data-open="education">
                 Education
               </button>
-              <button class="tabLink" onclick="openData('religion')">
+              <button class="tabLink openData" data-open="religion">
                 Religion and Language
               </button>
-              <button class="tabLink" onclick="openData('occupation')">
+              <button class="tabLink openData" data-open="occupation">
                 Occupation
               </button>
-              <button class="tabLink" onclick="openData('healthindi')">
+              <button class="tabLink openData" data-open="healthindi">
                 Health Indicators
               </button>
-              <button class="tabLink" onclick="openData('diseases')">
+              <button class="tabLink openData" data-open="diseases">
                 Diseases
               </button>
-              <button class="tabLink" onclick="openData('healthinfra')">
+              <button class="tabLink openData" data-open="healthinfra">
                 Health Infrastructure
               </button>
             </div>
             <!-- Tab content -->
             <div class="tabContentDiv">
-              <div class="tabContent" id="population">Population</div>
+              <div class="tabContent active" id="population">Population</div>
               <div class="tabContent" id="family">Family</div>
               <div class="tabContent" id="education">Education</div>
               <div class="tabContent" id="religion">Religion and Language</div>
@@ -87,7 +86,6 @@
             <button
               class="toolbarIcon activeIcon"
               id="databaseIcon"
-              onclick="changeToolbarIcon('databaseIcon')"
             >
               <span title="Database"
                 ><img src="./assets/icons/database.svg" alt=""
@@ -97,7 +95,6 @@
             <button
               class="toolbarIcon"
               id="demographicDataIcon"
-              onclick="changeToolbarIcon('demographicDataIcon')"
             >
               <span title="Toggle Demographic Data"
                 ><img src="./assets/icons/demographics.svg" alt=""
@@ -107,7 +104,6 @@
             <button
               class="toolbarIcon"
               id="downloadIcon"
-              onclick="changeToolbarIcon('downloadIcon')"
             >
               <span title="Download Data"
                 ><img src="./assets/icons/download.svg" alt=""
@@ -117,7 +113,6 @@
             <button
               class="toolbarIcon"
               id="parameterIcon"
-              onclick="changeToolbarIcon('parameterIcon')"
             >
               <span title="Toggle Parameters"
                 ><img src="./assets/icons/parameters.svg" alt=""
@@ -127,7 +122,6 @@
             <button
               class="toolbarIcon"
               id="datasheetIcon"
-              onclick="changeToolbarIcon('datasheetIcon')"
             >
               <span title="Datasheet"
                 ><img src="./assets/icons/datasheet.svg" alt=""
@@ -137,7 +131,6 @@
             <button
               class="toolbarIcon"
               id="heatmapIcon"
-              onclick="changeToolbarIcon('heatmapIcon')"
             >
               <span title="Toggle Heatmap"
                 ><img src="./assets/icons/heatmap.svg" alt=""
@@ -150,8 +143,8 @@
 
         <!-- Zoom -->
         <div class="zoom">
-          <i class="fa fa-plus" onclick="zoom(1)"></i>
-          <i class="fa fa-minus" onclick="zoom(0)"></i>
+          <i class="fa fa-plus" id="zoom-in-button"></i>
+          <i class="fa fa-minus" id="zoom-out-button"></i>
         </div>
       </div>
     </div>
@@ -161,20 +154,22 @@
       <div class="modal-content" style="width: 35rem">
         <div class="flex-tab">
           <button
-            class="tab-link active parameter-tab"
-            onclick="changeModalTab(event, 'aq-parameters', ['parameter-tab', 'parameter-box'])"
+            class="tab-link active parameter-tab changeModalTab"
+            data-modal-tab="aq-parameters"
+            data-tab-classes='["parameter-tab", "parameter-box"]'
           >
             Air Quality
           </button>
           <button
-            class="tab-link parameter-tab"
-            onclick="changeModalTab(event, 'demo-parameters', ['parameter-tab', 'parameter-box'])"
+            class="tab-link parameter-tab changeModalTab"
+            data-modal-tab="demo-parameters"
+            data-tab-classes='["parameter-tab", "parameter-box"]'
           >
             Demographic
           </button>
         </div>
         <div id="aq-parameters" class="parameter-box active">
-          <form onsubmit="saveAirQualityParameters(event)">
+          <form id="aq-parameters-form">
             <div class="responsive-table">
               <table>
                 <tr>
@@ -271,7 +266,7 @@
             </div>
             <div class="modal-footer">
               <button type="submit">Apply Changes</button>
-              <button type="button" onclick="resetAirQualityParametersToDefault()">Reset to Defaults</button>
+              <button type="button" id="resetAirQualityToDefaultButton">Reset to Defaults</button>
               <button type="button" class="close-parameter-modal">Close</button>
             </div>
           </form>
@@ -289,14 +284,16 @@
       <div class="modal-content" style="width: 25rem">
         <div class="flex-tab">
           <button
-            class="tab-link active dataset-tab"
-            onclick="changeModalTab(event, 'aq-dataset-list', ['dataset-tab', 'dataset-list'])"
+            class="tab-link active dataset-tab changeModalTab"
+            data-modal-tab="aq-dataset-list"
+            data-tab-classes='["dataset-tab", "dataset-list"]'
           >
             Air Quality
           </button>
           <button
-            class="tab-link dataset-tab"
-            onclick="changeModalTab(event, 'demo-dataset-list', ['dataset-tab', 'dataset-list'])"
+            class="tab-link dataset-tab changeModalTab"
+            data-modal-tab="demo-dataset-list"
+            data-tab-classes='["dataset-tab", "dataset-list"]'
           >
             Demographic
           </button>
@@ -315,7 +312,6 @@
           <div class="modal-footer">
             <button
               id="download-aq-sample-dataset"
-              onclick="downloadAQSample()"
             >
               Download Sample
             </button>
@@ -342,7 +338,6 @@
           <div class="modal-footer">
             <button
               id="download-demo-sample-dataset"
-              onclick="downloadDemoSample()"
             >
               Download Sample
             </button>
@@ -359,9 +354,6 @@
     </div>
 
     <script type="module" src="./js/map.js"></script>
-    <script src="./js/air-quality-and-demographic-utils.js"></script>
-    <script src="./js/csv.js"></script>
-    <script src="./js/interface.js"></script>
-    <script src="./js/active-event-handlers.js"></script>
+    <script type="module" src="./js/active-event-handlers.js"></script>
   </body>
 </html>
