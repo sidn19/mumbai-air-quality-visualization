@@ -27,7 +27,7 @@ function convertToCSV(objArray) {
   
     var jsonObject = JSON.stringify(data);
   
-    var csv = this.convertToCSV(jsonObject);
+    var csv = convertToCSV(jsonObject);
   
     var exportedFilename = fileName + ".csv" || "aqvdata.csv";
   
@@ -48,7 +48,7 @@ function convertToCSV(objArray) {
     }
   }
   
-  function downloadAQSample() {
+  export function downloadAQSample() {
     let headers = {
       date: "Date",
       latitude: "Latitude",
