@@ -1,25 +1,44 @@
 import regionData from "../data/demographic_data.js";
+import { createPieChart } from "./piechart.js";
+import {
+  populationCategories,
+  createLegend,
+} from "./demographic-categories.js";
 
 const findRegion = (gid) => {
   return regionData.find((region) => region.gid == gid);
 };
 
-const populateDemographicData = (region) => {
-  let name = document.getElementById("regionName");
-  let direction = document.getElementById("regionDir");
-  let population = document.getElementById("population");
+const modalPopulation = (region) => {
+  let div = document.getElementById("population");
+  // Clear all previous child nodes
+  div.innerHTML = "";
 
-  name.textContent = region.name;
-  direction.textContent =
+  // Add the piechart
+  div.append(
+    createPieChart(populationCategories(region.data.population), 100, false, 90)
+  );
+  // Add piechart legend
+  createLegend(div, populationCategories(region.data.population));
+
+  //Display total population, sex ratio, and child sex ratio
+};
+
+const populateDemographicData = (region) => {
+  // Change region name and direction
+  document.getElementById("regionName").textContent = region.name;
+  document.getElementById("regionDir").textContent =
     region.direction === "east"
       ? "East"
       : region.direction === "west"
       ? "West"
       : "Other";
-  population.textContent = region.data.poulation.total;
+  //Populate population data
+  modalPopulation(region);
 };
 
-window.addEventListener("load", () => {
+// Add a click event to each region
+export const regionEventListener = () => {
   let currentRegionId = null;
   let currentRegion = null;
   let regions = document.getElementsByClassName("region");
@@ -31,4 +50,6 @@ window.addEventListener("load", () => {
       populateDemographicData(currentRegion);
     });
   }
-});
+};
+
+window.addEventListener("load", regionEventListener);

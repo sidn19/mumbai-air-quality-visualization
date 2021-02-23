@@ -15,6 +15,8 @@ import {
 import { geojsonOverlay } from "./svg_layer.js";
 import { addHeatmapTiles, removeHeatmapTiles } from "./heatmap_layer.js";
 
+import { regionEventListener } from "./demographic-modal.js";
+
 const svgMap = document.getElementById("svg-map");
 const svgMapRect = svgMap.getBoundingClientRect();
 
@@ -486,6 +488,9 @@ svgMap.addEventListener("wheel", function (event) {
 
     drawMap(tileLocationX, tileLocationY, newTileX, newTileY, currentZoom);
   }
+
+  // Add click event listener to region again after zooming
+  regionEventListener();
 });
 
 //Testing mappingPixelCoordsToLatLng function

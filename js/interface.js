@@ -1,8 +1,8 @@
 /*
-* Interface Functions
-*/
-export const openData = event => {
-  let category = event.currentTarget.getAttribute('data-open');
+ * Interface Functions
+ */
+export const openData = (event) => {
+  let category = event.currentTarget.getAttribute("data-open");
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabContent");
   for (i = 0; i < tabcontent.length; i++) {
@@ -14,7 +14,7 @@ export const openData = event => {
     tablinks[i].className = tablinks[i].className.replace(" active", "");
   }
 
-  document.getElementById(category).style.display = "block";
+  document.getElementById(category).style.display = "flex";
   event.currentTarget.className += " active";
 };
 
@@ -24,7 +24,7 @@ export const zoom = (x) => {
   // connect to zoom functionality
 };
 
-export const changeToolbarIcon = event => {
+export const changeToolbarIcon = (event) => {
   let toolbarIcons = document.getElementsByClassName("toolbarIcon");
   for (let i = 0; i < toolbarIcons.length; i++) {
     toolbarIcons[i].className = toolbarIcons[i].className.replace(
@@ -68,10 +68,12 @@ const openModal = (modalId, closeButtonClass) => {
   modal.addEventListener("click", clickEvent);
 };
 
-export const changeModalTab = event => {
-  let activateId = event.currentTarget.getAttribute('data-modal-tab');
-  let activeClasses = JSON.parse(event.currentTarget.getAttribute('data-tab-classes'));
-  
+export const changeModalTab = (event) => {
+  let activateId = event.currentTarget.getAttribute("data-modal-tab");
+  let activeClasses = JSON.parse(
+    event.currentTarget.getAttribute("data-tab-classes")
+  );
+
   for (let activeClass of activeClasses) {
     for (let tab of document.getElementsByClassName(activeClass)) {
       tab.className = tab.className.replace(" active", "");

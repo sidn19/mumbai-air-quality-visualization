@@ -121,6 +121,12 @@ body {
 
 .tabContent {
   display: none;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
 }
 
 .tabContent.active {
@@ -137,6 +143,39 @@ body {
   background-color: white;
   padding: 1rem;
   margin: 1rem;
+}
+
+.legendDiv {
+  width: 80%;
+  height: auto;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+}
+
+.legendCategory {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 0.2rem;
+}
+
+.categoryColor {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+.categoryType {
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.categoryValue {
+  font-size: 0.6rem;
+  margin: 0;
 }
 
 .right {
