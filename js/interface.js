@@ -18,12 +18,6 @@ export const openData = event => {
   event.currentTarget.className += " active";
 };
 
-export const zoom = (x) => {
-  // x = 1 if zoom in, 0 if out
-  console.log(x);
-  // connect to zoom functionality
-};
-
 export const changeToolbarIcon = event => {
   let toolbarIcons = document.getElementsByClassName("toolbarIcon");
   for (let i = 0; i < toolbarIcons.length; i++) {

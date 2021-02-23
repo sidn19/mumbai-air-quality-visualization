@@ -20,4 +20,4 @@ const categories = [
     },
 ];
 
-document.getElementById("piechart").append(createPieChart(categories, 500, true, 0));
+document.getElementById("piechart").append(createPieChart(categories, 300, false, 90));
