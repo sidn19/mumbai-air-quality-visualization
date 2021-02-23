@@ -18,7 +18,7 @@ const svgRegions = document.getElementById("svg-regions");
 const heatmapLayer = document.getElementById("heatmap-layer");
 
 let mappingLatLngToPixelCoords = null; //This will be the mapping function from (lat, lng) to pixel coordinates
-let mappingPixelCoordsToLatLng = null; //This will be the reverse mapping function from pixel coordinates to (lat, lng)
+export let mappingPixelCoordsToLatLng = null; //This will be the reverse mapping function from pixel coordinates to (lat, lng)
 
 let heatmapDataRefined = null; //This will hold the heatmap data points in pixel coordinates
 
@@ -47,11 +47,11 @@ let viewport = {
     height: svgMapRect.height,
 };
 
-let viewBoxCoords = {
-    min_x: svgMapRect.left,
-    min_y: svgMapRect.top,
-    width: svgMapRect.width,
-    height: svgMapRect.height,
+export let viewBoxCoords = {
+  min_x: svgMapRect.left,
+  min_y: svgMapRect.top,
+  width: svgMapRect.width,
+  height: svgMapRect.height,
 };
 
 let heatmapLayerCoords = {

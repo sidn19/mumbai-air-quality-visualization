@@ -1,11 +1,8 @@
-const init = () => {
-  document.getElementById("defaultOpen").click();
-};
-
 /*
 * Interface Functions
 */
-const openData = (category) => {
+export const openData = event => {
+  let category = event.currentTarget.getAttribute('data-open');
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabContent");
   for (i = 0; i < tabcontent.length; i++) {
@@ -21,18 +18,17 @@ const openData = (category) => {
   event.currentTarget.className += " active";
 };
 
-const changeToolbarIcon = (icon) => {
+export const changeToolbarIcon = event => {
   let toolbarIcons = document.getElementsByClassName("toolbarIcon");
-  for (i = 0; i < toolbarIcons.length; i++) {
+  for (let i = 0; i < toolbarIcons.length; i++) {
     toolbarIcons[i].className = toolbarIcons[i].className.replace(
       " activeIcon",
       ""
     );
   }
-  let activeIcon = document.getElementById(icon);
-  activeIcon.className += " activeIcon";
+  event.currentTarget.className += " activeIcon";
 
-  switch (icon) {
+  switch (event.currentTarget.id) {
     case "demographicDataIcon":
       if (document.getElementById("left").style.display === "none") {
         document.getElementById("left").style.display = "block";
@@ -66,13 +62,16 @@ const openModal = (modalId, closeButtonClass) => {
   modal.addEventListener("click", clickEvent);
 };
 
-const changeModalTab = (event, activateId, activeClasses) => {
+export const changeModalTab = event => {
+  let activateId = event.currentTarget.getAttribute('data-modal-tab');
+  let activeClasses = JSON.parse(event.currentTarget.getAttribute('data-tab-classes'));
+  
   for (let activeClass of activeClasses) {
     for (let tab of document.getElementsByClassName(activeClass)) {
       tab.className = tab.className.replace(" active", "");
     }
   }
 
-  event.target.className += " active";
+  event.currentTarget.className += " active";
   document.getElementById(activateId).className += " active";
 };
