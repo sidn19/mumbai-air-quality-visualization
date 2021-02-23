@@ -59,15 +59,14 @@
             </div>
             <!-- Tab content -->
             <div class="tabContentDiv">
-              <div class="tabContent" id="population">Population</div>
-              <div class="tabContent" id="family">Family</div>
-              <div class="tabContent" id="education">Education</div>
-              <div class="tabContent" id="religion">Religion and Language</div>
-              <div class="tabContent" id="occupation">Occupation</div>
-              <div class="tabContent" id="healthindi">Health Indicators</div>
-              <div class="tabContent" id="diseases">Diseases</div>
+              <div class="tabContent" id="population"></div>
+              <div class="tabContent" id="family"></div>
+              <div class="tabContent" id="education"></div>
+              <div class="tabContent" id="religion"></div>
+              <div class="tabContent" id="occupation"></div>
+              <div class="tabContent" id="healthindi"></div>
+              <div class="tabContent" id="diseases"></div>
               <div class="tabContent" id="healthinfra">
-                Health Infrastructure
               </div>
             </div>
             <!-- End of tab content -->
@@ -145,7 +144,7 @@
             </button>
           </div>
           <!-- Toolbar ends -->
-          <div id="secondaryDiv">secondary div</div>
+          <!-- <div id="secondaryDiv">secondary div</div> -->
         </div>
 
         <!-- Zoom -->
@@ -174,7 +173,7 @@
           </button>
         </div>
         <div id="aq-parameters" class="parameter-box active">
-          <form>
+          <form onsubmit="saveAirQualityParameters(event)">
             <div class="responsive-table">
               <table>
                 <tr>
@@ -191,11 +190,11 @@
                       <input type="checkbox" id="o3-enable" />O<sub>3</sub>
                     </label>
                   </td>
-                  <td><input type="number" id="o3-0" /></td>
-                  <td><input type="number" id="o3-1" /></td>
-                  <td><input type="number" id="o3-2" /></td>
-                  <td><input type="number" id="o3-3" /></td>
-                  <td><input type="number" id="o3-4" /></td>
+                  <td><input type="number" min="0" step="0.0001" id="o3-0" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="o3-1" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="o3-2" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="o3-3" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="o3-4" required /></td>
                 </tr>
                 <tr>
                   <td>
@@ -203,11 +202,11 @@
                       <input type="checkbox" id="pm25-enable" />PM 2.5
                     </label>
                   </td>
-                  <td><input type="number" id="pm25-0" /></td>
-                  <td><input type="number" id="pm25-1" /></td>
-                  <td><input type="number" id="pm25-2" /></td>
-                  <td><input type="number" id="pm25-3" /></td>
-                  <td><input type="number" id="pm25-4" /></td>
+                  <td><input type="number" min="0" step="0.0001" id="pm25-0" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="pm25-1" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="pm25-2" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="pm25-3" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="pm25-4" required /></td>
                 </tr>
                 <tr>
                   <td>
@@ -215,11 +214,11 @@
                       <input type="checkbox" id="pm10-enable" />PM 10
                     </label>
                   </td>
-                  <td><input type="number" id="pm10-0" /></td>
-                  <td><input type="number" id="pm10-1" /></td>
-                  <td><input type="number" id="pm10-2" /></td>
-                  <td><input type="number" id="pm10-3" /></td>
-                  <td><input type="number" id="pm10-4" /></td>
+                  <td><input type="number" min="0" step="0.0001" id="pm10-0" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="pm10-1" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="pm10-2" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="pm10-3" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="pm10-4" required /></td>
                 </tr>
                 <tr>
                   <td>
@@ -227,11 +226,11 @@
                       <input type="checkbox" id="no2-enable" />NO<sub>2</sub>
                     </label>
                   </td>
-                  <td><input type="number" id="no2-0" /></td>
-                  <td><input type="number" id="no2-1" /></td>
-                  <td><input type="number" id="no2-2" /></td>
-                  <td><input type="number" id="no2-3" /></td>
-                  <td><input type="number" id="no2-4" /></td>
+                  <td><input type="number" min="0" step="0.0001" id="no2-0" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="no2-1" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="no2-2" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="no2-3" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="no2-4" required /></td>
                 </tr>
                 <tr>
                   <td>
@@ -239,21 +238,21 @@
                       <input type="checkbox" id="so2-enable" />SO<sub>2</sub>
                     </label>
                   </td>
-                  <td><input type="number" id="so2-0" /></td>
-                  <td><input type="number" id="so2-1" /></td>
-                  <td><input type="number" id="so2-2" /></td>
-                  <td><input type="number" id="so2-3" /></td>
-                  <td><input type="number" id="so2-4" /></td>
+                  <td><input type="number" min="0" step="0.0001" id="so2-0" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="so2-1" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="so2-2" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="so2-3" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="so2-4" required /></td>
                 </tr>
                 <tr>
                   <td>
                     <label> <input type="checkbox" id="co-enable" />CO </label>
                   </td>
-                  <td><input type="number" id="co-0" /></td>
-                  <td><input type="number" id="co-1" /></td>
-                  <td><input type="number" id="co-2" /></td>
-                  <td><input type="number" id="co-3" /></td>
-                  <td><input type="number" id="co-4" /></td>
+                  <td><input type="number" min="0" step="0.0001" id="co-0" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="co-1" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="co-2" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="co-3" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="co-4" required /></td>
                 </tr>
                 <tr>
                   <td>
@@ -261,19 +260,20 @@
                       <input type="checkbox" id="nh3-enable" />NH<sub>3</sub>
                     </label>
                   </td>
-                  <td><input type="number" id="nh3-0" /></td>
-                  <td><input type="number" id="nh3-1" /></td>
-                  <td><input type="number" id="nh3-2" /></td>
-                  <td><input type="number" id="nh3-3" /></td>
-                  <td><input type="number" id="nh3-4" /></td>
+                  <td><input type="number" min="0" step="0.0001" id="nh3-0" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="nh3-1" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="nh3-2" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="nh3-3" required /></td>
+                  <td><input type="number" min="0" step="0.0001" id="nh3-4" required /></td>
                 </tr>
               </table>
             </div>
+            <div class="modal-footer">
+              <button type="submit">Apply Changes</button>
+              <button type="button" onclick="resetAirQualityParametersToDefault()">Reset to Defaults</button>
+              <button type="button" class="close-parameter-modal">Close</button>
+            </div>
           </form>
-          <div class="modal-footer">
-            <button>Apply Changes</button>
-            <button class="close-parameter-modal">Close</button>
-          </div>
         </div>
         <div id="demo-parameters" class="parameter-box">
           <div class="modal-footer">
@@ -358,6 +358,10 @@
     </div>
 
     <script type="module" src="./js/map.js"></script>
+    <script type="module" src="./js/demographic-modal.js"></script>
+    <script src="./js/air-quality-and-demographic-utils.js"></script>
+    <script src="./js/csv.js"></script>
     <script src="./js/interface.js"></script>
+    <script src="./js/active-event-handlers.js"></script>
   </body>
 </html>
