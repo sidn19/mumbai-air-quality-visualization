@@ -72,7 +72,7 @@ for (let parameter in parameters) {
 // load air quality parameters
 loadAirQualityParametersToForm();
 
-const saveAirQualityParameters = event => {
+export const saveAirQualityParameters = event => {
   event.preventDefault();
   // apply air quality parameters
   for (let pollutant in parameters.airQuality) {
@@ -87,7 +87,7 @@ const saveAirQualityParameters = event => {
   );
 }
 
-function resetAirQualityParametersToDefault() {
+export function resetAirQualityParametersToDefault() {
   parameters.airQuality = defaultParameters.airQuality
   
   localStorage.setItem(

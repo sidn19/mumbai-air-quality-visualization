@@ -4,6 +4,7 @@ body {
   padding: 0;
   height: 100%;
   font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
 }
 
 body {
@@ -12,6 +13,10 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+#location-tooltip {
+  position: absolute;
 }
 
 #map-container {
@@ -112,6 +117,14 @@ body {
 .flex-tab button.active,
 .tab button.active {
   background-color: #ccc;
+}
+
+.tabContent {
+  display: none;
+}
+
+.tabContent.active {
+  display: block;
 }
 
 .tabContentDiv {
