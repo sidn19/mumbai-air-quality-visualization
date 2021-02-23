@@ -105,3 +105,39 @@ export const gradientCustom = [
         color: "red",
     },
 ];
+
+export const defaultParameters = {
+    airQuality: {
+      o3: {
+        enable: true,
+        ranges: [33, 65, 120, 180, 240],
+      },
+      pm25: {
+        enable: true,
+        ranges: [5, 10, 20, 25, 60],
+      },
+      pm10: {
+        enable: true,
+        ranges: [10, 20, 35, 50, 100],
+      },
+      no2: {
+        enable: true,
+        ranges: [25, 50, 100, 200, 400],
+      },
+      so2: {
+        enable: true,
+        ranges: [25, 50, 120, 350, 500],
+      },
+      co: {
+        enable: true,
+        ranges: [1, 2, 4, 10, 30],
+      },
+      nh3: {
+        enable: true,
+        ranges: [3, 7.5, 37.5, 15000, 150000],
+      },
+    },
+    demographic: {
+  
+    }
+  }
