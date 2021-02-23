@@ -21,12 +21,6 @@ const openData = (category) => {
   event.currentTarget.className += " active";
 };
 
-const zoom = (x) => {
-  // x = 1 if zoom in, 0 if out
-  console.log(x);
-  // connect to zoom functionality
-};
-
 const changeToolbarIcon = (icon) => {
   let toolbarIcons = document.getElementsByClassName("toolbarIcon");
   for (i = 0; i < toolbarIcons.length; i++) {
