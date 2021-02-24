@@ -1,24 +1,62 @@
-export const populationCategories = (region) => {
-  return [
-    {
-      type: "male",
-      value: region.male,
-      color: "#0275d8",
-    },
-    {
-      type: "female",
-      value: region.female,
-      color: "#fb98d4",
-    },
-    {
-      type: "transgender",
-      value: region.transgender,
-      color: "#1e0166",
-    },
-  ];
+export const tabs = ["population", "family"];
+
+export const piechartCategories = (tab, region) => {
+  switch (tab) {
+    case "population":
+      return [
+        {
+          type: "Male",
+          value: region.data.population.male,
+          color: "#0275d8",
+        },
+        {
+          type: "Female",
+          value: region.data.population.female,
+          color: "#fb98d4",
+        },
+        {
+          type: "Transgender",
+          value: region.data.population.transgender,
+          color: "#FFFF00",
+        },
+      ];
+    case "family":
+      return [
+        {
+          type: "Nuclear Family",
+          value: region.data.family.nuclearFamily,
+          color: "#ccc",
+        },
+        {
+          type: "Joint Family",
+          value: region.data.family.jointFamily,
+          color: "#eee",
+        },
+      ];
+  }
 };
 
-export const createLegend = (div, categories) => {
+export const otherProperties = (tab, region) => {
+  switch (tab) {
+    case "population":
+      return [
+        {
+          type: "Total Population",
+          value: region.data.population.total,
+        },
+        {
+          type: "Sex Ratio",
+          value: region.data.population.sexRatio,
+        },
+        {
+          type: "Child Sex Ratio",
+          value: region.data.population.childSexRatio,
+        },
+      ];
+  }
+};
+
+export const createLegend = (categories) => {
   let legendDiv = document.createElement("div");
 
   //div container of legend
@@ -45,13 +83,25 @@ export const createLegend = (div, categories) => {
     categoryValue.textContent = category.value + "%";
 
     // Append color, type, and value to the legend category
-    legendCategory.appendChild(categoryColor);
-    legendCategory.appendChild(categoryType);
-    legendCategory.appendChild(categoryValue);
+    legendCategory.append(categoryColor, categoryType, categoryValue);
 
-    legendDiv.appendChild(legendCategory);
+    legendDiv.append(legendCategory);
   }
 
   // Append the legend div to the content tab
-  div.appendChild(legendDiv);
+  return legendDiv;
+};
+
+export const addOtherProperties = (properties) => {
+  let otherPropertiesDiv = document.createElement("div");
+  otherPropertiesDiv.setAttribute("class", "otherPropertiesDiv");
+
+  for (let property of properties) {
+    let otherProperty = document.createElement("h3");
+    otherProperty.setAttribute("class", "otherProperty");
+    otherProperty.textContent = `${property.type}: ${property.value}`;
+    otherPropertiesDiv.append(otherProperty);
+  }
+
+  return otherPropertiesDiv;
 };

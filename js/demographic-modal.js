@@ -1,27 +1,37 @@
 import regionData from "../data/demographic_data.js";
 import { createPieChart } from "./piechart.js";
 import {
-  populationCategories,
+  tabs,
+  piechartCategories,
+  otherProperties,
   createLegend,
+  addOtherProperties,
 } from "./demographic-categories.js";
+
+let currentPiechartCategories = null;
+let currentOtherProperties = null;
 
 const findRegion = (gid) => {
   return regionData.find((region) => region.gid == gid);
 };
 
-const modalPopulation = (region) => {
-  let div = document.getElementById("population");
+const populateData = (tab, region) => {
+  // Get piechart and other properties of the population tab
+  currentPiechartCategories = piechartCategories(tab, region);
+  currentOtherProperties = otherProperties(tab, region);
+
   // Clear all previous child nodes
+  let div = document.getElementById(tab);
   div.innerHTML = "";
 
-  // Add the piechart
+  // Add the piechart and legend
   div.append(
-    createPieChart(populationCategories(region.data.population), 100, false, 90)
+    createPieChart(currentPiechartCategories, 100, false, 90),
+    createLegend(currentPiechartCategories)
   );
-  // Add piechart legend
-  createLegend(div, populationCategories(region.data.population));
 
-  //Display total population, sex ratio, and child sex ratio
+  //Display other properties
+  div.append(addOtherProperties(currentOtherProperties));
 };
 
 const populateDemographicData = (region) => {
@@ -33,8 +43,11 @@ const populateDemographicData = (region) => {
       : region.direction === "west"
       ? "West"
       : "Other";
-  //Populate population data
-  modalPopulation(region);
+
+  //Populate data
+  for (let tab of tabs) {
+    populateData(tab, region);
+  }
 };
 
 // Add a click event to each region
@@ -42,9 +55,9 @@ export const regionEventListener = () => {
   let currentRegionId = null;
   let currentRegion = null;
   let regions = document.getElementsByClassName("region");
+
   for (let i = 0; i < regions.length; i++) {
     regions[i].addEventListener("click", (event) => {
-      //or add id = gid to the path
       currentRegionId = event.target.attributes[5].nodeValue;
       currentRegion = findRegion(currentRegionId);
       populateDemographicData(currentRegion);

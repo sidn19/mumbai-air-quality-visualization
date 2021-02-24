@@ -156,9 +156,10 @@ body {
 }
 
 .legendCategory {
+  padding: 0 0.5rem;
   width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   margin: 0.2rem;
 }
@@ -169,13 +170,26 @@ body {
 }
 
 .categoryType {
-  font-size: 0.8rem;
+  font-size: 0.65rem;
   margin: 0;
 }
 
 .categoryValue {
   font-size: 0.6rem;
   margin: 0;
+}
+
+.otherPropertiesDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+  width: 80%;
+}
+
+.otherProperty {
+  font-size: 0.6rem;
+  margin: 0.1rem;
 }
 
 .right {
