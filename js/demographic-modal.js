@@ -47,7 +47,6 @@ const populateDemographicData = (region) => {
 
   //Populate data
   for (let tab of tabs) {
-    console.log(tab);
     populateData(tab, region);
   }
 };
