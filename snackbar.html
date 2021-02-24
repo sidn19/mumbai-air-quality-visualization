@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <style>  
+        #snackbar {
+            visibility: hidden;
+            top: 50px;
+            left: 50%;
+            text-align: center;
+            background-color: gray;
+            color: white;
+            position: fixed;
+            padding: 20px;
+            min-width: 250px;
+            margin-left: -125px;
+            font-size: 20px;
+        }
+
+        .show {
+            visibility: visible !important;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 4.5s;
+            animation: fadein 0.5s, fadeout 0.5s 4.5s;
+        }
+
+        @-webkit-keyframes fadein {
+            from {top: 0; opacity: 0;}
+            to {top: 50px; opacity: 1;}
+        }
+
+        @keyframes fadein {
+            from {top: 0; opacity: 0;}
+            to {top: 50px; opacity: 1;}
+        }
+
+        @-webkit-keyframes fadeout {
+            from {top: 50px; opacity: 1;}
+            to {top: 0; opacity: 0;}
+        }
+
+        @keyframes fadeout {
+            from {top: 50px; opacity: 1;}
+            to {top: 0; opacity: 0;}
+        }
+      </style>
+    </head>
+    <body>
+      <button onclick="Snackbar()">Open Snackbar</button>
+      <div id="snackbar">Snackbar Content</div>
+      <script>
+        function Snackbar() {
+          var x = document.getElementById("snackbar");
+          x.className = "show";
+          setTimeout(function(){ 
+            x.className = x.className.replace("show", ""); 
+          }, 5000);
+        }
+      </script>
+    </body>
+  </html>
