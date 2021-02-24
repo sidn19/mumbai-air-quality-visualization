@@ -309,11 +309,11 @@ svgMap.addEventListener("wheel", function (event) {
 	zoomAt(x, y, event.deltaY);    
 });
 
-document.getElementById("zoom-in").addEventListener("click", function(event) {
+document.getElementById("zoom-in-button").addEventListener("click", function(event) {
 	zoomAt(Math.floor(viewport.width >>> 1), Math.floor(viewport.height >>> 1), -1);
 });
 
-document.getElementById("zoom-out").addEventListener("click", function(event) {
+document.getElementById("zoom-out-button").addEventListener("click", function(event) {
 	zoomAt(Math.floor(viewport.width >>> 1), Math.floor(viewport.height >>> 1), 1);
 });
 

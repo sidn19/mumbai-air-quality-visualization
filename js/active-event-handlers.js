@@ -1,5 +1,5 @@
 import { downloadAQSample } from './csv.js';
-import { zoom, openData, changeToolbarIcon, changeModalTab } from './interface.js';
+import { openData, changeToolbarIcon, changeModalTab } from './interface.js';
 import { resetAirQualityParametersToDefault, saveAirQualityParameters } from './air-quality-and-demographic-utils.js';
 import { viewBoxCoords, mappingPixelCoordsToLatLng } from './map.js';
 
