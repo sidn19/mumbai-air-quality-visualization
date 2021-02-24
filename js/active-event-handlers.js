@@ -1,7 +1,8 @@
 import { downloadAQSample } from './csv.js';
-import { zoom, openData, changeToolbarIcon, changeModalTab } from './interface.js';
+import { openData, changeToolbarIcon, changeModalTab } from './interface.js';
 import { resetAirQualityParametersToDefault, saveAirQualityParameters } from './air-quality-and-demographic-utils.js';
-import { viewBoxCoords, mappingPixelCoordsToLatLng } from './map.js';
+import { mappingPixelCoordsToLatLng } from './map.js';
+import { state } from './state.js';
 
 /*
 * Event handlers
@@ -11,9 +12,6 @@ document.getElementById('download-aq-sample-dataset').addEventListener('click', 
 document.getElementById('resetAirQualityToDefaultButton').addEventListener('click', resetAirQualityParametersToDefault);
 
 document.getElementById('aq-parameters-form').addEventListener('submit', saveAirQualityParameters);
-
-document.getElementById('zoom-in-button').addEventListener('click', () => zoom(1));
-document.getElementById('zoom-out-button').addEventListener('click', () => zoom(0));
 
 Array.from(document.querySelectorAll('.openData')).map(x => x.addEventListener('click', openData));
 Array.from(document.querySelectorAll('.toolbarIcon')).map(x => x.addEventListener('click', changeToolbarIcon));
@@ -40,7 +38,7 @@ document
   });
 
 document.addEventListener('mousemove', function (event) {
-  const latlng = mappingPixelCoordsToLatLng(event.clientX + viewBoxCoords.min_x, event.clientY + viewBoxCoords.min_y);
+  const latlng = mappingPixelCoordsToLatLng(event.clientX + state.viewBoxCoords.min_x, event.clientY + state.viewBoxCoords.min_y);
   const tooltip = document.getElementById('location-tooltip');
   tooltip.style.left = `${event.clientX}px`;
   tooltip.style.top = `${event.clientY + 12}px`;

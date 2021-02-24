@@ -28,10 +28,7 @@
           <!-- Vertical tabs -->
           <section class="content">
             <div class="tab">
-              <button
-                class="tabLink active openData"
-                data-open="population"
-              >
+              <button class="tabLink active openData" data-open="population">
                 Population
               </button>
               <button class="tabLink openData" data-open="family">
@@ -41,7 +38,10 @@
                 Education
               </button>
               <button class="tabLink openData" data-open="religion">
-                Religion and Language
+                Religion
+              </button>
+              <button class="tabLink openData" data-open="language">
+                Language
               </button>
               <button class="tabLink openData" data-open="occupation">
                 Occupation
@@ -58,16 +58,15 @@
             </div>
             <!-- Tab content -->
             <div class="tabContentDiv">
-              <div class="tabContent active" id="population">Population</div>
-              <div class="tabContent" id="family">Family</div>
-              <div class="tabContent" id="education">Education</div>
-              <div class="tabContent" id="religion">Religion and Language</div>
-              <div class="tabContent" id="occupation">Occupation</div>
-              <div class="tabContent" id="healthindi">Health Indicators</div>
-              <div class="tabContent" id="diseases">Diseases</div>
-              <div class="tabContent" id="healthinfra">
-                Health Infrastructure
-              </div>
+              <div class="tabContent" id="population"></div>
+              <div class="tabContent" id="family"></div>
+              <div class="tabContent" id="education"></div>
+              <div class="tabContent" id="religion"></div>
+              <div class="tabContent" id="language"></div>
+              <div class="tabContent" id="occupation"></div>
+              <div class="tabContent" id="healthindi"></div>
+              <div class="tabContent" id="diseases"></div>
+              <div class="tabContent" id="healthinfra"></div>
             </div>
             <!-- End of tab content -->
           </section>
@@ -83,62 +82,44 @@
         <div class="toolbarSecondaryContainer">
           <!-- Toolbar -->
           <div class="toolbar">
-            <button
-              class="toolbarIcon activeIcon"
-              id="databaseIcon"
-            >
+            <button class="toolbarIcon activeIcon" id="databaseIcon">
               <span title="Database"
                 ><img src="./assets/icons/database.svg" alt=""
               /></span>
             </button>
 
-            <button
-              class="toolbarIcon"
-              id="demographicDataIcon"
-            >
+            <button class="toolbarIcon" id="demographicDataIcon">
               <span title="Toggle Demographic Data"
                 ><img src="./assets/icons/demographics.svg" alt=""
               /></span>
             </button>
 
-            <button
-              class="toolbarIcon"
-              id="downloadIcon"
-            >
+            <button class="toolbarIcon" id="downloadIcon">
               <span title="Download Data"
                 ><img src="./assets/icons/download.svg" alt=""
               /></span>
             </button>
 
-            <button
-              class="toolbarIcon"
-              id="parameterIcon"
-            >
+            <button class="toolbarIcon" id="parameterIcon">
               <span title="Toggle Parameters"
                 ><img src="./assets/icons/parameters.svg" alt=""
               /></span>
             </button>
 
-            <button
-              class="toolbarIcon"
-              id="datasheetIcon"
-            >
+            <button class="toolbarIcon" id="datasheetIcon">
               <span title="Datasheet"
                 ><img src="./assets/icons/datasheet.svg" alt=""
               /></span>
             </button>
 
-            <button
-              class="toolbarIcon"
-              id="heatmapIcon"
-            >
+            <button class="toolbarIcon" id="heatmapIcon">
               <span title="Toggle Heatmap"
                 ><img src="./assets/icons/heatmap.svg" alt=""
               /></span>
             </button>
           </div>
           <!-- Toolbar ends -->
-          <div id="secondaryDiv">secondary div</div>
+          <!-- <div id="secondaryDiv">secondary div</div> -->
         </div>
 
         <!-- Zoom -->
@@ -186,11 +167,51 @@
                       <input type="checkbox" id="o3-enable" />O<sub>3</sub>
                     </label>
                   </td>
-                  <td><input type="number" min="0" step="0.0001" id="o3-0" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="o3-1" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="o3-2" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="o3-3" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="o3-4" required /></td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="o3-0"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="o3-1"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="o3-2"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="o3-3"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="o3-4"
+                      required
+                    />
+                  </td>
                 </tr>
                 <tr>
                   <td>
@@ -198,11 +219,51 @@
                       <input type="checkbox" id="pm25-enable" />PM 2.5
                     </label>
                   </td>
-                  <td><input type="number" min="0" step="0.0001" id="pm25-0" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="pm25-1" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="pm25-2" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="pm25-3" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="pm25-4" required /></td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="pm25-0"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="pm25-1"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="pm25-2"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="pm25-3"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="pm25-4"
+                      required
+                    />
+                  </td>
                 </tr>
                 <tr>
                   <td>
@@ -210,11 +271,51 @@
                       <input type="checkbox" id="pm10-enable" />PM 10
                     </label>
                   </td>
-                  <td><input type="number" min="0" step="0.0001" id="pm10-0" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="pm10-1" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="pm10-2" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="pm10-3" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="pm10-4" required /></td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="pm10-0"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="pm10-1"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="pm10-2"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="pm10-3"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="pm10-4"
+                      required
+                    />
+                  </td>
                 </tr>
                 <tr>
                   <td>
@@ -222,11 +323,51 @@
                       <input type="checkbox" id="no2-enable" />NO<sub>2</sub>
                     </label>
                   </td>
-                  <td><input type="number" min="0" step="0.0001" id="no2-0" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="no2-1" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="no2-2" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="no2-3" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="no2-4" required /></td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="no2-0"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="no2-1"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="no2-2"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="no2-3"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="no2-4"
+                      required
+                    />
+                  </td>
                 </tr>
                 <tr>
                   <td>
@@ -234,21 +375,101 @@
                       <input type="checkbox" id="so2-enable" />SO<sub>2</sub>
                     </label>
                   </td>
-                  <td><input type="number" min="0" step="0.0001" id="so2-0" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="so2-1" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="so2-2" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="so2-3" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="so2-4" required /></td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="so2-0"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="so2-1"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="so2-2"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="so2-3"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="so2-4"
+                      required
+                    />
+                  </td>
                 </tr>
                 <tr>
                   <td>
                     <label> <input type="checkbox" id="co-enable" />CO </label>
                   </td>
-                  <td><input type="number" min="0" step="0.0001" id="co-0" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="co-1" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="co-2" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="co-3" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="co-4" required /></td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="co-0"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="co-1"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="co-2"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="co-3"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="co-4"
+                      required
+                    />
+                  </td>
                 </tr>
                 <tr>
                   <td>
@@ -256,17 +477,59 @@
                       <input type="checkbox" id="nh3-enable" />NH<sub>3</sub>
                     </label>
                   </td>
-                  <td><input type="number" min="0" step="0.0001" id="nh3-0" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="nh3-1" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="nh3-2" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="nh3-3" required /></td>
-                  <td><input type="number" min="0" step="0.0001" id="nh3-4" required /></td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="nh3-0"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="nh3-1"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="nh3-2"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="nh3-3"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      id="nh3-4"
+                      required
+                    />
+                  </td>
                 </tr>
               </table>
             </div>
             <div class="modal-footer">
               <button type="submit">Apply Changes</button>
-              <button type="button" id="resetAirQualityToDefaultButton">Reset to Defaults</button>
+              <button type="button" id="resetAirQualityToDefaultButton">
+                Reset to Defaults
+              </button>
               <button type="button" class="close-parameter-modal">Close</button>
             </div>
           </form>
@@ -310,11 +573,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button
-              id="download-aq-sample-dataset"
-            >
-              Download Sample
-            </button>
+            <button id="download-aq-sample-dataset">Download Sample</button>
             <button type="button">
               <label for="aq-upload-dataset" class="custom-file-upload"
                 >Upload Dataset</label
@@ -336,11 +595,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button
-              id="download-demo-sample-dataset"
-            >
-              Download Sample
-            </button>
+            <button id="download-demo-sample-dataset">Download Sample</button>
             <button type="button">
               <label for="demo-upload-dataset" class="custom-file-upload"
                 >Upload Dataset</label
@@ -354,6 +609,13 @@
     </div>
     <div id="location-tooltip"></div>
     <script type="module" src="./js/map.js"></script>
+    <script type="module" src="./js/demographic-modal.js"></script>
+    <script
+      type="module"
+      src="./js/air-quality-and-demographic-utils.js"
+    ></script>
+    <script src="./js/csv.js"></script>
     <script type="module" src="./js/active-event-handlers.js"></script>
+    <script type="module" src="./js/interface.js"></script>
   </body>
 </html>
