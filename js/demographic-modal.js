@@ -7,6 +7,7 @@ import {
   createLegend,
   addOtherProperties,
 } from "./demographic-categories.js";
+import { state } from "./state.js";
 
 let currentPiechartCategories = null;
 let currentOtherProperties = null;
@@ -16,7 +17,7 @@ const findRegion = (gid) => {
 };
 
 const populateData = (tab, region) => {
-  // Get piechart and other properties of the population tab
+  // Get piechart and other properties of the tab
   currentPiechartCategories = piechartCategories(tab, region);
   currentOtherProperties = otherProperties(tab, region);
 
@@ -46,23 +47,25 @@ const populateDemographicData = (region) => {
 
   //Populate data
   for (let tab of tabs) {
+    console.log(tab);
     populateData(tab, region);
   }
 };
 
 // Add a click event to each region
 export const regionEventListener = () => {
-  let currentRegionId = null;
-  let currentRegion = null;
   let regions = document.getElementsByClassName("region");
 
   for (let i = 0; i < regions.length; i++) {
     regions[i].addEventListener("click", (event) => {
-      currentRegionId = event.target.attributes[5].nodeValue;
-      currentRegion = findRegion(currentRegionId);
-      populateDemographicData(currentRegion);
+      state.currentRegionId = event.target.attributes[5].nodeValue;
+      state.currentRegion = findRegion(state.currentRegionId);
+      populateDemographicData(state.currentRegion);
     });
   }
 };
 
-window.addEventListener("load", regionEventListener);
+window.addEventListener("load", () => {
+  regionEventListener();
+  document.querySelector(".active").click();
+});

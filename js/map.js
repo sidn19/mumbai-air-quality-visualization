@@ -155,6 +155,8 @@ function drawMap(locationX, locationY, tileX, tileY, zoom) {
     heatmapLayerCoords.top = 0;
     heatmapLayer.style.transform = `translate(0px, 0px)`;
     addHeatmapTiles(heatmapDataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.right, mapCoords.bottom);
+
+    regionEventListener();
 }
 
 //initialize map

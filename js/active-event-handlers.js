@@ -12,9 +12,6 @@ document.getElementById('resetAirQualityToDefaultButton').addEventListener('clic
 
 document.getElementById('aq-parameters-form').addEventListener('submit', saveAirQualityParameters);
 
-document.getElementById('zoom-in-button').addEventListener('click', () => zoom(1));
-document.getElementById('zoom-out-button').addEventListener('click', () => zoom(0));
-
 Array.from(document.querySelectorAll('.openData')).map(x => x.addEventListener('click', openData));
 Array.from(document.querySelectorAll('.toolbarIcon')).map(x => x.addEventListener('click', changeToolbarIcon));
 Array.from(document.querySelectorAll('.changeModalTab')).map(x => x.addEventListener('click', changeModalTab));
