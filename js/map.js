@@ -9,6 +9,8 @@ import { getTileImage, latlngToPixelCoords, pixelCoordsToLatLng, addMapTiles, re
 import { geojsonOverlay } from "./svg_layer.js";
 import { addHeatmapTiles, removeHeatmapTiles } from "./heatmap_layer.js";
 
+import { regionEventListener } from "./demographic-modal.js";
+
 const svgMap = document.getElementById("svg-map");
 const svgMapRect = svgMap.getBoundingClientRect();
 
@@ -153,6 +155,8 @@ function drawMap(locationX, locationY, tileX, tileY, zoom) {
     heatmapLayerCoords.top = 0;
     heatmapLayer.style.transform = `translate(0px, 0px)`;
     addHeatmapTiles(heatmapDataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.right, mapCoords.bottom);
+
+    regionEventListener();
 }
 
 //initialize map
@@ -307,11 +311,11 @@ svgMap.addEventListener("wheel", function (event) {
 	zoomAt(x, y, event.deltaY);    
 });
 
-document.getElementById("zoom-in").addEventListener("click", function(event) {
+document.getElementById("zoom-in-button").addEventListener("click", function(event) {
 	zoomAt(Math.floor(viewport.width >>> 1), Math.floor(viewport.height >>> 1), -1);
 });
 
-document.getElementById("zoom-out").addEventListener("click", function(event) {
+document.getElementById("zoom-out-button").addEventListener("click", function(event) {
 	zoomAt(Math.floor(viewport.width >>> 1), Math.floor(viewport.height >>> 1), 1);
 });
 

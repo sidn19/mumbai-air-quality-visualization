@@ -1,5 +1,5 @@
 import { downloadAQSample } from './csv.js';
-import { zoom, openData, changeToolbarIcon, changeModalTab } from './interface.js';
+import { openData, changeToolbarIcon, changeModalTab } from './interface.js';
 import { resetAirQualityParametersToDefault, saveAirQualityParameters } from './air-quality-and-demographic-utils.js';
 import { viewBoxCoords, mappingPixelCoordsToLatLng } from './map.js';
 
@@ -11,9 +11,6 @@ document.getElementById('download-aq-sample-dataset').addEventListener('click', 
 document.getElementById('resetAirQualityToDefaultButton').addEventListener('click', resetAirQualityParametersToDefault);
 
 document.getElementById('aq-parameters-form').addEventListener('submit', saveAirQualityParameters);
-
-document.getElementById('zoom-in-button').addEventListener('click', () => zoom(1));
-document.getElementById('zoom-out-button').addEventListener('click', () => zoom(0));
 
 Array.from(document.querySelectorAll('.openData')).map(x => x.addEventListener('click', openData));
 Array.from(document.querySelectorAll('.toolbarIcon')).map(x => x.addEventListener('click', changeToolbarIcon));
