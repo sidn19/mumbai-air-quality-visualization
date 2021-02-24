@@ -1,5 +1,6 @@
 import { defaultParameters } from './declarations.js';
 import { state } from './state.js';
+import { csvToObject } from './csv.js';
 
 /*
 * Initializing datasets and parameters
@@ -12,9 +13,36 @@ let JSONDatasets = {
 for (let dataset in state.datasets) {
   if (JSONDatasets[dataset] !== null) {
     state.datasets[dataset] = JSON.parse(JSONDatasets[dataset]);
+
+    if (dataset === 'airQuality') {
+      addDatasetsToDOM(state.datasets[dataset]);
+
+      for (let data of state.datasets[dataset]) {
+        data = groupDataByDate(data);
+      }
+    }
   }
   else {
-    // initialize with default data
+    if (dataset === 'airQuality') {
+      fetch('./data/demo-air-quality.csv')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error;
+        }
+        return response.text();
+      })
+      .then(data => {
+        state.datasets[dataset][0] = {
+          data: csvToObject(data),
+          name: 'demo-air-quality.csv',
+          addedOn: new Date().toISOString()
+        };
+        localStorage.setItem('air-quality-datasets', JSON.stringify(state.datasets[dataset]));
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    }
   }
 }
 
@@ -70,5 +98,49 @@ function loadAirQualityParametersToForm() {
       document.getElementById(`${pollutant}-${i}`).value =
       state.parameters.airQuality[pollutant].ranges[i];
     }
+  }
+}
+
+function groupDataByDate(dataset) {
+  let dates = {};
+  let firstDate = '';
+
+  for (let dataItem of dataset.data) {
+    if (!dates.hasOwnProperty(dataItem.date)) {
+      dates[dataItem.date] = [];
+
+      if (firstDate === '') {
+        firstDate = dataItem.date;
+      }
+    }
+
+    const dataToPush = {};
+    for (let property in dataItem) {
+      if (property !== 'date') {
+        dataToPush[property] = dataItem[property];
+      }
+    }
+    dates[dataItem.date].push(dataToPush);
+  }
+
+  return dates;
+}
+
+function addDatasetsToDOM(datasets) {
+  const list = document.getElementById('aq-dataset-list');
+  for (let dataset of datasets) {
+    const div = document.createElement('div');
+    div.className = 'dataset-item';
+    div.innerHTML = `
+      <div class="dataset-text">
+        <div>${dataset.name}</div>
+        <div>Added on: ${dataset.addedOn}</div>
+      </div>
+      <div>
+        <button class="download-button"></button>
+        <button class="delete-button"></button>
+      </div>
+    `;
+    list.prepend(div);
   }
 }

@@ -99,3 +99,35 @@ function convertToCSV(objArray) {
   
     exportCSVFile(headers, aqvdataFormatted, "Mumbai M ward AQV data");
   }
+
+
+export function csvToObject(data) {
+  let dataset = [];
+  let properties = [];
+  for (let item of data.split('\n')) {
+    if (item === '') {
+      continue;
+    }
+
+    const itemData = item.trim().split(',');
+
+    if (properties.length === 0) {
+      properties = itemData;
+    }
+    else {
+      const dataItem = {};
+
+      for (let i = 0; i < itemData.length; ++i) {
+        if (properties[i] !== 'date') {
+          dataItem[properties[i]] = parseFloat(itemData[i]);
+        }
+        else {
+          dataItem[properties[i]] = itemData[i];
+        }
+      }
+      dataset.push(dataItem);
+    }
+  }
+
+  return dataset;
+}
