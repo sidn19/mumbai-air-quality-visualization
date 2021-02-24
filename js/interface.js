@@ -1,3 +1,5 @@
+import { toggleHeatmap } from "./map.js";
+
 /*
  * Interface Functions
  */
@@ -41,6 +43,9 @@ export const changeToolbarIcon = (event) => {
       break;
     case "datasheetIcon":
       openModal("datasetModal", "close-dataset-modal");
+      break;
+    case "heatmapIcon":
+      toggleHeatmap();
       break;
   }
 };
