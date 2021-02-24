@@ -6,5 +6,7 @@ export const state = {
     parameters: {
         airQuality: {},
         demographic: []
-    }
+    },
+    currentRegionId: 112,
+    currentRegion: null,
 };
