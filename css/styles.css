@@ -21,6 +21,12 @@ body {
   right: 5rem;
 }
 
+#region-name-tooltip {
+  position: absolute;
+  font-size: 1.2rem;
+  width: 12rem;
+}
+
 #map-container {
   /* border: 2px solid blueviolet; */
   width: 100%;

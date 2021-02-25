@@ -7,7 +7,7 @@ export const state = {
         airQuality: {},
         demographic: []
     },
-    currentRegionId: 112,
+    currentRegionId: null,
     currentRegion: null,
     viewHeatmap: true,
     viewBoxCoords: {
