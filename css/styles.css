@@ -36,6 +36,10 @@ body {
   cursor: grab;
 }
 
+.activeRegion {
+  fill: rgba(170,238,204,0.7);
+}
+
 #heatmap-layer {
   /* border: 1px solid blue; */
   pointer-events: none;

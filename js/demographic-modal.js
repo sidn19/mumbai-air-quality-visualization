@@ -51,14 +51,29 @@ const populateDemographicData = (region) => {
   }
 };
 
+const clearActiveRegions = () => {
+  for(let path of document.querySelectorAll('.activeRegion')){
+    path.setAttribute('class', path.getAttribute('class').replace('activeRegion',""))
+  }
+}
+
+
 // Add a click event to each region
 export const regionEventListener = () => {
   let regions = document.getElementsByClassName("region");
-
+  
   for (let i = 0; i < regions.length; i++) {
     regions[i].addEventListener("click", (event) => {
+      // Remove 'activeRegion' classname
+      clearActiveRegions();
+
+      // Get region id of selected event
       state.currentRegionId = event.target.attributes[5].nodeValue;
       state.currentRegion = findRegion(state.currentRegionId);
+
+      //Highlight selected region
+      event.target.setAttribute('class',`${event.target.getAttribute('class')} activeRegion`)
+      
       populateDemographicData(state.currentRegion);
     });
   }
