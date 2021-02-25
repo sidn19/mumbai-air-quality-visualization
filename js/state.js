@@ -8,7 +8,7 @@ export const state = {
         demographic: []
     },
     currentRegionId: null,
-    currentRegion: null,
+    currentRegionData: null,
     viewHeatmap: true,
     viewBoxCoords: {
         min_x: 0,
