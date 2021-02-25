@@ -15,5 +15,6 @@ export const state = {
         min_y: 0,
         width: 0,
         height: 0
-    }
+    },
+    selectedDate: '1-1-2020'
 };
