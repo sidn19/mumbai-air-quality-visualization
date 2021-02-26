@@ -82,11 +82,12 @@ export function toggleHeatmap() {
  * 
  * @param {{latitude: number, longitude: number, severity: number}[]} heatmapData - Raw Heatmap Data
  * @param {*} mapping - Mapping function from latitude longitude to pixel coordinates
+ * @param {*} normalize - Normalization function to normalize value of severity from 0 to 1
  */
-function refineHeatmapData(heatmapData, mapping) {
+function refineHeatmapData(heatmapData, mapping, normalize) {
     let heatmapDataRefined = heatmapData.map((point) => {
         let pixelCoords = mapping(point.latitude, point.longitude);
-        return [pixelCoords.x, pixelCoords.y, point.severity];
+        return [pixelCoords.x, pixelCoords.y, normalize(point.severity)];
     });
     return heatmapDataRefined;
 }
@@ -140,7 +141,12 @@ export function drawMap(locationX, locationY, tileX, tileY, zoom) {
     heatmapLayerCoords.left = 0;
     heatmapLayerCoords.top = 0;
     heatmapLayer.style.transform = `translate(0px, 0px)`;
-    state.heatmapDataRefined = refineHeatmapData(state.heatmapData, state.mappingLatLngToPixelCoords);
+    
+    // Need to update this
+    state.heatmapDataRefined = refineHeatmapData(state.heatmapData, state.mappingLatLngToPixelCoords, function(severity) {
+        return severity / 3;
+    });
+    console.log(state.heatmapDataRefined);
     if (state.viewHeatmap) {
         addHeatmapTiles(state.heatmapDataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.right, mapCoords.bottom);
     }
