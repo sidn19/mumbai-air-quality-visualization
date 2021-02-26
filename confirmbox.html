@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <style>
+        body {font-family: Arial, Helvetica, sans-serif;}
+        * {box-sizing: border-box;}
+
+        button:hover {
+        opacity:1;
+        }
+
+        .yesbtn{
+            float: bottom;
+            font-size: 10px;
+            width: 100px;
+            height: 20px;
+            background-color: green;
+            color: white;
+        }
+
+        .nobtn {
+            float: bottom;
+            font-size: 10px;
+            width: 100px;
+            height: 20px;
+            background-color: red;
+            color: white;
+        }
+
+        .container {
+            padding: 5px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 10px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: auto;
+            padding: 5px;
+            width: 20%;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+            -webkit-animation-name: animatetop;
+            -webkit-animation-duration: 0.4s;
+            animation-name: animatetop;
+            animation-duration: 0.4s
+        }
+
+        @-webkit-keyframes animatetop {
+            from {top:-300px; opacity:0} 
+            to {top:0; opacity:1}
+        }
+
+        @keyframes animatetop {
+            from {top:-300px; opacity:0}
+            to {top:0; opacity:1}
+        }
+
+        .close {
+            color: gray;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover, .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            padding: 2px 16px;
+            color: white;
+        }
+    </style>
+    <body>
+        <button onclick="getAlert()">Confirm Dialog</button>
+
+        <div id="confirm" class="modal">
+            <form class="modal-content" action="#">
+                <span class="close">&times;</span>
+                <div class="container">
+                    <p>Click Yes or No</p>
+                    <div class="modal-footer">
+                        <button type="button" onclick="clickedYes()" class="yesbtn">Yes</button>&nbsp;
+                        <button type="button" onclick="clickedNo()" class="nobtn">No</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            var modal = document.getElementById('confirm');
+
+            var span = document.getElementsByClassName("close")[0];
+
+            function getAlert() {
+                document.getElementById('confirm').style.display='block';
+            }
+            
+            function clickedYes() {
+                document.getElementById('confirm').style.display='none';
+            }
+
+            function clickedNo() {
+                document.getElementById('confirm').style.display='none';
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            
+        </script>
+    </body>
+</html>

@@ -9,6 +9,7 @@ body {
 
 body {
   background-color: #ddd;
+  user-select: none;
 }
 
 * {
@@ -44,6 +45,10 @@ body {
 
 .activeRegion {
   fill: rgba(170,238,204,0.7);
+}
+
+.region:hover {
+  opacity: 0.8;
 }
 
 #heatmap-layer {
@@ -391,7 +396,14 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   margin: 1rem 0rem;
+}
+
+.dataset-item .dataset-item-inner-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .dataset-text {

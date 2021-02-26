@@ -3,57 +3,32 @@
     <head>
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <style>  
-        #snackbar {
-            visibility: hidden;
-            top: 50px;
-            left: 50%;
+        .snackbar {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
             text-align: center;
             background-color: gray;
             color: white;
-            position: fixed;
             padding: 20px;
-            min-width: 250px;
-            margin-left: -125px;
+            min-width: 200px;
+            margin-left: -100px;
             font-size: 20px;
-        }
-
-        .show {
-            visibility: visible !important;
-            -webkit-animation: fadein 0.5s, fadeout 0.5s 4.5s;
-            animation: fadein 0.5s, fadeout 0.5s 4.5s;
-        }
-
-        @-webkit-keyframes fadein {
-            from {top: 0; opacity: 0;}
-            to {top: 50px; opacity: 1;}
-        }
-
-        @keyframes fadein {
-            from {top: 0; opacity: 0;}
-            to {top: 50px; opacity: 1;}
-        }
-
-        @-webkit-keyframes fadeout {
-            from {top: 50px; opacity: 1;}
-            to {top: 0; opacity: 0;}
-        }
-
-        @keyframes fadeout {
-            from {top: 50px; opacity: 1;}
-            to {top: 0; opacity: 0;}
         }
       </style>
     </head>
     <body>
-      <button onclick="Snackbar()">Open Snackbar</button>
-      <div id="snackbar">Snackbar Content</div>
+      <button onclick="Snackbar('Abcd')">Open Snackbar</button>
+      
       <script>
-        function Snackbar() {
-          var x = document.getElementById("snackbar");
-          x.className = "show";
+        function Snackbar(text) {
+          const x = document.createElement('div');
+          x.innerText = text;
+          x.className += 'snackbar';
+          document.body.append(x);
           setTimeout(function(){ 
-            x.className = x.className.replace("show", ""); 
-          }, 5000);
+            x.remove();
+          }, 3000);
         }
       </script>
     </body>

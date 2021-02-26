@@ -5,47 +5,6 @@ import { csvToObject } from './csv.js';
 /*
 * Initializing datasets and parameters
 */
-let JSONDatasets = {
-  airQuality: localStorage.getItem("air-quality-datasets"),
-  demographic: localStorage.getItem('demographic-datasets')
-};
-
-for (let dataset in state.datasets) {
-  if (JSONDatasets[dataset] !== null) {
-    state.datasets[dataset] = JSON.parse(JSONDatasets[dataset]);
-
-    if (dataset === 'airQuality') {
-      addDatasetsToDOM(state.datasets[dataset]);
-
-      for (let data of state.datasets[dataset]) {
-        data = groupDataByDate(data);
-      }
-    }
-  }
-  else {
-    if (dataset === 'airQuality') {
-      fetch('./data/demo-air-quality.csv')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error;
-        }
-        return response.text();
-      })
-      .then(data => {
-        state.datasets[dataset][0] = {
-          data: csvToObject(data),
-          name: 'demo-air-quality.csv',
-          addedOn: new Date().toISOString()
-        };
-        localStorage.setItem('air-quality-datasets', JSON.stringify(state.datasets[dataset]));
-      })
-      .catch(error => {
-        console.error(error);
-      });
-    }
-  }
-}
-
 let JSONParameters = {
   airQuality: localStorage.getItem("air-quality-parameters"),
   demographic: localStorage.getItem('demographic-parameters')
@@ -64,6 +23,93 @@ for (let parameter in state.parameters) {
 // load air quality parameters
 loadAirQualityParametersToForm();
 
+let JSONDatasets = {
+  airQuality: localStorage.getItem("air-quality-datasets"),
+  demographic: localStorage.getItem('demographic-datasets')
+};
+
+for (let dataset in state.datasets) {
+  if (JSONDatasets[dataset] !== null) {
+    state.datasets[dataset] = JSON.parse(JSONDatasets[dataset]);
+
+    if (dataset === 'airQuality') {
+      addDatasetsToDOM(state.datasets[dataset], dataset);
+      loadHeatmapFromAirQualityDatasets(state.datasets[dataset]);
+    }
+  }
+  else {
+    if (dataset === 'airQuality') {
+      fetch('./data/demo-air-quality.csv')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error;
+        }
+        return response.text();
+      })
+      .then(data => {
+        state.datasets[dataset][0] = {
+          data: csvToObject(data),
+          name: 'demo-air-quality.csv',
+          addedOn: new Date().toISOString()
+        };
+        addDatasetsToDOM(state.datasets[dataset]);
+        loadHeatmapFromAirQualityDatasets(state.datasets[dataset])
+        localStorage.setItem('air-quality-datasets', JSON.stringify(state.datasets[dataset]));
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    }
+  }
+}
+
+function loadHeatmapFromAirQualityDatasets(datasets) {
+  // generate air quality heatmap from dataset sources
+  const date = state.selectedDate;
+  let locations = [];
+  for (let dataset of datasets) {
+    // group by date
+    dataset = groupDataByDate(dataset);
+    if (dataset.hasOwnProperty(date)) {
+      for (let location of dataset[date]) {
+        let severity = getAirQualityValueFromPollutants(location);
+        console.log(severity);
+        locations.push({
+          latitude: location.latitude,
+          longitude: location.longitude,
+          severity: severity
+        });
+      }
+    }
+  }
+
+  console.log(locations);
+}
+
+function getAirQualityValueFromPollutants(pollutants) {
+  let overallSeverity = 0;
+  let enabledParameters = 0;
+  for (let pollutant in state.parameters.airQuality) {
+    if (!state.parameters.airQuality[pollutant].enable) {
+      continue;
+    }
+
+    ++enabledParameters;
+
+    let pollutantSeverity = 0;
+    while (pollutantSeverity < state.parameters.airQuality[pollutant].ranges.length) {
+      if (pollutants[pollutant] < state.parameters.airQuality[pollutant].ranges[pollutantSeverity]) {
+        break;
+      }
+      
+      ++pollutantSeverity;
+    }
+    overallSeverity += pollutantSeverity;
+  }
+
+  return overallSeverity / enabledParameters;
+}
+
 export const saveAirQualityParameters = event => {
   event.preventDefault();
   // apply air quality parameters
@@ -77,6 +123,8 @@ export const saveAirQualityParameters = event => {
     "air-quality-parameters",
     JSON.stringify(state.parameters.airQuality)
   );
+
+  loadHeatmapFromAirQualityDatasets(state.datasets.airQuality);
 }
 
 export function resetAirQualityParametersToDefault() {
@@ -88,6 +136,7 @@ export function resetAirQualityParametersToDefault() {
   );
 
   loadAirQualityParametersToForm();
+  loadHeatmapFromAirQualityDatasets(state.datasets.airQuality);
 }
 
 function loadAirQualityParametersToForm() {
@@ -126,15 +175,18 @@ function groupDataByDate(dataset) {
   return dates;
 }
 
-function addDatasetsToDOM(datasets) {
-  const list = document.getElementById('aq-dataset-list');
+function addDatasetsToDOM(datasets, dataset) {
+  const list = document.getElementById(dataset === 'airQuality' ? 'aq-dataset-list' : 'demo-dataset-list');
   for (let dataset of datasets) {
     const div = document.createElement('div');
     div.className = 'dataset-item';
     div.innerHTML = `
-      <div class="dataset-text">
-        <div>${dataset.name}</div>
-        <div>Added on: ${dataset.addedOn}</div>
+      <div class="dataset-item-inner-div">
+        <img src="./assets/icons/datasheet.svg" style="height: 50px;">
+        <div class="dataset-text">
+          <div>${dataset.name}</div>
+          <div>${dataset.addedOn}</div>
+        </div>
       </div>
       <div>
         <button class="download-button"></button>
