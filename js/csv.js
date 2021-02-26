@@ -29,7 +29,7 @@ function convertToCSV(objArray) {
   
     var csv = convertToCSV(jsonObject);
   
-    var exportedFilename = fileName + ".csv" || "aqvdata.csv";
+    var exportedFilename = fileName;
   
     var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     if (navigator.msSaveBlob) {
@@ -49,20 +49,7 @@ function convertToCSV(objArray) {
   }
   
   export function downloadAQSample() {
-    let headers = {
-      date: "Date",
-      latitude: "Latitude",
-      longitude: "Longitude",
-      o3: "O3",
-      pm25: "PM 2.5",
-      pm10: "PM 10",
-      no2: "NO2",
-      so2: "SO2",
-      co: "CO",
-      nh3: "NH3",
-    };
-  
-    let aqvdatanotFormatted = [
+    let demoData = [
       {
         date: "01-02-2021",
         latitude: "45.8",
@@ -89,16 +76,25 @@ function convertToCSV(objArray) {
       },
     ];
   
-    let aqvdataFormatted = [];
-  
-    aqvdatanotFormatted.forEach((data) => {
-      aqvdataFormatted.push({
-        ...data,
-      });
-    });
-  
-    exportCSVFile(headers, aqvdataFormatted, "Mumbai M ward AQV data");
+    aqvObjectToCSVFile(demoData, "Mumbai AQ Sample.csv")
   }
+
+export function aqvObjectToCSVFile(data, filename) {
+  const headers = {
+    date: "Date",
+    latitude: "Latitude",
+    longitude: "Longitude",
+    o3: "O3",
+    pm25: "PM 2.5",
+    pm10: "PM 10",
+    no2: "NO2",
+    so2: "SO2",
+    co: "CO",
+    nh3: "NH3",
+  };
+
+  exportCSVFile(headers, data, filename);
+}
 
 
 export function csvToObject(data) {

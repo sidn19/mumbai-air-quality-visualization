@@ -67,6 +67,11 @@ const openModal = (modalId, closeButtonClass) => {
   modal.addEventListener("click", clickEvent);
 };
 
+export const closeModal = (modalId) => {
+  const modal = document.getElementById(modalId);
+  modal.style.display = "none";
+}
+
 export const changeModalTab = (event) => {
   let activateId = event.currentTarget.getAttribute("data-modal-tab");
   let activeClasses = JSON.parse(
@@ -82,3 +87,13 @@ export const changeModalTab = (event) => {
   event.currentTarget.className += " active";
   document.getElementById(activateId).className += " active";
 };
+
+export function snackbar(text, type = 'error') {
+  const x = document.createElement('div');
+  x.innerText = text;
+  x.className += `snackbar ${type}`;
+  document.body.append(x);
+  setTimeout(function(){ 
+    x.remove();
+  }, 3000);
+}
