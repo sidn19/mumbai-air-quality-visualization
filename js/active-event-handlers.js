@@ -1,6 +1,6 @@
-import { downloadAQSample } from './csv.js';
-import { openData, changeToolbarIcon, changeModalTab } from './interface.js';
-import { resetAirQualityParametersToDefault, saveAirQualityParameters } from './air-quality-and-demographic-utils.js';
+import { downloadAQSample, csvToObject } from './csv.js';
+import { openData, changeToolbarIcon, changeModalTab, snackbar } from './interface.js';
+import { resetAirQualityParametersToDefault, saveAirQualityParameters, addDatasetsToDOM, loadHeatmapFromAirQualityDatasets } from './air-quality-and-demographic-utils.js';
 import { state } from './state.js';
 
 /*
@@ -21,7 +21,16 @@ document
   .addEventListener("change", function (event) {
     let reader = new FileReader();
     reader.onload = function () {
-      console.log(reader.result);
+      state.datasets.airQuality.push({
+        data: csvToObject(reader.result),
+        name: event.target.value.replace(/^.*?([^\\\/]*)$/, '$1'),
+        addedOn: new Date().toISOString(),
+        id: state.datasets.airQuality[state.datasets.airQuality.length - 1].id + 1
+      });
+      addDatasetsToDOM(state.datasets.airQuality, 'airQuality');
+      loadHeatmapFromAirQualityDatasets(state.datasets.airQuality)
+      localStorage.setItem('air-quality-datasets', JSON.stringify(state.datasets.airQuality));
+      snackbar('Air quality dataset has been loaded!', 'success');
     };
     reader.readAsBinaryString(event.target.files[0]);
   });

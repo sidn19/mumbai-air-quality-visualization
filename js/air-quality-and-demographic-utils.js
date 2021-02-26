@@ -1,7 +1,8 @@
 import { defaultParameters } from './declarations.js';
 import { state } from './state.js';
-import { csvToObject } from './csv.js';
 import { drawMap } from './map.js';
+import { csvToObject, aqvObjectToCSVFile } from './csv.js';
+import { snackbar, closeModal } from './interface.js';
 
 /*
 * Initializing datasets and parameters
@@ -51,9 +52,10 @@ for (let dataset in state.datasets) {
         state.datasets[dataset][0] = {
           data: csvToObject(data),
           name: 'demo-air-quality.csv',
-          addedOn: new Date().toISOString()
+          addedOn: new Date().toISOString(),
+          id: 0
         };
-        addDatasetsToDOM(state.datasets[dataset]);
+        addDatasetsToDOM(state.datasets[dataset], dataset);
         loadHeatmapFromAirQualityDatasets(state.datasets[dataset])
         localStorage.setItem('air-quality-datasets', JSON.stringify(state.datasets[dataset]));
       })
@@ -64,7 +66,7 @@ for (let dataset in state.datasets) {
   }
 }
 
-function loadHeatmapFromAirQualityDatasets(datasets) {
+export function loadHeatmapFromAirQualityDatasets(datasets) {
   // generate air quality heatmap from dataset sources
   const date = state.selectedDate;
   let locations = [];
@@ -115,11 +117,20 @@ function getAirQualityValueFromPollutants(pollutants) {
 
 export const saveAirQualityParameters = event => {
   event.preventDefault();
+  // check if parameters are valid!
+  for (let pollutant in state.parameters.airQuality) {
+    for (let i = 0; i < state.parameters.airQuality[pollutant].ranges.length - 1; ++i) {
+      if (parseFloat(document.getElementById(`${pollutant}-${i}`).value) >= parseFloat(document.getElementById(`${pollutant}-${i + 1}`).value)) {
+        return snackbar('Please enter valid ranges!');
+      }
+    }
+  }
+
   // apply air quality parameters
   for (let pollutant in state.parameters.airQuality) {
     state.parameters.airQuality[pollutant].enable = document.getElementById(`${pollutant}-enable`).checked;
     for (let i = 0; i < state.parameters.airQuality[pollutant].ranges.length; ++i) {
-      state.parameters.airQuality[pollutant].ranges[i] = document.getElementById(`${pollutant}-${i}`).value;
+      state.parameters.airQuality[pollutant].ranges[i] = parseFloat(document.getElementById(`${pollutant}-${i}`).value);
     }
   }
   localStorage.setItem(
@@ -128,6 +139,8 @@ export const saveAirQualityParameters = event => {
   );
 
   loadHeatmapFromAirQualityDatasets(state.datasets.airQuality);
+  snackbar('New Parameters have been set!', 'success');
+  closeModal('parameterModal');
 }
 
 export function resetAirQualityParametersToDefault() {
@@ -140,6 +153,7 @@ export function resetAirQualityParametersToDefault() {
 
   loadAirQualityParametersToForm();
   loadHeatmapFromAirQualityDatasets(state.datasets.airQuality);
+  snackbar('Air quality parameters have been reset!', 'success');
 }
 
 function loadAirQualityParametersToForm() {
@@ -178,8 +192,13 @@ function groupDataByDate(dataset) {
   return dates;
 }
 
-function addDatasetsToDOM(datasets, dataset) {
+export function addDatasetsToDOM(datasets, dataset) {
   const list = document.getElementById(dataset === 'airQuality' ? 'aq-dataset-list' : 'demo-dataset-list');
+  const items = list.querySelectorAll('.dataset-item');
+  for (let item of items) {
+    item.remove();
+  }
+
   for (let dataset of datasets) {
     const div = document.createElement('div');
     div.className = 'dataset-item';
@@ -196,6 +215,23 @@ function addDatasetsToDOM(datasets, dataset) {
         <button class="delete-button"></button>
       </div>
     `;
+    div.querySelector('.download-button').addEventListener('click', () => {
+      aqvObjectToCSVFile(dataset.data, dataset.name);
+    });
+    div.querySelector('.delete-button').addEventListener('click', () => {
+      if (confirm('Are you sure you want to delete this file?')) {
+        state.datasets.airQuality.splice(
+          state.datasets.airQuality.findIndex(
+            x => x.id == dataset.id
+          ),
+          1
+        );
+        addDatasetsToDOM(state.datasets.airQuality, 'airQuality');
+        loadHeatmapFromAirQualityDatasets(state.datasets.airQuality)
+        localStorage.setItem('air-quality-datasets', JSON.stringify(state.datasets.airQuality));
+        snackbar(`Dataset ${dataset.name} has been deleted!`, 'success');
+      }
+    });
     list.prepend(div);
   }
 }

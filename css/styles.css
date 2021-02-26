@@ -80,6 +80,7 @@ body {
 #demoData {
   display: flex;
   flex-direction: column;
+  box-shadow: 4px 4px 10px 0 rgb(0 0 0 / 33%)
 }
 
 #regionName {
@@ -242,6 +243,7 @@ body {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  box-shadow: 4px 4px 10px 0 rgb(0 0 0 / 33%)
 }
 
 .toolbarIcon {
@@ -273,6 +275,7 @@ body {
   display: flex;
   flex-direction: column;
   background-color: white;
+  box-shadow: 4px 4px 10px 0 rgb(0 0 0 / 33%)
 }
 
 .zoom i {
@@ -431,4 +434,26 @@ body {
 
 input[type="file"] {
   display: none;
+}
+
+.snackbar {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  text-align: center;
+  color: white;
+  padding: 0.6rem;
+  min-width: 200px;
+  margin-left: -100px;
+  font-size: 1.2rem;
+  border-radius: 0.6rem;
+  z-index: 9999;
+}
+
+.snackbar.error {
+  background-color: #D8000C;
+}
+
+.snackbar.success {
+  background-color: #4F8A10;
 }
