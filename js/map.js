@@ -91,7 +91,7 @@ function refineHeatmapData(heatmapData, mapping) {
     return heatmapDataRefined;
 }
 
-function drawMap(locationX, locationY, tileX, tileY, zoom) {
+export function drawMap(locationX, locationY, tileX, tileY, zoom) {
     //Clear map tiles and svg overlay
     svgMapTiles.innerHTML = "";
     svgRegions.innerHTML = "";
@@ -140,8 +140,8 @@ function drawMap(locationX, locationY, tileX, tileY, zoom) {
     heatmapLayerCoords.left = 0;
     heatmapLayerCoords.top = 0;
     heatmapLayer.style.transform = `translate(0px, 0px)`;
-    //state.heatmapDataRefined = refineHeatmapData(state.heatmapData, state.mappingLatLngToPixelCoords);
-    if (state.viewHeatmap) {        
+    state.heatmapDataRefined = refineHeatmapData(state.heatmapData, state.mappingLatLngToPixelCoords);
+    if (state.viewHeatmap) {
         addHeatmapTiles(state.heatmapDataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.right, mapCoords.bottom);
     }
 
@@ -149,7 +149,9 @@ function drawMap(locationX, locationY, tileX, tileY, zoom) {
 }
 
 //initialize map
-drawMap((viewport.width >>> 1) - 100, (viewport.height >>> 1) - 170, 5755, 3654, state.currentZoom);
+// setTimeout(function() {
+//     drawMap((viewport.width >>> 1) - 100, (viewport.height >>> 1) - 170, 5755, 3654, state.currentZoom);
+// }, 3000);
 
 /**
  * Panning Functionality

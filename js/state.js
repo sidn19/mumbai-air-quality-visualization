@@ -9,7 +9,7 @@ export const state = {
     },
     currentRegionId: null,
     currentRegionData: null,
-    viewHeatmap: false,
+    viewHeatmap: true,
     viewBoxCoords: {
         min_x: 0,
         min_y: 0,
