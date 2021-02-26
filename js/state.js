@@ -7,13 +7,14 @@ export const state = {
         airQuality: {},
         demographic: []
     },
-    currentRegionId: 112,
-    currentRegion: null,
+    currentRegionId: null,
+    currentRegionData: null,
     viewHeatmap: true,
     viewBoxCoords: {
         min_x: 0,
         min_y: 0,
         width: 0,
         height: 0
-    }
+    },
+    selectedDate: '1-1-2020'
 };

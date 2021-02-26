@@ -94,21 +94,9 @@
               /></span>
             </button>
 
-            <button class="toolbarIcon" id="downloadIcon">
-              <span title="Download Data"
-                ><img src="./assets/icons/download.svg" alt=""
-              /></span>
-            </button>
-
             <button class="toolbarIcon" id="parameterIcon">
               <span title="Toggle Parameters"
                 ><img src="./assets/icons/parameters.svg" alt=""
-              /></span>
-            </button>
-
-            <button class="toolbarIcon" id="datasheetIcon">
-              <span title="Datasheet"
-                ><img src="./assets/icons/datasheet.svg" alt=""
               /></span>
             </button>
 
@@ -562,16 +550,6 @@
           </button>
         </div>
         <div id="aq-dataset-list" class="dataset-list active">
-          <div class="dataset-item">
-            <div class="dataset-text">
-              <div>Demo Dataset</div>
-              <div>Added on: Jan 21 2021</div>
-            </div>
-            <div>
-              <button class="download-button"></button>
-              <button class="delete-button"></button>
-            </div>
-          </div>
           <div class="modal-footer">
             <button id="download-aq-sample-dataset">Download Sample</button>
             <button type="button">
@@ -585,9 +563,12 @@
         </div>
         <div id="demo-dataset-list" class="dataset-list">
           <div class="dataset-item">
-            <div class="dataset-text">
-              <div>Demo Dataset</div>
-              <div>Added on: Jan 22 2021</div>
+            <div class="dataset-item-inner-div">
+              <img src="./assets/icons/datasheet.svg" style="height: 50px;">
+              <div class="dataset-text">
+                <div>Demo Dataset</div>
+                <div>Jan 22 2021</div>
+              </div>
             </div>
             <div>
               <button class="download-button"></button>
@@ -608,13 +589,9 @@
       </div>
     </div>
     <div id="location-tooltip"></div>
+    <div id="region-name-tooltip"></div>
     <script type="module" src="./js/map.js"></script>
     <script type="module" src="./js/demographic-modal.js"></script>
-    <script
-      type="module"
-      src="./js/air-quality-and-demographic-utils.js"
-    ></script>
-    <script src="./js/csv.js"></script>
     <script type="module" src="./js/active-event-handlers.js"></script>
     <script type="module" src="./js/interface.js"></script>
   </body>

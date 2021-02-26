@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <style>  
+        .snackbar {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            text-align: center;
+            background-color: gray;
+            color: white;
+            padding: 20px;
+            min-width: 200px;
+            margin-left: -100px;
+            font-size: 20px;
+        }
+      </style>
+    </head>
+    <body>
+      <button onclick="Snackbar('Abcd')">Open Snackbar</button>
+      
+      <script>
+        function Snackbar(text) {
+          const x = document.createElement('div');
+          x.innerText = text;
+          x.className += 'snackbar';
+          document.body.append(x);
+          setTimeout(function(){ 
+            x.remove();
+          }, 3000);
+        }
+      </script>
+    </body>
+  </html>

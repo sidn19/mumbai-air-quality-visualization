@@ -41,7 +41,7 @@ export const changeToolbarIcon = (event) => {
     case "parameterIcon":
       openModal("parameterModal", "close-parameter-modal");
       break;
-    case "datasheetIcon":
+    case "databaseIcon":
       openModal("datasetModal", "close-dataset-modal");
       break;
     case "heatmapIcon":

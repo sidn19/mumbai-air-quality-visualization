@@ -37,10 +37,26 @@ document
     reader.readAsBinaryString(event.target.files[0]);
   });
 
+
+const tooltip = document.getElementById('location-tooltip');
+const regionTooltip = document.getElementById('region-name-tooltip')
+
 document.addEventListener('mousemove', function (event) {
+  // Region name
+  regionTooltip.style.left = `${event.clientX + 12}px`;
+  regionTooltip.style.top = `${event.clientY + 12}px`;
+
+  // Latitude and longitude
   const latlng = mappingPixelCoordsToLatLng(event.clientX + state.viewBoxCoords.min_x, event.clientY + state.viewBoxCoords.min_y);
-  const tooltip = document.getElementById('location-tooltip');
-  tooltip.style.left = `${event.clientX}px`;
-  tooltip.style.top = `${event.clientY + 12}px`;
-  tooltip.innerHTML = `<strong>Latitude:</strong> ${latlng.lat.toFixed(4)}<br><strong>Longitude:</strong> ${latlng.lng.toFixed(4)}`;
+  tooltip.innerHTML = `<strong>Latitude:</strong> ${latlng.lat.toFixed(4)}  <strong>Longitude:</strong> ${latlng.lng.toFixed(4)}`;
 });
+
+// Show region name near mouse when it is hovered over
+let region = document.getElementById('svg-regions')
+region.addEventListener('mouseover', (e) => {
+  regionTooltip.innerHTML = e.target.getAttribute('gname')
+})
+
+region.addEventListener('mouseout', () => {
+  regionTooltip.innerHTML = ''
+})
