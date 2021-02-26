@@ -25,7 +25,7 @@ document
         data: csvToObject(reader.result),
         name: event.target.value.replace(/^.*?([^\\\/]*)$/, '$1'),
         addedOn: new Date().toISOString(),
-        id: state.datasets.airQuality[state.datasets.airQuality.length - 1].id + 1
+        id: state.datasets.airQuality.length > 0 ? state.datasets.airQuality[state.datasets.airQuality.length - 1].id + 1 : 0
       });
       addDatasetsToDOM(state.datasets.airQuality, 'airQuality');
       loadHeatmapFromAirQualityDatasets(state.datasets.airQuality)
