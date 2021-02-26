@@ -47,6 +47,10 @@ body {
   fill: rgba(170,238,204,0.7);
 }
 
+.region:hover {
+  opacity: 0.8;
+}
+
 #heatmap-layer {
   /* border: 1px solid blue; */
   pointer-events: none;
