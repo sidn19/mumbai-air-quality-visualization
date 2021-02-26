@@ -66,6 +66,7 @@ for (let dataset in state.datasets) {
 function loadHeatmapFromAirQualityDatasets(datasets) {
   // generate air quality heatmap from dataset sources
   const date = state.selectedDate;
+  let locations = [];
   for (let dataset of datasets) {
     // group by date
     dataset = groupDataByDate(dataset);
@@ -73,12 +74,17 @@ function loadHeatmapFromAirQualityDatasets(datasets) {
       for (let location of dataset[date]) {
         let severity = getAirQualityValueFromPollutants(location);
         console.log(severity);
+        locations.push({
+          latitude: location.latitude,
+          longitude: location.longitude,
+          severity: severity
+        });
       }
     }
   }
-}
 
-console.log(state.parameters.airQuality);
+  console.log(locations);
+}
 
 function getAirQualityValueFromPollutants(pollutants) {
   let overallSeverity = 0;
@@ -117,6 +123,8 @@ export const saveAirQualityParameters = event => {
     "air-quality-parameters",
     JSON.stringify(state.parameters.airQuality)
   );
+
+  loadHeatmapFromAirQualityDatasets(state.datasets.airQuality);
 }
 
 export function resetAirQualityParametersToDefault() {
@@ -128,6 +136,7 @@ export function resetAirQualityParametersToDefault() {
   );
 
   loadAirQualityParametersToForm();
+  loadHeatmapFromAirQualityDatasets(state.datasets.airQuality);
 }
 
 function loadAirQualityParametersToForm() {
