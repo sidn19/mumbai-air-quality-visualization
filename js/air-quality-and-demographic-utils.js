@@ -33,7 +33,7 @@ for (let dataset in state.datasets) {
     state.datasets[dataset] = JSON.parse(JSONDatasets[dataset]);
 
     if (dataset === 'airQuality') {
-      addDatasetsToDOM(state.datasets[dataset]);
+      addDatasetsToDOM(state.datasets[dataset], dataset);
       loadHeatmapFromAirQualityDatasets(state.datasets[dataset]);
     }
   }
@@ -175,15 +175,18 @@ function groupDataByDate(dataset) {
   return dates;
 }
 
-function addDatasetsToDOM(datasets) {
-  const list = document.getElementById('aq-dataset-list');
+function addDatasetsToDOM(datasets, dataset) {
+  const list = document.getElementById(dataset === 'airQuality' ? 'aq-dataset-list' : 'demo-dataset-list');
   for (let dataset of datasets) {
     const div = document.createElement('div');
     div.className = 'dataset-item';
     div.innerHTML = `
-      <div class="dataset-text">
-        <div>${dataset.name}</div>
-        <div>Added on: ${dataset.addedOn}</div>
+      <div class="dataset-item-inner-div">
+        <img src="./assets/icons/datasheet.svg" style="height: 50px;">
+        <div class="dataset-text">
+          <div>${dataset.name}</div>
+          <div>${dataset.addedOn}</div>
+        </div>
       </div>
       <div>
         <button class="download-button"></button>
