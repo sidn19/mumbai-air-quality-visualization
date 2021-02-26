@@ -4,7 +4,7 @@ import regions from "../data/regions.js";
 import aqv_points from "../data/aqv_points.js";
 
 import { TILE_SIZE } from "./declarations.js";
-import { getTileImage, latlngToPixelCoords, pixelCoordsToLatLng, addMapTiles, removeMapTiles } from "./tile_layer.js";
+import { latlngToPixelCoords, pixelCoordsToLatLng, addMapTiles, removeMapTiles } from "./tile_layer.js";
 
 import { geojsonOverlay } from "./svg_layer.js";
 import { addHeatmapTiles, removeHeatmapTiles } from "./heatmap_layer.js";
@@ -20,8 +20,6 @@ const svgMapTiles = document.getElementById("map-tiles");
 const svgRegions = document.getElementById("svg-regions");
 
 const heatmapLayer = document.getElementById("heatmap-layer");
-
-let heatmapDataRefined = null; //This will hold the heatmap data points in pixel coordinates
 
 const BUFFER_TILES = 1; //Number of extra layer of tiles to be loaded around the visible area tiles
 
@@ -75,9 +73,22 @@ export function toggleHeatmap() {
     }
     else {
         //Add All Heatmap Tiles of Current mapCoords
-        addHeatmapTiles(heatmapDataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.right, mapCoords.bottom);
+        addHeatmapTiles(state.heatmapDataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.right, mapCoords.bottom);
         state.viewHeatmap = true;
     }
+}
+
+/**
+ * 
+ * @param {{latitude: number, longitude: number, severity: number}[]} heatmapData - Raw Heatmap Data
+ * @param {*} mapping - Mapping function from latitude longitude to pixel coordinates
+ */
+function refineHeatmapData(heatmapData, mapping) {
+    let heatmapDataRefined = heatmapData.map((point) => {
+        let pixelCoords = mapping(point.latitude, point.longitude);
+        return [pixelCoords.x, pixelCoords.y, point.severity];
+    });
+    return heatmapDataRefined;
 }
 
 function drawMap(locationX, locationY, tileX, tileY, zoom) {
@@ -89,40 +100,21 @@ function drawMap(locationX, locationY, tileX, tileY, zoom) {
     //Reset viewBox
     updateViewBox(viewport.min_x, viewport.min_y, viewport.width, viewport.height);
 
-    let maxTiles = 1 << zoom;
-
     mapCoords.left = locationX - Math.ceil((locationX - svgMapRect.left) / TILE_SIZE) * TILE_SIZE - BUFFER_TILES * TILE_SIZE;
     mapCoords.top = locationY - Math.ceil((locationY - svgMapRect.top) / TILE_SIZE) * TILE_SIZE - BUFFER_TILES * TILE_SIZE;
 
     tileCoords.min_x = tileX - Math.ceil((locationX - svgMapRect.left) / TILE_SIZE) - BUFFER_TILES;
     tileCoords.min_y = tileY - Math.ceil((locationY - svgMapRect.top) / TILE_SIZE) - BUFFER_TILES;
 
-    let currentLocationY = mapCoords.top,
-        currentTileY = tileCoords.min_y;
-    let currentLocationX = mapCoords.left,
-        currentTileX = tileCoords.min_x;
+    mapCoords.right = locationX + Math.ceil((svgMapRect.right - locationX) / TILE_SIZE) * TILE_SIZE + BUFFER_TILES * TILE_SIZE;
+    mapCoords.bottom = locationY + Math.ceil((svgMapRect.bottom - locationY) / TILE_SIZE) * TILE_SIZE + BUFFER_TILES * TILE_SIZE;
 
-    while (currentLocationY < svgMapRect.bottom + BUFFER_TILES * TILE_SIZE) {
-        currentLocationX = mapCoords.left;
-        currentTileX = tileCoords.min_x;
-        while (currentLocationX < svgMapRect.right + BUFFER_TILES * TILE_SIZE) {
-            if (currentTileX >= 0 && currentTileX < maxTiles && currentTileY >= 0 && currentTileY < maxTiles) {
-                svgMapTiles.appendChild(getTileImage(currentLocationX, currentLocationY, currentTileX, currentTileY, zoom));
-            }
-            currentLocationX += TILE_SIZE;
-            currentTileX++;
-        }
-        currentLocationY += TILE_SIZE;
-        currentTileY++;
-    }
+    tileCoords.max_x = tileX + Math.ceil((svgMapRect.right - locationX) / TILE_SIZE) - 1 + BUFFER_TILES;
+    tileCoords.max_y = tileY + Math.ceil((svgMapRect.bottom - locationY) / TILE_SIZE) - 1 + BUFFER_TILES;
 
-    mapCoords.right = currentLocationX;
-    mapCoords.bottom = currentLocationY;
+    addMapTiles(svgMapTiles, mapCoords.left, mapCoords.top, mapCoords.right, mapCoords.bottom, tileCoords.min_x, tileCoords.min_y, state.currentZoom);
 
-    tileCoords.max_x = currentTileX - 1;
-    tileCoords.max_y = currentTileY - 1;
-
-    //Set up mapping function
+    //Set up mapping functions
     state.mappingLatLngToPixelCoords = (lat, lng) => {
         let pixelCoords = latlngToPixelCoords(lat, lng, zoom);
         return {
@@ -141,11 +133,6 @@ function drawMap(locationX, locationY, tileX, tileY, zoom) {
         };
     };
 
-    heatmapDataRefined = aqv_points.map((point) => {
-        let pixelCoords = state.mappingLatLngToPixelCoords(point[1], point[0]);
-        return [pixelCoords.x, pixelCoords.y, point[2]];
-    });
-
     //Add geoJSON SVG Layer
     geojsonOverlay(regions, state.mappingLatLngToPixelCoords, svgRegions);
 
@@ -153,8 +140,9 @@ function drawMap(locationX, locationY, tileX, tileY, zoom) {
     heatmapLayerCoords.left = 0;
     heatmapLayerCoords.top = 0;
     heatmapLayer.style.transform = `translate(0px, 0px)`;
-    if (state.viewHeatmap) {
-        addHeatmapTiles(heatmapDataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.right, mapCoords.bottom);
+    //state.heatmapDataRefined = refineHeatmapData(state.heatmapData, state.mappingLatLngToPixelCoords);
+    if (state.viewHeatmap) {        
+        addHeatmapTiles(state.heatmapDataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.right, mapCoords.bottom);
     }
 
     regionEventListener();
@@ -196,14 +184,14 @@ function mousedown(event) {
             tileCoords.min_x--;
             addMapTiles(svgMapTiles, mapCoords.left, mapCoords.top, mapCoords.left + TILE_SIZE, mapCoords.bottom, tileCoords.min_x, tileCoords.min_y, state.currentZoom);
             if (state.viewHeatmap) {
-                addHeatmapTiles(heatmapDataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.left + TILE_SIZE, mapCoords.bottom);
+                addHeatmapTiles(state.heatmapDataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.left + TILE_SIZE, mapCoords.bottom);
             }
         } else if (state.viewBoxCoords.min_x + state.viewBoxCoords.width > mapCoords.right - BUFFER_TILES * TILE_SIZE) {
             //console.log("load right tiles");
             tileCoords.max_x++;
             addMapTiles(svgMapTiles, mapCoords.right, mapCoords.top, mapCoords.right + TILE_SIZE, mapCoords.bottom, tileCoords.max_x, tileCoords.min_y, state.currentZoom);
             if (state.viewHeatmap) {
-                addHeatmapTiles(heatmapDataRefined, heatmapLayer, mapCoords.right, mapCoords.top, mapCoords.right + TILE_SIZE, mapCoords.bottom);
+                addHeatmapTiles(state.heatmapDataRefined, heatmapLayer, mapCoords.right, mapCoords.top, mapCoords.right + TILE_SIZE, mapCoords.bottom);
             }
             mapCoords.right += TILE_SIZE;
         }
@@ -214,14 +202,14 @@ function mousedown(event) {
             tileCoords.min_y--;
             addMapTiles(svgMapTiles, mapCoords.left, mapCoords.top, mapCoords.right, mapCoords.top + TILE_SIZE, tileCoords.min_x, tileCoords.min_y, state.currentZoom);
             if (state.viewHeatmap) {
-                addHeatmapTiles(heatmapDataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.right, mapCoords.top + TILE_SIZE);
+                addHeatmapTiles(state.heatmapDataRefined, heatmapLayer, mapCoords.left, mapCoords.top, mapCoords.right, mapCoords.top + TILE_SIZE);
             }
         } else if (state.viewBoxCoords.min_y + state.viewBoxCoords.height > mapCoords.bottom - BUFFER_TILES * TILE_SIZE) {
             //console.log("load bottom tiles");
             tileCoords.max_y++;
             addMapTiles(svgMapTiles, mapCoords.left, mapCoords.bottom, mapCoords.right, mapCoords.bottom + TILE_SIZE, tileCoords.min_x, tileCoords.max_y, state.currentZoom);
             if (state.viewHeatmap) {
-                addHeatmapTiles(heatmapDataRefined, heatmapLayer, mapCoords.left, mapCoords.bottom, mapCoords.right, mapCoords.bottom + TILE_SIZE);
+                addHeatmapTiles(state.heatmapDataRefined, heatmapLayer, mapCoords.left, mapCoords.bottom, mapCoords.right, mapCoords.bottom + TILE_SIZE);
             }
             mapCoords.bottom += TILE_SIZE;
         }

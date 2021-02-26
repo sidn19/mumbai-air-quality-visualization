@@ -73,7 +73,7 @@ function loadHeatmapFromAirQualityDatasets(datasets) {
     if (dataset.hasOwnProperty(date)) {
       for (let location of dataset[date]) {
         let severity = getAirQualityValueFromPollutants(location);
-        console.log(severity);
+        //console.log(severity);
         locations.push({
           latitude: location.latitude,
           longitude: location.longitude,
@@ -83,6 +83,7 @@ function loadHeatmapFromAirQualityDatasets(datasets) {
     }
   }
 
+  state.heatmapData = locations;
   console.log(locations);
 }
 
