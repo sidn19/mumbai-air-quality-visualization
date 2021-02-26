@@ -1,5 +1,6 @@
 import { defaultParameters } from './declarations.js';
 import { state } from './state.js';
+import { drawMap } from './map.js';
 import { csvToObject, aqvObjectToCSVFile } from './csv.js';
 import { snackbar, closeModal } from './interface.js';
 
@@ -75,7 +76,7 @@ export function loadHeatmapFromAirQualityDatasets(datasets) {
     if (dataset.hasOwnProperty(date)) {
       for (let location of dataset[date]) {
         let severity = getAirQualityValueFromPollutants(location);
-        console.log(severity);
+        //console.log(severity);
         locations.push({
           latitude: location.latitude,
           longitude: location.longitude,
@@ -85,7 +86,9 @@ export function loadHeatmapFromAirQualityDatasets(datasets) {
     }
   }
 
-  console.log(locations);
+  state.heatmapData = locations;
+  console.log("loadHeatmapFromAirQualityDatasets", locations);
+  drawMap((state.viewBoxCoords.width >>> 1) - 100, (state.viewBoxCoords.height >>> 1) - 170, 5755, 3654, state.currentZoom);
 }
 
 function getAirQualityValueFromPollutants(pollutants) {

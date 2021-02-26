@@ -1,7 +1,6 @@
 import { downloadAQSample, csvToObject } from './csv.js';
 import { openData, changeToolbarIcon, changeModalTab, snackbar } from './interface.js';
 import { resetAirQualityParametersToDefault, saveAirQualityParameters, addDatasetsToDOM, loadHeatmapFromAirQualityDatasets } from './air-quality-and-demographic-utils.js';
-import { mappingPixelCoordsToLatLng } from './map.js';
 import { state } from './state.js';
 
 /*
@@ -56,7 +55,7 @@ document.addEventListener('mousemove', function (event) {
   regionTooltip.style.top = `${event.clientY + 12}px`;
 
   // Latitude and longitude
-  const latlng = mappingPixelCoordsToLatLng(event.clientX + state.viewBoxCoords.min_x, event.clientY + state.viewBoxCoords.min_y);
+  const latlng = state.mappingPixelCoordsToLatLng(event.clientX + state.viewBoxCoords.min_x, event.clientY + state.viewBoxCoords.min_y);
   tooltip.innerHTML = `<strong>Latitude:</strong> ${latlng.lat.toFixed(4)}  <strong>Longitude:</strong> ${latlng.lng.toFixed(4)}`;
 });
 
