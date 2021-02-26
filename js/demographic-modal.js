@@ -17,6 +17,7 @@ const findRegion = (gid) => {
 };
 
 const populateData = (tab, region) => {
+
   // Get piechart and other properties of the tab
   currentPiechartCategories = piechartCategories(tab, region);
   currentOtherProperties = otherProperties(tab, region);
@@ -36,6 +37,7 @@ const populateData = (tab, region) => {
 };
 
 const populateDemographicData = (region) => {
+
   // Change region name and direction
   document.getElementById("regionName").textContent = region.name;
   document.getElementById("regionDir").textContent =
@@ -51,17 +53,31 @@ const populateDemographicData = (region) => {
   }
 };
 
-// Add a click event to each region
-export const regionEventListener = () => {
-  let regions = document.getElementsByClassName("region");
-
-  for (let i = 0; i < regions.length; i++) {
-    regions[i].addEventListener("click", (event) => {
-      state.currentRegionId = event.target.attributes[5].nodeValue;
-      state.currentRegion = findRegion(state.currentRegionId);
-      populateDemographicData(state.currentRegion);
-    });
+const clearActiveRegions = () => {
+  for(let path of document.querySelectorAll('.activeRegion')){
+    path.setAttribute('class', path.getAttribute('class').replace('activeRegion',""))
   }
+}
+
+
+// Add a click event to the whole svg region
+export const regionEventListener = () => {
+  let regions = document.getElementById("svg-regions");
+  
+  regions.addEventListener("click", (event) => {
+    // Remove 'activeRegion' classname
+    clearActiveRegions();
+
+    // Get region id of selected event
+    state.currentRegionDataElement = event.target;
+    state.currentRegionId = event.target.getAttribute('gid');
+    state.currentRegionData = findRegion(state.currentRegionId);
+
+    //Highlight selected region
+    event.target.setAttribute('class',`${event.target.getAttribute('class')} activeRegion`)
+    
+    populateDemographicData(state.currentRegionData);
+  });
 };
 
 window.addEventListener("load", () => {
