@@ -87,7 +87,6 @@ export function loadHeatmapFromAirQualityDatasets(datasets) {
   }
 
   state.heatmapData = locations;
-  console.log("loadHeatmapFromAirQualityDatasets", locations);
   drawMap((state.viewBoxCoords.width >>> 1) - 100, (state.viewBoxCoords.height >>> 1) - 170, 5755, 3654, state.currentZoom);
 }
 
