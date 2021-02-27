@@ -234,7 +234,7 @@ export function addDatasetsToDOM(datasets, dataset) {
         <img src="./assets/icons/datasheet.svg" style="height: 50px;">
         <div class="dataset-text">
           <div>${dataset.name}</div>
-          <div>${dataset.addedOn}</div>
+          <div>${new Date(dataset.addedOn).toLocaleString()}</div>
         </div>
       </div>
       <div>
