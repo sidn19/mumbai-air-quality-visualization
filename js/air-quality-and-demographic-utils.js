@@ -1,6 +1,7 @@
 import { defaultParameters } from './declarations.js';
 import { state } from './state.js';
-import { drawMap } from './map.js';
+import { drawMap, initializeMap, initializeHeatmapData } from './map.js';
+import { addHeatmapTiles, removeHeatmapTiles } from './heatmap_layer.js';
 import { csvToObject, aqvObjectToCSVFile } from './csv.js';
 import { snackbar, closeModal } from './interface.js';
 
@@ -87,7 +88,13 @@ export function loadHeatmapFromAirQualityDatasets(datasets) {
   }
 
   state.heatmapData = locations;
-  drawMap((state.viewBoxCoords.width >>> 1) - 100, (state.viewBoxCoords.height >>> 1) - 170, 5755, 3654, state.currentZoom);
+  //drawMap(state.mapCoords.left, state.mapCoords.top, state.tileCoords.min_x, state.tileCoords.min_y, state.currentZoom);
+  initializeHeatmapData();
+  removeHeatmapTiles(document.getElementById("heatmap-layer"), state.mapCoords.left, state.mapCoords.top, state.mapCoords.right, state.mapCoords.bottom);
+  if (state.viewHeatmap) {
+    addHeatmapTiles(state.heatmapDataRefined, document.getElementById("heatmap-layer"), state.mapCoords.left, state.mapCoords.top, state.mapCoords.right, state.mapCoords.bottom);
+  }
+  console.log(state.tileCoords, state.mapCoords);
 }
 
 function getAirQualityValueFromPollutants(pollutants) {
