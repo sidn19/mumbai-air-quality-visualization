@@ -25,7 +25,9 @@ body {
 #region-name-tooltip {
   position: absolute;
   font-size: 1.2rem;
-  width: 12rem;
+  display: inline-block;
+  background-color: rgba(255, 255, 255, 100);
+  border-radius: 0.3rem;
 }
 
 #map-container {
@@ -47,8 +49,12 @@ body {
   fill: rgba(170,238,204,0.7);
 }
 
+.region {
+  opacity: 0.4;
+}
+
 .region:hover {
-  opacity: 0.8;
+  opacity: 0.75;
 }
 
 #heatmap-layer {
@@ -62,7 +68,6 @@ body {
 }
 
 .canvas-tile {
-  /* border: 1px solid red; */
   position: absolute;
   top: 0;
   left: 0;
