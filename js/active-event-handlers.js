@@ -68,3 +68,8 @@ region.addEventListener('mouseover', (e) => {
 region.addEventListener('mouseout', () => {
   regionTooltip.innerHTML = ''
 })
+
+document.getElementById('date-selection').addEventListener('change', event => {
+  state.selectedDate = event.target.value;
+  loadHeatmapFromAirQualityDatasets(state.datasets.airQuality);
+});

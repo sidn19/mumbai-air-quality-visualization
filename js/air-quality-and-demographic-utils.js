@@ -192,8 +192,36 @@ function groupDataByDate(dataset) {
   return dates;
 }
 
+function addDatesToDOM(datasets) {
+  const dates = [];
+  for (let dataset of datasets) {
+    for (let item of dataset.data) {
+      if (!dates.includes(item.date)) {
+        dates.push(item.date);
+      }
+    }
+  }
+  
+  const dateSelection = document.getElementById('date-selection');
+  const dateNodes = dateSelection.querySelectorAll('option');
+  for (let date of dateNodes) {
+    date.remove();
+  }
+  for (let date of dates) {
+    const dateNode = document.createElement('option');
+    dateNode.innerText = date;
+    dateNode.value = date;
+    dateSelection.append(dateNode);
+  }
+}
+
 export function addDatasetsToDOM(datasets, dataset) {
   const list = document.getElementById(dataset === 'airQuality' ? 'aq-dataset-list' : 'demo-dataset-list');
+
+  if (dataset === 'airQuality') {
+    addDatesToDOM(datasets);
+  }
+
   const items = list.querySelectorAll('.dataset-item');
   for (let item of items) {
     item.remove();
