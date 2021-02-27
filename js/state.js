@@ -16,7 +16,7 @@ export const state = {
         width: 0,
         height: 0
     },
-    selectedDate: '1-1-2020',
+    selectedDate: '1/1/2020',
     heatmapData: null, //Raw heatmap data
     heatmapDataRefined: null, //Heatmap data points in pixel coordinates
     mappingLatLngToPixelCoords: null, //Mapping function from (lat, lng) to pixel coordinates
