@@ -51,7 +51,7 @@ function convertToCSV(objArray) {
   export function downloadAQSample() {
     let demoData = [
       {
-        date: "01-02-2021",
+        date: "01-01-2020",
         latitude: "45.8",
         longitude: "80.2",
         o3: "30",
@@ -63,7 +63,7 @@ function convertToCSV(objArray) {
         nh3: "17",
       },
       {
-        date: "02-02-2021",
+        date: "01-01-2020",
         latitude: "46.3",
         longitude: "67",
         o3: "20",
@@ -81,16 +81,16 @@ function convertToCSV(objArray) {
 
 export function aqvObjectToCSVFile(data, filename) {
   const headers = {
-    date: "Date",
-    latitude: "Latitude",
-    longitude: "Longitude",
-    o3: "O3",
-    pm25: "PM 2.5",
-    pm10: "PM 10",
-    no2: "NO2",
-    so2: "SO2",
-    co: "CO",
-    nh3: "NH3",
+    date: "date",
+    latitude: "latitude",
+    longitude: "longitude",
+    o3: "o3",
+    pm25: "pm2.5",
+    pm10: "pm10",
+    no2: "no2",
+    so2: "so2",
+    co: "co",
+    nh3: "nh3",
   };
 
   exportCSVFile(headers, data, filename);

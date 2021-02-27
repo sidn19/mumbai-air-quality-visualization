@@ -144,7 +144,7 @@ export function drawMap(locationX, locationY, tileX, tileY, zoom) {
     
     // Need to update this
     state.heatmapDataRefined = refineHeatmapData(state.heatmapData, state.mappingLatLngToPixelCoords, function(severity) {
-        return severity / 3;
+        return severity / 5;
     });
     console.log(state.heatmapDataRefined);
     if (state.viewHeatmap) {
