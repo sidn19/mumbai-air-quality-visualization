@@ -473,3 +473,25 @@ input[type="file"] {
 .air-quality-date select {
   font-size: 1rem;
 }
+
+.yesbtn {
+  width: 5rem;
+  background-color: #4F8A10;
+  color: white;
+  margin-right: 15px;
+  border: 1px solid #fff;
+  border-radius: 0.2rem;
+}
+
+.yesbtn:hover {
+  background-color: #60ad0d;
+}
+
+.nobtn {
+  width: 5rem;
+}
+
+.container {
+  text-align: center;
+  font-size: 1rem;
+}

@@ -2,7 +2,7 @@ import { defaultParameters } from './declarations.js';
 import { state } from './state.js';
 import { drawMap } from './map.js';
 import { csvToObject, aqvObjectToCSVFile } from './csv.js';
-import { snackbar, closeModal } from './interface.js';
+import { snackbar, closeModal, getAlert } from './interface.js';
 
 /*
 * Initializing datasets and parameters
@@ -246,7 +246,7 @@ export function addDatasetsToDOM(datasets, dataset) {
       aqvObjectToCSVFile(dataset.data, dataset.name);
     });
     div.querySelector('.delete-button').addEventListener('click', () => {
-      if (confirm('Are you sure you want to delete this file?')) {
+      getAlert('Are you sure you want to delete this file?', () => {
         state.datasets.airQuality.splice(
           state.datasets.airQuality.findIndex(
             x => x.id == dataset.id
@@ -257,7 +257,7 @@ export function addDatasetsToDOM(datasets, dataset) {
         loadHeatmapFromAirQualityDatasets(state.datasets.airQuality)
         localStorage.setItem('air-quality-datasets', JSON.stringify(state.datasets.airQuality));
         snackbar(`Dataset ${dataset.name} has been deleted!`, 'success');
-      }
+      });
     });
     list.prepend(div);
   }
