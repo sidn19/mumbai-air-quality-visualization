@@ -26,8 +26,9 @@ body {
   position: absolute;
   font-size: 1.2rem;
   display: inline-block;
-  background-color: rgba(255, 255, 255, 100);
+  background-color: rgba(248,236,236,0.8);
   border-radius: 0.3rem;
+  padding: 0.3rem;
 }
 
 #map-container {
@@ -46,15 +47,15 @@ body {
 }
 
 .activeRegion {
-  fill: rgba(170,238,204,0.7);
+  fill: #abc;
 }
 
 .region {
-  opacity: 0.4;
+  opacity: 0.75;
 }
 
 .region:hover {
-  opacity: 0.75;
+  opacity: 0.4;
 }
 
 #heatmap-layer {
@@ -134,13 +135,14 @@ body {
 
 .flex-tab button:hover,
 .tab button:hover {
-  background-color: #2196f3;
+  background-color: #ccc;
   color: white;
 }
 
 .flex-tab button.active,
 .tab button.active {
-  background-color: #ccc;
+  background-color: #abc;
+  color: white;
 }
 
 .tabContent {
@@ -233,17 +235,10 @@ body {
   background-color: white;
 }
 
-.toolbarSecondaryContainer {
-  display: flex;
-  flex-direction: row-reverse;
-  justify-content: center;
-  align-items: center;
-}
-
 .toolbar {
   background-color: white;
-  width: 3.5rem;
-  height: 21rem;
+  width: 4rem;
+  height: 16rem;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;

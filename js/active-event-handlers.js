@@ -62,11 +62,13 @@ document.addEventListener('mousemove', function (event) {
 // Show region name near mouse when it is hovered over
 let region = document.getElementById('svg-regions')
 region.addEventListener('mouseover', (e) => {
+  if (regionTooltip.style.display == 'none')
+    regionTooltip.style.display = 'inline-block'
   regionTooltip.innerHTML = e.target.getAttribute('gname')
 })
 
 region.addEventListener('mouseout', () => {
-  regionTooltip.innerHTML = ''
+  regionTooltip.style.display = 'none'
 })
 
 document.getElementById('date-selection').addEventListener('change', event => {
