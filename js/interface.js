@@ -97,3 +97,55 @@ export function snackbar(text, type = 'error') {
     x.remove();
   }, 3000);
 }
+
+export function getAlert(text, confirmCallback) {
+  const box = document.createElement('div');
+  box.id = 'confirm';
+  box.className += 'modal';
+  box.style.display = 'flex';
+  document.body.append(box);
+
+  const frm = document.createElement('form');
+  frm.className = 'modal-content';
+  frm.action = '#';
+  box.appendChild(frm);
+
+  const container = document.createElement('div');
+  container.className = 'container';
+  frm.appendChild(container);
+
+  
+  const p = document.createElement('div');
+  p.innerText = text;
+  p.style.marginBottom = '1rem';
+  container.appendChild(p);
+
+  const footer = document.createElement('div');
+  footer.className = 'modal-footer';
+  container.appendChild(footer);
+
+  const yes = document.createElement('button');
+  yes.className = 'yesbtn';
+  yes.innerText = "Confirm";
+  yes.type = 'button';
+  footer.appendChild(yes);
+  yes.onclick = function() {
+      confirmCallback();
+      box.remove();
+  }
+
+  const no = document.createElement('button');
+  no.className = 'nobtn';
+  no.innerText = 'Cancel';
+  no.type = 'button';
+  footer.appendChild(no);
+  no.onclick = function() {
+      box.remove();
+  }
+  
+  window.onclick = function(event) {
+      if (event.target == box) {
+        box.remove();
+      }
+  }
+}
