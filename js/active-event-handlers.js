@@ -2,6 +2,7 @@ import { downloadAQSample, csvToObject } from './csv.js';
 import { openData, changeToolbarIcon, changeModalTab, snackbar } from './interface.js';
 import { resetAirQualityParametersToDefault, saveAirQualityParameters, addDatasetsToDOM, loadHeatmapFromAirQualityDatasets } from './air-quality-and-demographic-utils.js';
 import { state } from './state.js';
+import { saveDemographicDataParameters } from './demographic-gradient.js'
 
 /*
 * Event handlers
@@ -11,6 +12,12 @@ document.getElementById('download-aq-sample-dataset').addEventListener('click', 
 document.getElementById('resetAirQualityToDefaultButton').addEventListener('click', resetAirQualityParametersToDefault);
 
 document.getElementById('aq-parameters-form').addEventListener('submit', saveAirQualityParameters);
+
+document.getElementById('demo-parameter-form').addEventListener('submit', saveDemographicDataParameters)
+
+document.getElementById('close-demo-parameter-modal').addEventListener('click', (event) => {
+  event.preventDefault()
+})
 
 Array.from(document.querySelectorAll('.openData')).map(x => x.addEventListener('click', openData));
 Array.from(document.querySelectorAll('.toolbarIcon')).map(x => x.addEventListener('click', changeToolbarIcon));
@@ -64,7 +71,15 @@ let region = document.getElementById('svg-regions')
 region.addEventListener('mouseover', (e) => {
   if (regionTooltip.style.display == 'none')
     regionTooltip.style.display = 'inline-block'
-  regionTooltip.innerHTML = e.target.getAttribute('gname')
+  regionTooltip.textContent = e.target.getAttribute('gname')
+
+  // Gradient is displayed => Also show value on hover
+  if (state.gradientData) {
+    let regionGradientValue = document.createElement('div')
+    regionGradientValue.setAttribute('id', 'regionGradientValue')
+    regionGradientValue.textContent = `${state.currentGradientProperty}: ${state.gradientData.find(v => v.gid == e.target.getAttribute('gid')).data}`
+    regionTooltip.append(regionGradientValue)
+  }
 })
 
 region.addEventListener('mouseout', () => {
@@ -75,3 +90,4 @@ document.getElementById('date-selection').addEventListener('change', event => {
   state.selectedDate = event.target.value;
   loadHeatmapFromAirQualityDatasets(state.datasets.airQuality);
 });
+

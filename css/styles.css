@@ -47,11 +47,17 @@ body {
 }
 
 .activeRegion {
-  fill: #abc;
+  fill: #abc !important;
 }
 
 .region {
   opacity: 0.75;
+}
+
+.regionFill {
+  fill:rgb(170, 0, 0, 0.5);
+  stroke:rgb(170, 0, 0, 1);
+  stroke-width: 1;
 }
 
 .region:hover {
@@ -230,9 +236,43 @@ body {
 }
 
 .gradient {
-  height: 2rem;
-  width: 8rem;
+  display: flex;
   background-color: white;
+  flex-direction: column;
+}
+
+#gradientProperty {
+  font-size: 0.6rem;
+  margin: 0;
+  padding: 0.2rem;
+}
+
+.barDiv {
+  display: flex;
+  background-color: white;
+  padding: 0.2rem;
+}
+
+.valuesDiv {
+  display: flex;
+}
+
+.gradientValue {
+  font-size: 0.5rem;
+  width: 2rem;
+  text-align: center;
+}
+
+.gradientStep {
+  height: 1rem;
+  width: 2rem;
+  opacity: 0.75;
+}
+
+.gradientFill {
+  opacity: 0.75 !important;
+  stroke: black;
+  stroke-width: 1
 }
 
 .toolbar {
@@ -337,6 +377,10 @@ body {
 .modal .modal-footer button {
   font-size: 1rem;
   padding: 0.3rem 0.6rem;
+}
+
+.demo-parameters-div {
+  padding: 1rem
 }
 
 @-webkit-keyframes animate-top {

@@ -76,9 +76,9 @@
 
       <!-- Right-->
       <div class="right">
-        <!-- Gradient -->
-        <div class="gradient">Gradient here</div>
 
+        <!-- Gradient -->
+        <div class="gradient"></div>
         
         <!-- Toolbar -->
         <div class="toolbar">
@@ -521,11 +521,62 @@
             </div>
           </form>
         </div>
+
+        <!-- Modal to select demographic data parameters -->
         <div id="demo-parameters" class="parameter-box">
+          <form id="demo-parameter-form">
+            <section class="demo-parameters-div">
+
+            <div class="demo-paramter">
+              <input type="radio" id="totalPopulation" class="demographic-parameter" name="demographic-parameter">
+              <label for="totalPopulation">Population</label>
+            </div>
+
+            <div class="demo-paramter">
+              <input type="radio" id="sexRatio" class="demographic-parameter" name="demographic-parameter">
+              <label for="sexRatio">Sex Ratio</label>
+            </div>
+
+            <div class="demo-paramter">
+              <input type="radio" id="childSexRatio" class="demographic-parameter" name="demographic-parameter">
+              <label for="childSexRatio">Child Sex Ratio</label>
+            </div>
+
+            <div class="demo-paramter">
+              <input type="radio" id="familySize" class="demographic-parameter" name="demographic-parameter">
+              <label for="familySize">Family Size</label>
+            </div>
+
+            <div class="demo-paramter">
+              <input type="radio" id="averageLiteracy" class="demographic-parameter" name="demographic-parameter">
+              <label for="averageLiteracy">Average Literacy</label>
+            </div>
+
+            <div class="demo-paramter">
+              <input type="radio" id="femaleLiteracy" class="demographic-parameter" name="demographic-parameter">
+              <label for="femaleLiteracy">Female Literacy</label>
+            </div>
+
+            <div class="demo-paramter">
+              <input type="radio" id="maleLiteracy" class="demographic-parameter" name="demographic-parameter">
+              <label for="maleLiteracy">Male Literacy</label>
+            </div>
+
+            <div class="demo-paramter">
+              <input type="radio" id="avgFamilyIncome" class="demographic-parameter" name="demographic-parameter">
+              <label for="avgFamilyIncome">Average Family Income</label>
+            </div>
+
+            <div class="demo-paramter">
+              <input type="radio" id="avgEarningMember" class="demographic-parameter" name="demographic-parameter">
+              <label for="avgEarningMember">Average Earning Member</label>
+            </div>
+
+          </section>
           <div class="modal-footer">
-            <button>Apply Changes</button>
-            <button class="close-parameter-modal">Close</button>
-          </div>
+            <button type="submit">Apply Changes</button>
+            <button class="close-parameter-modal" id='close-demo-parameter-modal'>Close</button>
+          </div></form>
         </div>
       </div>
     </div>
@@ -597,5 +648,6 @@
     <script type="module" src="./js/demographic-modal.js"></script>
     <script type="module" src="./js/active-event-handlers.js"></script>
     <script type="module" src="./js/interface.js"></script>
+    <script type="module" src="./js/demographic-gradient.js"></script>
   </body>
 </html>

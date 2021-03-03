@@ -27,9 +27,9 @@ function getPolygonPath(polygon, mapping) {
     let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
     let color = [0xaa, 0, 0];
-    path.setAttributeNS(null, "fill", `rgb(${color[0]}, ${color[1]}, ${color[2]}, 0.5)`);
-    path.setAttributeNS(null, "stroke", `rgb(${color[0]}, ${color[1]}, ${color[2]}, 1)`);
-    path.setAttributeNS(null, "stroke-width", "1");
+    // path.setAttributeNS(null, "fill", `rgb(${color[0]}, ${color[1]}, ${color[2]}, 0.5)`);
+    // path.setAttributeNS(null, "stroke", `rgb(${color[0]}, ${color[1]}, ${color[2]}, 1)`);
+    // path.setAttributeNS(null, "stroke-width", "1");
     path.setAttributeNS(null, "d", pathString);
     path.setAttributeNS(null, "fill-rule", "evenodd");
     return path;
@@ -66,9 +66,9 @@ function getMultiPolygonPath(multiPolygon, mapping) {
     let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
     let color = [0xaa, 0, 0];
-    path.setAttributeNS(null, "fill", `rgb(${color[0]}, ${color[1]}, ${color[2]}, 0.5)`);
-    path.setAttributeNS(null, "stroke", `rgb(${color[0]}, ${color[1]}, ${color[2]}, 1)`);
-    path.setAttributeNS(null, "stroke-width", "1");
+    // path.setAttributeNS(null, "fill", `rgb(${color[0]}, ${color[1]}, ${color[2]}, 0.5)`);
+    // path.setAttributeNS(null, "stroke", `rgb(${color[0]}, ${color[1]}, ${color[2]}, 1)`);
+    // path.setAttributeNS(null, "stroke-width", "1");
     path.setAttributeNS(null, "d", pathString);
     path.setAttributeNS(null, "fill-rule", "evenodd");
     return path;
@@ -86,7 +86,7 @@ export function geojsonOverlay(geojsonData, mapping, container) {
             let path = getMultiPolygonPath(feature.geometry.coordinates, mapping);
             path.setAttributeNS(null, "gid", feature.properties.gid);
             path.setAttributeNS(null, "gname", feature.properties.name);
-            path.setAttributeNS(null, "class", "region");
+            path.setAttributeNS(null, "class", "region regionFill");
             container.appendChild(path);
         }
     }

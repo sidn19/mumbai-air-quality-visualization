@@ -46,5 +46,20 @@ export const state = {
     mappingPixelCoordsToLatLng: null, //Reverse mapping function from pixel coordinates to (lat, lng)
     minZoom: 0,
     maxZoom: 18,
-    currentZoom: 13
+    currentZoom: 13,
+    color: {
+        minColor: {
+            red: 170,
+            green: 204,
+            blue: 238
+        },
+        maxColor: {
+            red: 0,
+            green: 128,
+            blue: 255
+        }
+    },
+    nColor: null,
+    gradientData: null,
+    currentGradientProperty: null
 };
