@@ -149,6 +149,17 @@ const addGradientBar = (min, d) => {
     }
 }
 
+export const addGradientToMap = () => {
+    // Remove regionFill class
+    Array.from(document.getElementsByClassName('region')).map(region => region.setAttribute('class', region.getAttribute('class').replace(' regionFill', ' gradientFill')))
+
+    state.gradientData.map(v => {
+        let r = Array.from(document.querySelectorAll(`[gid="${v.gid}"]`))
+        let rColor = getRegionColor(v.nData, state.nColor)
+        r.map(region => region.style.fill = `rgb(${rColor.red},${rColor.green},${rColor.blue})`)
+    })
+}
+
 export const saveDemographicDataParameters = (event) => {
     event.preventDefault();
 
@@ -168,15 +179,17 @@ export const saveDemographicDataParameters = (event) => {
     // Normalize colors
     state.nColor = getNColor(state.color)
 
-    // Remove regionFill class
-    Array.from(document.getElementsByClassName('region')).map(region => region.setAttribute('class', region.getAttribute('class').replace(' regionFill', ' gradientFill')))
-
     // Color to region
-    state.gradientData.map(v => {
-        let r = Array.from(document.querySelectorAll(`[gid="${v.gid}"]`))
-        let rColor = getRegionColor(v.nData, state.nColor)
-        r.map(region => region.style.fill = `rgb(${rColor.red},${rColor.green},${rColor.blue})`)
-    })
+    addGradientToMap()
 
     addGradientBar(min, d);
+}
+
+export const resetDemographicGradient = () => {
+    state.gradientData = null
+    document.getElementsByClassName('gradient')[0].innerHTML = ''
+    Array.from(document.getElementsByClassName('region')).map(region => {
+        region.setAttribute('class', region.getAttribute('class').replace(' gradientFill', ' regionFill'))
+        region.style.fill = ''
+    })
 }

@@ -9,6 +9,7 @@ import { geojsonOverlay } from "./svg_layer.js";
 import { addHeatmapTiles, removeHeatmapTiles } from "./heatmap_layer.js";
 
 import { regionEventListener } from "./demographic-modal.js";
+import { addGradientToMap } from "./demographic-gradient.js"
 
 import { state } from "./state.js";
 
@@ -96,7 +97,7 @@ export function initializeMap(locationX, locationY, tileX, tileY, zoom) {
     heatmapLayer.innerHTML = "";
 
     //Reset viewBox
-    updateViewBox(state.viewport.min_x, state.viewport.min_y, state.viewport.width, state.viewport.height);    
+    updateViewBox(state.viewport.min_x, state.viewport.min_y, state.viewport.width, state.viewport.height);
 
     state.mapCoords.left = locationX - Math.ceil((locationX - svgMapRect.left) / TILE_SIZE) * TILE_SIZE - BUFFER_TILES * TILE_SIZE;
     state.mapCoords.top = locationY - Math.ceil((locationY - svgMapRect.top) / TILE_SIZE) * TILE_SIZE - BUFFER_TILES * TILE_SIZE;
@@ -133,7 +134,7 @@ export function initializeMap(locationX, locationY, tileX, tileY, zoom) {
 }
 
 export function initializeHeatmapData() {
-    state.heatmapDataRefined = refineHeatmapData(state.heatmapData, state.mappingLatLngToPixelCoords, function(severity) {
+    state.heatmapDataRefined = refineHeatmapData(state.heatmapData, state.mappingLatLngToPixelCoords, function (severity) {
         return severity / 5;
     });
 }
@@ -142,7 +143,7 @@ export function initializeHeatmapOverlay() {
     heatmapLayerCoords.left = 0;
     heatmapLayerCoords.top = 0;
     heatmapLayer.style.transform = `translate(0px, 0px)`;
-    
+
     // Need to update this
     initializeHeatmapData();
     console.log(state.heatmapDataRefined);
@@ -151,7 +152,7 @@ export function initializeHeatmapOverlay() {
     }
 }
 
-export function drawMap(locationX, locationY, tileX, tileY, zoom) {    
+export function drawMap(locationX, locationY, tileX, tileY, zoom) {
     initializeMap(locationX, locationY, tileX, tileY, zoom);
 
     //Add geoJSON SVG Layer
@@ -160,6 +161,12 @@ export function drawMap(locationX, locationY, tileX, tileY, zoom) {
     initializeHeatmapOverlay();
 
     regionEventListener();
+
+    if (!state.gradientData) {
+        Array.from(document.getElementsByClassName('region')).map(region => region.setAttribute('class', region.getAttribute('class').replace(' gradientFill', ' regionFill')))
+    } else {
+        addGradientToMap();
+    }
 }
 
 /**
@@ -269,7 +276,7 @@ function mousedown(event) {
  * Zooming Functionality
  */
 function zoomAt(x, y, scroll) {
-	//Get the Tile on which zoom was performed
+    //Get the Tile on which zoom was performed
     let tileDOM = document.elementsFromPoint(event.clientX, event.clientY).filter((dom) => {
         return dom.getAttribute("class") === "map-tile";
     })[0];
@@ -316,15 +323,15 @@ svgMap.addEventListener("wheel", function (event) {
     let x = event.clientX;
     let y = event.clientY;
 
-	zoomAt(x, y, event.deltaY);    
+    zoomAt(x, y, event.deltaY);
 });
 
-document.getElementById("zoom-in-button").addEventListener("click", function(event) {
-	zoomAt(Math.floor(state.viewport.width >>> 1), Math.floor(state.viewport.height >>> 1), -1);
+document.getElementById("zoom-in-button").addEventListener("click", function (event) {
+    zoomAt(Math.floor(state.viewport.width >>> 1), Math.floor(state.viewport.height >>> 1), -1);
 });
 
-document.getElementById("zoom-out-button").addEventListener("click", function(event) {
-	zoomAt(Math.floor(state.viewport.width >>> 1), Math.floor(state.viewport.height >>> 1), 1);
+document.getElementById("zoom-out-button").addEventListener("click", function (event) {
+    zoomAt(Math.floor(state.viewport.width >>> 1), Math.floor(state.viewport.height >>> 1), 1);
 });
 
 

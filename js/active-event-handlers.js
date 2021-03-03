@@ -1,6 +1,7 @@
 import { downloadAQSample, csvToObject } from './csv.js';
 import { openData, changeToolbarIcon, changeModalTab, snackbar } from './interface.js';
 import { resetAirQualityParametersToDefault, saveAirQualityParameters, addDatasetsToDOM, loadHeatmapFromAirQualityDatasets } from './air-quality-and-demographic-utils.js';
+import { resetDemographicGradient } from './demographic-gradient.js'
 import { state } from './state.js';
 import { saveDemographicDataParameters } from './demographic-gradient.js'
 
@@ -10,6 +11,8 @@ import { saveDemographicDataParameters } from './demographic-gradient.js'
 document.getElementById('download-aq-sample-dataset').addEventListener('click', downloadAQSample);
 
 document.getElementById('resetAirQualityToDefaultButton').addEventListener('click', resetAirQualityParametersToDefault);
+
+document.getElementById('resetDemographicGradient').addEventListener('click', resetDemographicGradient)
 
 document.getElementById('aq-parameters-form').addEventListener('submit', saveAirQualityParameters);
 
