@@ -146,7 +146,7 @@ export function initializeHeatmapOverlay() {
 
     // Need to update this
     initializeHeatmapData();
-    console.log(state.heatmapDataRefined);
+    // console.log(state.heatmapDataRefined);
     if (state.viewHeatmap) {
         addHeatmapTiles(state.heatmapDataRefined, heatmapLayer, state.mapCoords.left, state.mapCoords.top, state.mapCoords.right, state.mapCoords.bottom);
     }
@@ -160,8 +160,7 @@ export function drawMap(locationX, locationY, tileX, tileY, zoom) {
 
     initializeHeatmapOverlay();
 
-    regionEventListener();
-
+    regionEventListener(true);
     if (!state.gradientData) {
         Array.from(document.getElementsByClassName('region')).map(region => region.setAttribute('class', region.getAttribute('class').replace(' gradientFill', ' regionFill')))
     } else {

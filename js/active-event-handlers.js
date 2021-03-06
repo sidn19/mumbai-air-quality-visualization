@@ -72,9 +72,14 @@ document.addEventListener('mousemove', function (event) {
 // Show region name near mouse when it is hovered over
 let region = document.getElementById('svg-regions')
 region.addEventListener('mouseover', (e) => {
-  if (regionTooltip.style.display == 'none')
+  // Show hover effect only on non-active region
+  if (!e.target.getAttribute('class').includes('activeRegion'))
+    e.target.setAttribute('class', `${e.target.getAttribute('class')} regionHover`)
+
+  if (regionTooltip.style.display == 'none') {
     regionTooltip.style.display = 'inline-block'
-  regionTooltip.textContent = e.target.getAttribute('gname')
+    regionTooltip.textContent = e.target.getAttribute('gname')
+  }
 
   // Gradient is displayed => Also show value on hover
   if (state.gradientData) {
@@ -85,8 +90,11 @@ region.addEventListener('mouseover', (e) => {
   }
 })
 
-region.addEventListener('mouseout', () => {
+region.addEventListener('mouseout', (e) => {
   regionTooltip.style.display = 'none'
+  // Remove hover class
+  if (e.target.getAttribute('class').includes('regionHover'))
+    e.target.setAttribute('class', e.target.getAttribute('class').replace(' regionHover', ''))
 })
 
 document.getElementById('date-selection').addEventListener('change', event => {

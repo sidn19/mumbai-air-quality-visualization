@@ -7,9 +7,10 @@ export const state = {
         airQuality: {},
         demographic: []
     },
-    currentRegionId: null,
+    currentRegionId: 112,
     currentRegionData: null,
     viewHeatmap: true,
+    viewDemographicData: true,
 
     //mapCoords represents the extreme positions of the map tile group
     mapCoords: {

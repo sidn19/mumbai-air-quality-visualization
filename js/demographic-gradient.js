@@ -1,5 +1,6 @@
 import regionData from '../data/demographic_data.js'
 import { state } from './state.js'
+import { snackbar, closeModal } from './interface.js'
 
 const getData = (param) => {
     let values = []
@@ -181,8 +182,10 @@ export const saveDemographicDataParameters = (event) => {
 
     // Color to region
     addGradientToMap()
-
     addGradientBar(min, d);
+
+    snackbar('Demographic data gradient has been set!', 'success');
+    closeModal('parameterModal');
 }
 
 export const resetDemographicGradient = () => {
@@ -192,4 +195,6 @@ export const resetDemographicGradient = () => {
         region.setAttribute('class', region.getAttribute('class').replace(' gradientFill', ' regionFill'))
         region.style.fill = ''
     })
+
+    snackbar('Demographic data gradient has been removed!', 'success');
 }

@@ -1,4 +1,5 @@
 import { toggleHeatmap } from "./map.js";
+import { state } from './state.js'
 
 /*
  * Interface Functions
@@ -21,21 +22,25 @@ export const openData = (event) => {
 };
 
 export const changeToolbarIcon = (event) => {
-  let toolbarIcons = document.getElementsByClassName("toolbarIcon");
-  for (let i = 0; i < toolbarIcons.length; i++) {
-    toolbarIcons[i].className = toolbarIcons[i].className.replace(
-      " activeIcon",
-      ""
-    );
-  }
-  event.currentTarget.className += " activeIcon";
+  // let toolbarIcons = document.getElementsByClassName("toolbarIcon");
+  // for (let i = 0; i < toolbarIcons.length; i++) {
+  //   toolbarIcons[i].className = toolbarIcons[i].className.replace(
+  //     " activeIcon",
+  //     ""
+  //   );
+  // }
+  // event.currentTarget.className += " activeIcon";
 
   switch (event.currentTarget.id) {
     case "demographicDataIcon":
-      if (document.getElementById("left").style.display === "none") {
+      if (!state.viewDemographicData) {
         document.getElementById("left").style.display = "block";
+        event.currentTarget.className += " activeIcon";
+        state.viewDemographicData = true
       } else {
         document.getElementById("left").style.display = "none";
+        event.currentTarget.className = event.currentTarget.className.replace(' activeIcon', '')
+        state.viewDemographicData = false
       }
       break;
     case "parameterIcon":
@@ -46,6 +51,9 @@ export const changeToolbarIcon = (event) => {
       break;
     case "heatmapIcon":
       toggleHeatmap();
+      if (!state.viewHeatmap)
+        event.currentTarget.className = event.currentTarget.className.replace(' activeIcon', '')
+      else event.currentTarget.className += " activeIcon";
       break;
   }
 };
@@ -93,7 +101,7 @@ export function snackbar(text, type = 'error') {
   x.innerText = text;
   x.className += `snackbar ${type}`;
   document.body.append(x);
-  setTimeout(function(){ 
+  setTimeout(function () {
     x.remove();
   }, 3000);
 }
@@ -114,7 +122,7 @@ export function getAlert(text, confirmCallback) {
   container.className = 'container';
   frm.appendChild(container);
 
-  
+
   const p = document.createElement('div');
   p.innerText = text;
   p.style.marginBottom = '1rem';
@@ -129,9 +137,9 @@ export function getAlert(text, confirmCallback) {
   yes.innerText = "Confirm";
   yes.type = 'button';
   footer.appendChild(yes);
-  yes.onclick = function() {
-      confirmCallback();
-      box.remove();
+  yes.onclick = function () {
+    confirmCallback();
+    box.remove();
   }
 
   const no = document.createElement('button');
@@ -139,13 +147,13 @@ export function getAlert(text, confirmCallback) {
   no.innerText = 'Cancel';
   no.type = 'button';
   footer.appendChild(no);
-  no.onclick = function() {
-      box.remove();
+  no.onclick = function () {
+    box.remove();
   }
-  
-  window.onclick = function(event) {
-      if (event.target == box) {
-        box.remove();
-      }
+
+  window.onclick = function (event) {
+    if (event.target == box) {
+      box.remove();
+    }
   }
 }
