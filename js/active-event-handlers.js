@@ -4,11 +4,14 @@ import { resetAirQualityParametersToDefault, saveAirQualityParameters, addDatase
 import { resetDemographicGradient } from './demographic-gradient.js'
 import { state } from './state.js';
 import { saveDemographicDataParameters } from './demographic-gradient.js'
+import { downloadDemographicSample } from './demographic-csv.js'
 
 /*
 * Event handlers
 */
 document.getElementById('download-aq-sample-dataset').addEventListener('click', downloadAQSample);
+
+document.getElementById('download-demo-sample-dataset').addEventListener('click', downloadDemographicSample)
 
 document.getElementById('resetAirQualityToDefaultButton').addEventListener('click', resetAirQualityParametersToDefault);
 

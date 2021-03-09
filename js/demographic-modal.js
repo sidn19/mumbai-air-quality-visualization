@@ -69,7 +69,8 @@ const changeCurrentRegion = (event) => {
   state.currentRegionData = findRegion(state.currentRegionId);
 
   //Highlight selected region
-  event.target.setAttribute('class', `${event.target.getAttribute('class')} activeRegion`)
+
+  event.target.setAttribute('class', `${event.target.getAttribute('class').replace(' regionHover', '')} activeRegion`)
 
   populateDemographicData(state.currentRegionData);
 }
