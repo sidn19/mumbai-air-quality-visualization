@@ -1,3 +1,5 @@
+import { state } from './state.js';
+
 function getPolygonPath(polygon, mapping) {
     let boundary = polygon[0];
     let pixelCoords = mapping(boundary[0][1], boundary[0][0]);
@@ -76,7 +78,7 @@ function getMultiPolygonPath(multiPolygon, mapping) {
 
 export function geojsonOverlay(geojsonData, mapping, container) {
     //console.time("overlay");
-    for (let feature of geojsonData.features) {
+    geojsonData.features.forEach((feature, i) => {
         //let properties = feature.properties;
 
         if (feature.geometry.type === "Polygon") {
@@ -86,9 +88,16 @@ export function geojsonOverlay(geojsonData, mapping, container) {
             let path = getMultiPolygonPath(feature.geometry.coordinates, mapping);
             path.setAttributeNS(null, "gid", feature.properties.gid);
             path.setAttributeNS(null, "gname", feature.properties.name);
-            path.setAttributeNS(null, "class", "region regionFill");
+            path.setAttributeNS(null, 'index', i);
+            
+            if (i === state.currentRegionIndex) {
+                path.setAttributeNS(null, 'class', 'region regionFill activeRegion');
+            }
+            else {
+                path.setAttributeNS(null, "class", "region regionFill");
+            }
             container.appendChild(path);
         }
-    }
+    });
     //console.timeEnd("overlay");
 }

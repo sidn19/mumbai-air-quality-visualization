@@ -11,6 +11,8 @@ export const state = {
     currentRegionData: null,
     viewHeatmap: true,
     viewDemographicData: true,
+    currentRegionDataElement: null,
+    currentRegionIndex: null,
 
     //mapCoords represents the extreme positions of the map tile group
     mapCoords: {
