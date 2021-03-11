@@ -44,8 +44,8 @@ const populateDemographicData = (region) => {
     region.direction === "east"
       ? "East"
       : region.direction === "west"
-      ? "West"
-      : "Other";
+        ? "West"
+        : "Other";
 
   //Populate data
   for (let tab of tabs) {
@@ -54,30 +54,35 @@ const populateDemographicData = (region) => {
 };
 
 const clearActiveRegions = () => {
-  for(let path of document.querySelectorAll('.activeRegion')){
-    path.setAttribute('class', path.getAttribute('class').replace('activeRegion',""))
+  for (let path of document.querySelectorAll('.activeRegion')) {
+    path.setAttribute('class', path.getAttribute('class').replace('activeRegion', ""))
   }
 }
 
+const changeCurrentRegion = (event) => {
+  // Remove 'activeRegion' classname
+  clearActiveRegions();
+
+  // Get region id of selected event
+  state.currentRegionDataElement = event.target;
+  state.currentRegionId = event.target.getAttribute('gid');
+  state.currentRegionData = findRegion(state.currentRegionId);
+
+  //Highlight selected region
+
+  event.target.setAttribute('class', `${event.target.getAttribute('class').replace(' regionHover', '')} activeRegion`)
+
+  populateDemographicData(state.currentRegionData);
+}
 
 // Add a click event to the whole svg region
-export const regionEventListener = () => {
-  let regions = document.getElementById("svg-regions");
-  
-  regions.addEventListener("click", (event) => {
-    // Remove 'activeRegion' classname
-    clearActiveRegions();
-
-    // Get region id of selected event
-    state.currentRegionDataElement = event.target;
-    state.currentRegionId = event.target.getAttribute('gid');
-    state.currentRegionData = findRegion(state.currentRegionId);
-
-    //Highlight selected region
-    event.target.setAttribute('class',`${event.target.getAttribute('class')} activeRegion`)
-    
-    populateDemographicData(state.currentRegionData);
-  });
+export const regionEventListener = (zoomActionPerformed = false) => {
+  if (!zoomActionPerformed) {
+    let regions = document.getElementById("svg-regions");
+    regions.addEventListener("click", changeCurrentRegion);
+  } else {
+    // make changes here
+  }
 };
 
 window.addEventListener("load", () => {
