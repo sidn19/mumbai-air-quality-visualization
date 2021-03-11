@@ -50,7 +50,7 @@ const brushRadius = brushSize + brushBlurSize;
 
 const brushCanvas = createBrush(brushSize, brushBlurSize);
 
-const gradientDataArray = createGradientData(gradientIncandescent);
+const gradientDataArray = createGradientData(gradientHeatedMetal);
 
 
 export function addHeatmapTiles(data, container, min_x, min_y, max_x, max_y) {

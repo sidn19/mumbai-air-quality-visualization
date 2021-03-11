@@ -47,7 +47,7 @@ body {
 }
 
 .activeRegion {
-  fill: rgb(170, 0, 0) !important;
+  fill: #FF870080 !important;
 }
 
 .region {
@@ -55,13 +55,13 @@ body {
 }
 
 .regionFill {
-  fill:rgb(170, 0, 0, 0.5);
-  stroke:rgb(170, 0, 0, 1);
+  fill: #FFA50050;
+  stroke:#FF8700;
   stroke-width: 1;
 }
 
 .regionHover {
-  opacity: 0.6;
+  opacity: 1;
 }
 
 #heatmap-layer {
