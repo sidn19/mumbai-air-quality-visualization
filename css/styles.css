@@ -26,8 +26,9 @@ body {
   position: absolute;
   font-size: 1.2rem;
   display: inline-block;
-  background-color: rgba(255, 255, 255, 100);
+  background-color: rgba(236,236,236,0.8);
   border-radius: 0.3rem;
+  padding: 0.3rem;
 }
 
 #map-container {
@@ -46,15 +47,21 @@ body {
 }
 
 .activeRegion {
-  fill: rgba(170,238,204,0.7);
+  fill: rgb(170, 0, 0) !important;
 }
 
 .region {
-  opacity: 0.4;
+  opacity: 0.75;
 }
 
-.region:hover {
-  opacity: 0.75;
+.regionFill {
+  fill:rgb(170, 0, 0, 0.5);
+  stroke:rgb(170, 0, 0, 1);
+  stroke-width: 1;
+}
+
+.regionHover {
+  opacity: 0.6;
 }
 
 #heatmap-layer {
@@ -84,6 +91,7 @@ body {
 
 #demoData {
   display: flex;
+  border-radius: 0.3rem;
   flex-direction: column;
   box-shadow: 4px 4px 10px 0 rgb(0 0 0 / 33%)
 }
@@ -134,13 +142,14 @@ body {
 
 .flex-tab button:hover,
 .tab button:hover {
-  background-color: #2196f3;
+  background-color: #ccc;
   color: white;
 }
 
 .flex-tab button.active,
 .tab button.active {
-  background-color: #ccc;
+  background-color: #abc;
+  color: white;
 }
 
 .tabContent {
@@ -228,6 +237,16 @@ body {
 }
 
 .gradient {
+  display: flex;
+  background-color: white;
+  flex-direction: column;
+  width: 13rem;
+  box-shadow: 4px 4px 10px 0 rgb(0 0 0 / 33%);
+  border-radius: 0.3rem;
+  align-items: center;
+}
+
+.gradient2 {
   height: 2.5rem;
   width: 10rem;
   border-radius: 2px;
@@ -257,22 +276,50 @@ body {
   padding-bottom: 0.8rem;
 }
 
-.toolbarSecondaryContainer {
+#gradientProperty {
+  font-size: 0.6rem;
+  margin: 0;
+  padding: 0.3rem;
+}
+
+.barDiv {
   display: flex;
-  flex-direction: row-reverse;
-  justify-content: center;
-  align-items: center;
+  background-color: white;
+  padding: 0.2rem;
+}
+
+.valuesDiv {
+  display: flex;
+}
+
+.gradientValue {
+  font-size: 0.5rem;
+  width: 2rem;
+  text-align: center;
+  padding: 0.2rem;
+}
+
+.gradientStep {
+  height: 1rem;
+  width: 2rem;
+  opacity: 0.75;
+}
+
+.gradientFill {
+  opacity: 0.75 !important;
+  stroke: black;
+  stroke-width: 1
 }
 
 .toolbar {
   background-color: white;
-  width: 3.5rem;
-  height: 21rem;
+  width: 4rem;
+  height: 16rem;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  box-shadow: 4px 4px 10px 0 rgb(0 0 0 / 33%)
+  box-shadow: 4px 4px 10px 0 rgb(0 0 0 / 33%);
 }
 
 .toolbarIcon {
@@ -366,6 +413,10 @@ body {
 .modal .modal-footer button {
   font-size: 1rem;
   padding: 0.3rem 0.6rem;
+}
+
+.demo-parameters-div {
+  padding: 1rem
 }
 
 @-webkit-keyframes animate-top {

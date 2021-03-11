@@ -77,7 +77,7 @@
       <!-- Right-->
       <div class="right">
         <!-- Gradient -->
-        <div class="gradient">
+        <div class="gradient2">
           <div class="severity-rating">
             Severity rating:
             <div class="gradient-values">
@@ -86,36 +86,37 @@
           </div>
         </div>
 
-        <div class="toolbarSecondaryContainer">
-          <!-- Toolbar -->
-          <div class="toolbar">
-            <button class="toolbarIcon activeIcon" id="databaseIcon">
-              <span title="Database"
-                ><img src="./assets/icons/database.svg" alt=""
-              /></span>
-            </button>
+        <!-- Gradient -->
+        <div class="gradient"></div>
+        
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <button class="toolbarIcon" id="databaseIcon">
+            <span title="Database"
+              ><img src="./assets/icons/database.svg" alt=""
+            /></span>
+          </button>
 
-            <button class="toolbarIcon" id="demographicDataIcon">
-              <span title="Toggle Demographic Data"
-                ><img src="./assets/icons/demographics.svg" alt=""
-              /></span>
-            </button>
+          <button class="toolbarIcon activeIcon" id="demographicDataIcon">
+            <span title="Toggle Demographic Data"
+              ><img src="./assets/icons/demographics.svg" alt=""
+            /></span>
+          </button>
 
-            <button class="toolbarIcon" id="parameterIcon">
-              <span title="Toggle Parameters"
-                ><img src="./assets/icons/parameters.svg" alt=""
-              /></span>
-            </button>
+          <button class="toolbarIcon" id="parameterIcon">
+            <span title="Toggle Parameters"
+              ><img src="./assets/icons/parameters.svg" alt=""
+            /></span>
+          </button>
 
-            <button class="toolbarIcon" id="heatmapIcon">
-              <span title="Toggle Heatmap"
-                ><img src="./assets/icons/heatmap.svg" alt=""
-              /></span>
-            </button>
-          </div>
-          <!-- Toolbar ends -->
-          <!-- <div id="secondaryDiv">secondary div</div> -->
+          <button class="toolbarIcon activeIcon" id="heatmapIcon">
+            <span title="Toggle Heatmap"
+              ><img src="./assets/icons/heatmap.svg" alt=""
+            /></span>
+          </button>
         </div>
+        <!-- Toolbar ends -->
+          
 
         <!-- Zoom -->
         <div class="zoom">
@@ -529,11 +530,63 @@
             </div>
           </form>
         </div>
+
+        <!-- Modal to select demographic data parameters -->
         <div id="demo-parameters" class="parameter-box">
+          <form id="demo-parameter-form">
+            <section class="demo-parameters-div">
+
+            <div class="demo-paramter">
+              <input type="radio" id="totalPopulation" class="demographic-parameter" name="demographic-parameter">
+              <label for="totalPopulation">Population</label>
+            </div>
+
+            <div class="demo-paramter">
+              <input type="radio" id="sexRatio" class="demographic-parameter" name="demographic-parameter">
+              <label for="sexRatio">Sex Ratio</label>
+            </div>
+
+            <div class="demo-paramter">
+              <input type="radio" id="childSexRatio" class="demographic-parameter" name="demographic-parameter">
+              <label for="childSexRatio">Child Sex Ratio</label>
+            </div>
+
+            <div class="demo-paramter">
+              <input type="radio" id="familySize" class="demographic-parameter" name="demographic-parameter">
+              <label for="familySize">Family Size</label>
+            </div>
+
+            <div class="demo-paramter">
+              <input type="radio" id="averageLiteracy" class="demographic-parameter" name="demographic-parameter">
+              <label for="averageLiteracy">Average Literacy</label>
+            </div>
+
+            <div class="demo-paramter">
+              <input type="radio" id="femaleLiteracy" class="demographic-parameter" name="demographic-parameter">
+              <label for="femaleLiteracy">Female Literacy</label>
+            </div>
+
+            <div class="demo-paramter">
+              <input type="radio" id="maleLiteracy" class="demographic-parameter" name="demographic-parameter">
+              <label for="maleLiteracy">Male Literacy</label>
+            </div>
+
+            <div class="demo-paramter">
+              <input type="radio" id="avgFamilyIncome" class="demographic-parameter" name="demographic-parameter">
+              <label for="avgFamilyIncome">Average Family Income</label>
+            </div>
+
+            <div class="demo-paramter">
+              <input type="radio" id="avgEarningMember" class="demographic-parameter" name="demographic-parameter">
+              <label for="avgEarningMember">Average Earning Member</label>
+            </div>
+
+          </section>
           <div class="modal-footer">
-            <button>Apply Changes</button>
-            <button class="close-parameter-modal">Close</button>
-          </div>
+            <button type="submit">Apply Changes</button>
+            <button type="button" id="resetDemographicGradient">Reset to Defaults</button>
+            <button class="close-parameter-modal" id='close-demo-parameter-modal'>Close</button>
+          </div></form>
         </div>
       </div>
     </div>
@@ -578,7 +631,7 @@
               </div>
             </div>
             <div>
-              <button class="download-button"></button>
+              <button class="download-button" id="download-demo-sample-dataset"></button>
               <button class="delete-button"></button>
             </div>
           </div>
@@ -605,5 +658,6 @@
     <script type="module" src="./js/demographic-modal.js"></script>
     <script type="module" src="./js/active-event-handlers.js"></script>
     <script type="module" src="./js/interface.js"></script>
+    <script type="module" src="./js/demographic-gradient.js"></script>
   </body>
 </html>
