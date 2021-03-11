@@ -6,6 +6,7 @@ import {
   otherProperties,
   createLegend,
   addOtherProperties,
+  populateDiseasesTable
 } from "./demographic-categories.js";
 import { state } from "./state.js";
 
@@ -31,8 +32,11 @@ const populateData = (tab, region) => {
     createLegend(currentPiechartCategories)
   );
 
-  //Display other properties
-  div.append(addOtherProperties(currentOtherProperties));
+  if (tab == 'diseases') {
+    div.append(populateDiseasesTable(currentOtherProperties));
+  } else
+    //Display other properties
+    div.append(addOtherProperties(currentOtherProperties));
 };
 
 const populateDemographicData = (region) => {

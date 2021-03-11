@@ -256,63 +256,64 @@ export const otherProperties = (tab, region) => {
       ];
     case "diseases":
       return [
-        {
-          type: "Number of Cases of Communicable Cases",
-          value: region.data.commDiseases.total,
-        },
-        {
-          type: "Number of Cases of Fever",
-          value: region.data.commDiseases.fever,
-        },
-        {
-          type: "Number of Cases of Gastro",
-          value: region.data.commDiseases.gastro,
-        },
-        {
-          type: "Number of Cases of URTI",
-          value: region.data.commDiseases.urti,
-        },
-        {
-          type: "Number of Cases of Hepatitis",
-          value: region.data.commDiseases.hepatitis,
-        },
-        {
-          type: "Number of Cases of Malaria",
-          value: region.data.commDiseases.malaria,
-        },
-        {
-          type: "Number of Cases of Dengue",
-          value: region.data.commDiseases.dengue,
-        },
-        {
-          type: "Number of Cases of Tuberculosis",
-          value: region.data.commDiseases.tuberculosis,
-        },
-        {
-          type: "Number of Cases of Non Communicable Diseases",
-          value: region.data.nonCommDiseases.total,
-        },
-        {
-          type: "Number of Cases of Hypertension",
-          value: region.data.nonCommDiseases.hypertension,
-        },
-        {
-          type: "Number of Cases of Diabetes",
-          value: region.data.nonCommDiseases.diabetes,
-        },
-        {
-          type: "Number of Cases of Asthma",
-          value: region.data.nonCommDiseases.asthma,
-        },
-        {
-          type: "Number of Cases of IHD",
-          value: region.data.nonCommDiseases.ihd,
-        },
-        {
-          type: "Number of Cases of Psychiatric Disorders",
-          value: region.data.nonCommDiseases.psychiatricDisorders,
-        },
-      ];
+        [
+          {
+            type: "Fever",
+            value: region.data.commDiseases.fever,
+          },
+          {
+            type: "Gastro",
+            value: region.data.commDiseases.gastro,
+          },
+          {
+            type: "URTI",
+            value: region.data.commDiseases.urti,
+          },
+          {
+            type: "Hepatitis",
+            value: region.data.commDiseases.hepatitis,
+          },
+          {
+            type: "Malaria",
+            value: region.data.commDiseases.malaria,
+          },
+          {
+            type: "Dengue",
+            value: region.data.commDiseases.dengue,
+          },
+          {
+            type: "Tuberculosis",
+            value: region.data.commDiseases.tuberculosis,
+          },
+          {
+            type: "Total",
+            value: region.data.commDiseases.total,
+          }],
+        [
+          {
+            type: "Hypertension",
+            value: region.data.nonCommDiseases.hypertension,
+          },
+          {
+            type: "Diabetes",
+            value: region.data.nonCommDiseases.diabetes,
+          },
+          {
+            type: "Asthma",
+            value: region.data.nonCommDiseases.asthma,
+          },
+          {
+            type: "IHD",
+            value: region.data.nonCommDiseases.ihd,
+          },
+          {
+            type: "Psychiatric Disorders",
+            value: region.data.nonCommDiseases.psychiatricDisorders,
+          },
+          {
+            type: "Total",
+            value: region.data.nonCommDiseases.total,
+          }]]
     case "healthinfra":
       return [
         {
@@ -376,6 +377,53 @@ export const createLegend = (categories) => {
   // Append the legend div to the content tab
   return legendDiv;
 };
+
+export const populateDiseasesTable = (properties) => {
+  let div = document.createElement('div');
+
+  // Create table heading
+  for (let d in properties) {
+    let h3 = document.createElement('h3');
+    h3.setAttribute('class', 'disease-table-heading')
+    if (d == 0) {
+      h3.textContent = 'Communicable Diseases'
+      div.append(h3)
+    } else {
+      h3.textContent = 'Non Communicable Diseases'
+      div.append(h3)
+    }
+
+    // Create table
+    let table = document.createElement('table')
+    for (let i = -1; i < properties[d].length; i++) {
+      let tr = document.createElement('tr');
+      let td1 = document.createElement('td')
+      let td2 = document.createElement('td')
+      // Table headers
+      if (i == -1) {
+        let th1 = document.createElement('th');
+        th1.setAttribute('class', 'disease-table-header')
+        th1.textContent = 'Disease'
+        let th2 = document.createElement('th');
+        th2.setAttribute('class', 'disease-table-header')
+        th2.textContent = 'Cases'
+        tr.append(th1)
+        tr.append(th2)
+      } else {
+        // Table data
+        td1.textContent = properties[d][i].type;
+        td1.setAttribute('class', 'disease-table-data')
+        td2.textContent = properties[d][i].value;
+        td2.setAttribute('class', 'disease-table-data')
+        tr.append(td1)
+        tr.append(td2)
+      }
+      table.append(tr)
+      div.append(table)
+    }
+  }
+  return div;
+}
 
 export const addOtherProperties = (properties) => {
   let otherPropertiesDiv = document.createElement("div");
