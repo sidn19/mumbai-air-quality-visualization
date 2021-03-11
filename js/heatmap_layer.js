@@ -44,8 +44,8 @@ function createGradientData(gradientColors) {
     return gradientCanvasContext.getImageData(0, 0, 1, 256).data;
 }
 
-const brushSize = 25;
-const brushBlurSize = 30;
+const brushSize = 30;
+const brushBlurSize = 35;
 const brushRadius = brushSize + brushBlurSize;
 
 const brushCanvas = createBrush(brushSize, brushBlurSize);

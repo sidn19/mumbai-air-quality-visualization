@@ -252,7 +252,7 @@ body {
   border-radius: 2px;
   position: relative;
   background-color: red; /* For browsers that do not support gradients */
-  background-image: linear-gradient(to right, red , yellow);
+  background-image: linear-gradient(to right, black , purple, red, yellow, white);
 }
 
 .severity-rating {

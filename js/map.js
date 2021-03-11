@@ -23,21 +23,6 @@ const heatmapLayer = document.getElementById("heatmap-layer");
 
 const BUFFER_TILES = 1; //Number of extra layer of tiles to be loaded around the visible area tiles
 
-// //state.tileCoords represents Tile Coordinate System
-// let state.tileCoords = {
-//     min_x: 0,
-//     min_y: 0,
-//     max_x: 0,
-//     max_y: 0,
-// };
-
-// let state.mapCoords = {
-//     left: 0,
-//     top: 0,
-//     right: 0,
-//     bottom: 0,
-// };
-
 //Initialize Viewport
 state.viewport.min_x = svgMapRect.left;
 state.viewport.min_y = svgMapRect.top;
