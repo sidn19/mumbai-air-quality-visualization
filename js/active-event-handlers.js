@@ -85,7 +85,7 @@ region.addEventListener('mouseover', (e) => {
   }
 
   // Gradient is displayed => Also show value on hover
-  if (state.gradientData) {
+  if (state.gradientData && !document.getElementById('regionGradientValue')) {
     let regionGradientValue = document.createElement('div')
     regionGradientValue.setAttribute('id', 'regionGradientValue')
     regionGradientValue.textContent = `${state.currentGradientProperty}: ${state.gradientData.find(v => v.gid == e.target.getAttribute('gid')).data}`

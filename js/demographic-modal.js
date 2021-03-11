@@ -72,25 +72,21 @@ const changeCurrentRegion = (event) => {
     state.currentRegionData = findRegion(state.currentRegionId);
 
     //Highlight selected region
-
     event.target.setAttribute('class', `${event.target.getAttribute('class').replace(' regionHover', '')} activeRegion`);
-    
+
     populateDemographicData(state.currentRegionData);
   }
   else {
     event.target.setAttribute('class', event.target.getAttribute('class').replace('activeRegion', ""))
   }
-  
+
 }
 
 // Add a click event to the whole svg region
-export const regionEventListener = (zoomActionPerformed = false) => {
-  if (!zoomActionPerformed) {
-    let regions = document.getElementById("svg-regions");
-    regions.addEventListener("click", changeCurrentRegion);
-  } else {
-    // make changes here
-  }
+export const regionEventListener = () => {
+
+  let regions = document.getElementById("svg-regions");
+  regions.addEventListener("click", changeCurrentRegion);
 };
 
 window.addEventListener("load", () => {

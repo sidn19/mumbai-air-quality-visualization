@@ -145,7 +145,7 @@ export function drawMap(locationX, locationY, tileX, tileY, zoom) {
 
     initializeHeatmapOverlay();
 
-    regionEventListener(true);
+    regionEventListener();
     if (!state.gradientData) {
         Array.from(document.getElementsByClassName('region')).map(region => region.setAttribute('class', region.getAttribute('class').replace(' gradientFill', ' regionFill')))
     } else {
