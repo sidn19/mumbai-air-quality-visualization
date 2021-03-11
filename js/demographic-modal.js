@@ -60,20 +60,27 @@ const clearActiveRegions = () => {
 }
 
 const changeCurrentRegion = (event) => {
-  // Remove 'activeRegion' classname
-  clearActiveRegions();
 
-  // Get region id of selected event
-  state.currentRegionDataElement = event.target;
-  state.currentRegionId = event.target.getAttribute('gid');
-  state.currentRegionIndex = parseInt(event.target.getAttribute('index'));
-  state.currentRegionData = findRegion(state.currentRegionId);
+  if (event.target.getAttribute('class').indexOf('activeRegion') === -1) {
+    // Remove 'activeRegion' classname
+    clearActiveRegions(event.target);
 
-  //Highlight selected region
+    // Get region id of selected event
+    state.currentRegionDataElement = event.target;
+    state.currentRegionId = event.target.getAttribute('gid');
+    state.currentRegionIndex = parseInt(event.target.getAttribute('index'));
+    state.currentRegionData = findRegion(state.currentRegionId);
 
-  event.target.setAttribute('class', `${event.target.getAttribute('class').replace(' regionHover', '')} activeRegion`);
+    //Highlight selected region
 
-  populateDemographicData(state.currentRegionData);
+    event.target.setAttribute('class', `${event.target.getAttribute('class').replace(' regionHover', '')} activeRegion`);
+    
+    populateDemographicData(state.currentRegionData);
+  }
+  else {
+    event.target.setAttribute('class', event.target.getAttribute('class').replace('activeRegion', ""))
+  }
+  
 }
 
 // Add a click event to the whole svg region
