@@ -18,17 +18,17 @@ export const piechartCategories = (tab, region) => {
         {
           type: "Male",
           value: region.data.population.male,
-          color: "#aaa",
+          color: "#b5fff6",
         },
         {
           type: "Female",
           value: region.data.population.female,
-          color: "#ccc",
+          color: "#ffc2e7",
         },
         {
           type: "Transgender",
           value: region.data.population.transgender,
-          color: "#aec",
+          color: "#fff899",
         },
       ];
     case "family":

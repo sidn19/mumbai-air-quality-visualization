@@ -17,7 +17,6 @@ const findRegion = (gid) => {
 };
 
 const populateData = (tab, region) => {
-
   // Get piechart and other properties of the tab
   currentPiechartCategories = piechartCategories(tab, region);
   currentOtherProperties = otherProperties(tab, region);
@@ -59,8 +58,20 @@ const clearActiveRegions = () => {
   }
 }
 
-const changeCurrentRegion = (event) => {
+const clearDemographicData = () => {
+  // Clear tab content
+  for (let tab of tabs) {
+    let div = document.getElementById(tab);
+    div.innerHTML = "";
+  }
 
+  // Change region and direction name
+  document.getElementById("regionName").textContent = 'Region name';
+  document.getElementById("regionDir").textContent = 'M Ward East/West'
+}
+
+const changeCurrentRegion = (event) => {
+  // Current region is not the activeRegion
   if (event.target.getAttribute('class').indexOf('activeRegion') === -1) {
     // Remove 'activeRegion' classname
     clearActiveRegions(event.target);
@@ -76,7 +87,9 @@ const changeCurrentRegion = (event) => {
 
     populateDemographicData(state.currentRegionData);
   }
+  // Current region is the activeRegion => Deselect
   else {
+    clearDemographicData()
     event.target.setAttribute('class', event.target.getAttribute('class').replace('activeRegion', ""))
   }
 
