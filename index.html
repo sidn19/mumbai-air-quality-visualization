@@ -74,21 +74,25 @@
         </div>
       </div>
 
+      <!-- Heatmap Gradient -->
+      <span class="heatmap-gradient">
+        <span class="severity-rating">Severity rating:</span>
+        <div class="gradient2"></div>
+        <span class="gradient-values">
+          <span>0</span>
+          <span>1</span>
+          <span>2</span>
+          <span>3</span>
+          <span>4</span>
+          <span>5</span>
+        </span>
+      </span>
+    
+      <!-- Gradient -->
+      <span class="gradient"></span>
+
       <!-- Right-->
       <div class="right">
-        <!-- Gradient -->
-        <div class="gradient2">
-          <div class="severity-rating">
-            Severity rating:
-            <div class="gradient-values">
-              0&nbsp;1&nbsp;2&nbsp;3&nbsp;4&nbsp;5
-            </div>
-          </div>
-        </div>
-
-        <!-- Gradient -->
-        <div class="gradient"></div>
-        
         <!-- Toolbar -->
         <div class="toolbar">
           <button class="toolbarIcon" id="databaseIcon">
@@ -632,16 +636,12 @@
             </div>
             <div>
               <button class="download-button" id="download-demo-sample-dataset"></button>
-              <button class="delete-button"></button>
+              
             </div>
           </div>
           <div class="modal-footer">
             <button id="download-demo-sample-dataset">Download Sample</button>
-            <button type="button">
-              <label for="demo-upload-dataset" class="custom-file-upload"
-                >Upload Dataset</label
-              >
-            </button>
+            
             <input id="demo-upload-dataset" type="file" />
             <button class="close-dataset-modal">Close</button>
           </div>

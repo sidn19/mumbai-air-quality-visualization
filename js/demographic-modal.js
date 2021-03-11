@@ -103,6 +103,7 @@ export const regionEventListener = () => {
 };
 
 window.addEventListener("load", () => {
+  state.hasPageLoaded = true;
   regionEventListener();
   document.querySelector(".active").click();
 });

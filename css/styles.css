@@ -227,7 +227,7 @@ body {
 
 .right {
   position: absolute;
-  top: 0.8rem;
+  top: 12rem;
   bottom: 0.8rem;
   right: 0.8rem;
   display: flex;
@@ -237,6 +237,9 @@ body {
 }
 
 .gradient {
+  position: absolute;
+  top: 4rem;
+  right: 0.8rem;
   display: flex;
   background-color: white;
   flex-direction: column;
@@ -246,34 +249,48 @@ body {
   align-items: center;
 }
 
-.gradient2 {
-  height: 2.5rem;
-  width: 10rem;
-  border-radius: 2px;
-  position: relative;
-  background-color: red; /* For browsers that do not support gradients */
-  background-image: linear-gradient(to right, black , purple, red, yellow, white);
+.heatmap-gradient {
+  background-color: white;
+  box-shadow: 4px 4px 10px 0 rgb(0 0 0 / 33%);
+  border-radius: 0.3rem;
+  position: absolute;
+  right: 0.8rem;
+  top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 13rem;
 }
 
+/* Gradient heatmap */
 .severity-rating {
+  font-size: 0.6rem;
+  padding: 0.3rem;
+}
+
+.gradient2 {
   height: 0.8rem;
   width: 10rem;
-  position: absolute;
-  background-color: white;
-  font-size: 0.6rem;
-  align-items: center;
+  border-radius: 2px;
+  background-color: red; /* For browsers that do not support gradients */
+  background-image: linear-gradient(to right, black , purple, red, yellow, white);
+  padding: 0.3rem;
 }
 
 .gradient-values {
   height: 0.8rem;
   width: 10rem;
-  position: absolute;
   background-color: white;
   font-size: 0.7rem;
   text-align-last: justify;
   align-items: center;
   padding-top: 0.1rem;
-  padding-bottom: 0.8rem;
+  padding-bottom: 1rem;
+}
+
+.gradient-values > span {
+  font-size: 0.6rem;
 }
 
 #gradientProperty {
