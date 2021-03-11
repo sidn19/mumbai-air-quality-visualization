@@ -540,52 +540,50 @@
           <form id="demo-parameter-form">
             <section class="demo-parameters-div">
 
-            <div class="demo-paramter">
-              <input type="radio" id="totalPopulation" class="demographic-parameter" name="demographic-parameter">
-              <label for="totalPopulation">Population</label>
-            </div>
+              <select name="demographic-parameter" id="demographic-parameter">
 
-            <div class="demo-paramter">
-              <input type="radio" id="sexRatio" class="demographic-parameter" name="demographic-parameter">
-              <label for="sexRatio">Sex Ratio</label>
-            </div>
+                <optgroup label="Population">
+                  <option value="totalPopulation" id="totalPopulation">Total Population</option>
+                  <option value="sexRatio" id="sexRatio">Sex Ratio</option>
+                  <option value="childSexRatio" id="childSexRatio">Child Sex Ratio</option>
+                </optgroup>
 
-            <div class="demo-paramter">
-              <input type="radio" id="childSexRatio" class="demographic-parameter" name="demographic-parameter">
-              <label for="childSexRatio">Child Sex Ratio</label>
-            </div>
+                <optgroup label="Family">
+                  <option value="familySize" id="familySize">Family Size</option>
+                </optgroup>
 
-            <div class="demo-paramter">
-              <input type="radio" id="familySize" class="demographic-parameter" name="demographic-parameter">
-              <label for="familySize">Family Size</label>
-            </div>
+                <optgroup label="Education">
+                  <option value="averageLiteracy" id="averageLiteracy">Average Literacy</option>
+                  <option value="femaleLiteracy" id="femaleLiteracy">Female Literacy</option>
+                  <option value="maleLiteracy" id="averageLiteracy">Male Literacy</option>
+                </optgroup>
 
-            <div class="demo-paramter">
-              <input type="radio" id="averageLiteracy" class="demographic-parameter" name="demographic-parameter">
-              <label for="averageLiteracy">Average Literacy</label>
-            </div>
+                <optgroup label="Occupation">
+                  <option value="avgFamilyIncome" id="avgFamilyIncome">Average Family Income</option>
+                  <option value="avgEarningMember" id="averageLiteracy">Average Earning Member</option>
+                </optgroup>
 
-            <div class="demo-paramter">
-              <input type="radio" id="femaleLiteracy" class="demographic-parameter" name="demographic-parameter">
-              <label for="femaleLiteracy">Female Literacy</label>
-            </div>
+                <optgroup label="Health Indicators">
+                  <option value="underweight" id="underweight">% of Children Who Are Underweight</option>
+                  <option value="stunted" id="stunted">% of Children Who Are Stunted</option>
+                  <option value="wasted" id="wasted">% of Children Who Are Wasted</option>
+                  <option value="anaemia" id="anaemia">Anaemia in Pregnant Women (%)</option>
+                  <option value="infantMortality" id="infantMortality">Infant Mortality</option>
+                </optgroup>
 
-            <div class="demo-paramter">
-              <input type="radio" id="maleLiteracy" class="demographic-parameter" name="demographic-parameter">
-              <label for="maleLiteracy">Male Literacy</label>
-            </div>
+                <optgroup label="Diseases">
+                  <option value="commDiseases" id="commDiseases">Total Number of Cases of Communicable Diseases</option>
+                  <option value="nonCommDiseases" id="nonCommDiseases">Total Number of Cases of Non Communicable Diseases</option>
+                </optgroup>
 
-            <div class="demo-paramter">
-              <input type="radio" id="avgFamilyIncome" class="demographic-parameter" name="demographic-parameter">
-              <label for="avgFamilyIncome">Average Family Income</label>
-            </div>
-
-            <div class="demo-paramter">
-              <input type="radio" id="avgEarningMember" class="demographic-parameter" name="demographic-parameter">
-              <label for="avgEarningMember">Average Earning Member</label>
-            </div>
-
+                <optgroup label="Health Infrastructure">
+                  <option value="densityGovtDisp" id="densityGovtDisp">Density of Government Dispensaries to Population</option>
+                  <option value="percentIncomeHealth" id="percentIncomeHealth">% of Annual Family Income Spent on Health</option>
+                  <option value="noInsurance" id="noInsurance">% of Households where No Member has Insurance</option>
+                </optgroup>
+              </select>
           </section>
+
           <div class="modal-footer">
             <button type="submit">Apply Changes</button>
             <button type="button" id="resetDemographicGradient">Reset to Defaults</button>

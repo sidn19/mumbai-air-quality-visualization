@@ -433,7 +433,8 @@ body {
 }
 
 .demo-parameters-div {
-  padding: 1rem
+  padding: 1rem;
+  text-align: center;
 }
 
 @-webkit-keyframes animate-top {
