@@ -246,6 +246,36 @@ body {
   align-items: center;
 }
 
+.gradient2 {
+  height: 2.5rem;
+  width: 10rem;
+  border-radius: 2px;
+  position: relative;
+  background-color: red; /* For browsers that do not support gradients */
+  background-image: linear-gradient(to right, red , yellow);
+}
+
+.severity-rating {
+  height: 0.8rem;
+  width: 10rem;
+  position: absolute;
+  background-color: white;
+  font-size: 0.6rem;
+  align-items: center;
+}
+
+.gradient-values {
+  height: 0.8rem;
+  width: 10rem;
+  position: absolute;
+  background-color: white;
+  font-size: 0.7rem;
+  text-align-last: justify;
+  align-items: center;
+  padding-top: 0.1rem;
+  padding-bottom: 0.8rem;
+}
+
 #gradientProperty {
   font-size: 0.6rem;
   margin: 0;
