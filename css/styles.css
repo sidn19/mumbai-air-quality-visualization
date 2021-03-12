@@ -591,9 +591,9 @@ input[type="file"] {
   font-size: 1rem;
 }
 
-table, th, td {
+/* table, th, td {
   border: 0.1rem solid black;
-}
+} */
 
 table {
   width: 10rem;
@@ -607,9 +607,11 @@ table {
 }
 
 .disease-table-header {
-  font-size: 0.6rem;
+  font-size: 0.6rem;border: 1px solid #abc
 }
 
 .disease-table-data {
   font-size: 0.65rem;
+  text-align: center;
+  border: 1px solid #abc
 }
