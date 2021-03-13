@@ -62,6 +62,7 @@ body {
 
 .regionHover {
   opacity: 1;
+  fill: #ee7700aa;
 }
 
 #heatmap-layer {
@@ -435,8 +436,17 @@ body {
 }
 
 .demo-parameters-div {
-  padding: 1rem;
-  text-align: center;
+  margin: 1rem 0rem;
+}
+
+.demo-parameters-div label {
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.demo-parameters-div select {
+  padding: 0.6rem;
+  width: 100%;
 }
 
 @-webkit-keyframes animate-top {
