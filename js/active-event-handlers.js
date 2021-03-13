@@ -23,7 +23,38 @@ document.getElementById('demo-parameter-form').addEventListener('submit', saveDe
 
 document.getElementById('close-demo-parameter-modal').addEventListener('click', (event) => {
   event.preventDefault()
-})
+});
+
+document.getElementById('play-button').addEventListener('click', event => {
+
+  if (state.playing) {
+    clearInterval(state.playInterval);
+    state.playing = false;
+    event.target.innerHTML = 'Play &#9658;';
+  }
+  else {
+    state.playInterval = setInterval(() => {
+      const dateElement = document.getElementById('date-selection');
+      const date = dateElement.value;
+      [...document.getElementById('date-selection').children].forEach(option => {
+        if (option.value === date) {
+          if (option.nextSibling) {
+            state.selectedDate = option.nextSibling.value;
+            dateElement.value = state.selectedDate;
+          }
+          else {
+            dateElement.value = dateElement.children[0].value;
+            state.selectedDate = dateElement.children[0].value;
+          }
+        }
+      });
+  
+      loadHeatmapFromAirQualityDatasets(state.datasets.airQuality);
+    }, 500);
+    state.playing = true;
+    event.target.innerHTML = 'Pause &#10074;&#10074;';
+  }
+});
 
 Array.from(document.querySelectorAll('.openData')).map(x => x.addEventListener('click', openData));
 Array.from(document.querySelectorAll('.toolbarIcon')).map(x => x.addEventListener('click', changeToolbarIcon));

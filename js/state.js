@@ -13,6 +13,8 @@ export const state = {
     viewDemographicData: true,
     currentRegionDataElement: null,
     currentRegionIndex: null,
+    playing: false,
+    playInterval: null,
 
     //mapCoords represents the extreme positions of the map tile group
     mapCoords: {
