@@ -64,5 +64,6 @@ export const state = {
     },
     nColor: null,
     gradientData: null,
-    currentGradientProperty: null
+    currentGradientProperty: null,
+    hasPageLoaded: false,
 };

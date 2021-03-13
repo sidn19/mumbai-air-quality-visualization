@@ -79,13 +79,13 @@ region.addEventListener('mouseover', (e) => {
   if (!e.target.getAttribute('class').includes('activeRegion'))
     e.target.setAttribute('class', `${e.target.getAttribute('class')} regionHover`)
 
-  if (regionTooltip.style.display == 'none') {
+  if (regionTooltip.style.display == 'none' && state.hasPageLoaded) {
     regionTooltip.style.display = 'inline-block'
     regionTooltip.textContent = e.target.getAttribute('gname')
   }
 
   // Gradient is displayed => Also show value on hover
-  if (state.gradientData) {
+  if (state.gradientData && !document.getElementById('regionGradientValue')) {
     let regionGradientValue = document.createElement('div')
     regionGradientValue.setAttribute('id', 'regionGradientValue')
     regionGradientValue.textContent = `${state.currentGradientProperty}: ${state.gradientData.find(v => v.gid == e.target.getAttribute('gid')).data}`

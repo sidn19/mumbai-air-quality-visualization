@@ -68,6 +68,90 @@ const getData = (param) => {
                 data: region.data.income.avgEarningMember
             }))
             return values
+        case 'underweight':
+            state.currentGradientProperty = '% of Children Who Are Underweight'
+            regionData.map(region => values.push({
+                gid: region.gid,
+                data: region.data.healthIndicators.underweight
+            }))
+            return values
+        case 'stunted':
+            state.currentGradientProperty = '% of Children Who Are Stunted'
+            regionData.map(region => values.push({
+                gid: region.gid,
+                data: region.data.healthIndicators.stunted
+            }))
+            return values
+        case 'wasted':
+            state.currentGradientProperty = '% of Children Who Are Wasted'
+            regionData.map(region => values.push({
+                gid: region.gid,
+                data: region.data.healthIndicators.wasted
+            }))
+            return values
+        case 'anaemia':
+            state.currentGradientProperty = 'Anaemia in Pregnant Women (%)'
+            regionData.map(region => values.push({
+                gid: region.gid,
+                data: region.data.healthIndicators.anaemia
+            }))
+            return values
+        case 'infantMortality':
+            state.currentGradientProperty = 'Infant Mortality'
+            regionData.map(region => values.push({
+                gid: region.gid,
+                data: region.data.healthIndicators.infantMortality
+            }))
+            return values
+        case 'commDiseases':
+            state.currentGradientProperty = 'Total Number of Cases of Communicable Diseases'
+            regionData.map(region => values.push({
+                gid: region.gid,
+                data: region.data.commDiseases.total
+            }))
+            return values
+        case 'nonCommDiseases':
+            state.currentGradientProperty = 'Total Number of Cases of Non Communicable Diseases'
+            regionData.map(region => values.push({
+                gid: region.gid,
+                data: region.data.nonCommDiseases.total
+            }))
+            return values
+        case 'densityGovtDisp':
+            state.currentGradientProperty = 'Density of Government Dispensaries to Population'
+            regionData.map(region => values.push({
+                gid: region.gid,
+                data: region.data.healthInfrastructure.densityGovtDisp
+            }))
+            return values
+        case 'noInsurance':
+            state.currentGradientProperty = '% of Households where No Member has Insurance'
+            regionData.map(region => values.push({
+                gid: region.gid,
+                data: region.data.healthInsurance.noInsurance
+            }))
+            return values
+        case 'densityGovtDisp':
+            state.currentGradientProperty = 'Density of Government Dispensaries to Population'
+            regionData.map(region => values.push({
+                gid: region.gid,
+                data: region.data.healthInsurance.densityGovtDisp
+            }))
+            return values
+        case 'percentIncomeHealth':
+            state.currentGradientProperty = '% of Annual Family Income Spent on Health'
+            regionData.map(region => values.push({
+                gid: region.gid,
+                data: region.data.healthInsurance.percentIncomeHealth
+            }))
+            return values
+        case 'noInsurance':
+            state.currentGradientProperty = '% of Households where No Member has Insurance'
+            regionData.map(region => values.push({
+                gid: region.gid,
+                data: region.data.healthInsurance.noInsurance
+            }))
+            return values
     }
 }
 
@@ -165,10 +249,10 @@ export const saveDemographicDataParameters = (event) => {
     event.preventDefault();
 
     // Get selected parameter
-    let param = Array.from(document.getElementsByClassName('demographic-parameter')).filter(p => p.checked)[0].getAttribute('id');
+    let param = document.getElementById('demographic-parameter').value;
 
     // Create array of gid and parameter value
-    state.gradientData = getData(param)
+    state.gradientData = getData(param);
 
     // Normalize the values
     let min = Math.min(...state.gradientData.map(v => v.data)), max = Math.max(...state.gradientData.map(v => v.data)), d = max - min
@@ -181,7 +265,7 @@ export const saveDemographicDataParameters = (event) => {
     state.nColor = getNColor(state.color)
 
     // Color to region
-    addGradientToMap()
+    addGradientToMap();
     addGradientBar(min, d);
 
     snackbar('Demographic data gradient has been set!', 'success');
@@ -197,4 +281,5 @@ export const resetDemographicGradient = () => {
     })
 
     snackbar('Demographic data gradient has been removed!', 'success');
+    closeModal('parameterModal');
 }

@@ -22,15 +22,6 @@ export const openData = (event) => {
 };
 
 export const changeToolbarIcon = (event) => {
-  // let toolbarIcons = document.getElementsByClassName("toolbarIcon");
-  // for (let i = 0; i < toolbarIcons.length; i++) {
-  //   toolbarIcons[i].className = toolbarIcons[i].className.replace(
-  //     " activeIcon",
-  //     ""
-  //   );
-  // }
-  // event.currentTarget.className += " activeIcon";
-
   switch (event.currentTarget.id) {
     case "demographicDataIcon":
       if (!state.viewDemographicData) {
@@ -51,9 +42,14 @@ export const changeToolbarIcon = (event) => {
       break;
     case "heatmapIcon":
       toggleHeatmap();
-      if (!state.viewHeatmap)
+      if (!state.viewHeatmap) {
         event.currentTarget.className = event.currentTarget.className.replace(' activeIcon', '')
-      else event.currentTarget.className += " activeIcon";
+        document.getElementsByClassName('heatmap-gradient')[0].style.display = 'none'
+      }
+      else {
+        event.currentTarget.className += " activeIcon";
+        document.getElementsByClassName('heatmap-gradient')[0].style.display = 'flex'
+      };
       break;
   }
 };

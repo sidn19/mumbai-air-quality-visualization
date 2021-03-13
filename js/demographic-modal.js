@@ -6,6 +6,7 @@ import {
   otherProperties,
   createLegend,
   addOtherProperties,
+  populateDiseasesTable
 } from "./demographic-categories.js";
 import { state } from "./state.js";
 
@@ -17,7 +18,6 @@ const findRegion = (gid) => {
 };
 
 const populateData = (tab, region) => {
-
   // Get piechart and other properties of the tab
   currentPiechartCategories = piechartCategories(tab, region);
   currentOtherProperties = otherProperties(tab, region);
@@ -32,8 +32,11 @@ const populateData = (tab, region) => {
     createLegend(currentPiechartCategories)
   );
 
-  //Display other properties
-  div.append(addOtherProperties(currentOtherProperties));
+  if (tab == 'diseases') {
+    div.append(populateDiseasesTable(currentOtherProperties));
+  } else
+    //Display other properties
+    div.append(addOtherProperties(currentOtherProperties));
 };
 
 const populateDemographicData = (region) => {
@@ -59,8 +62,20 @@ const clearActiveRegions = () => {
   }
 }
 
-const changeCurrentRegion = (event) => {
+const clearDemographicData = () => {
+  // Clear tab content
+  for (let tab of tabs) {
+    let div = document.getElementById(tab);
+    div.innerHTML = "";
+  }
 
+  // Change region and direction name
+  document.getElementById("regionName").textContent = 'Region name';
+  document.getElementById("regionDir").textContent = 'M Ward East/West'
+}
+
+const changeCurrentRegion = (event) => {
+  // Current region is not the activeRegion
   if (event.target.getAttribute('class').indexOf('activeRegion') === -1) {
     // Remove 'activeRegion' classname
     clearActiveRegions(event.target);
@@ -72,28 +87,27 @@ const changeCurrentRegion = (event) => {
     state.currentRegionData = findRegion(state.currentRegionId);
 
     //Highlight selected region
-
     event.target.setAttribute('class', `${event.target.getAttribute('class').replace(' regionHover', '')} activeRegion`);
-    
+
     populateDemographicData(state.currentRegionData);
   }
+  // Current region is the activeRegion => Deselect
   else {
+    clearDemographicData()
     event.target.setAttribute('class', event.target.getAttribute('class').replace('activeRegion', ""))
   }
-  
+
 }
 
 // Add a click event to the whole svg region
-export const regionEventListener = (zoomActionPerformed = false) => {
-  if (!zoomActionPerformed) {
-    let regions = document.getElementById("svg-regions");
-    regions.addEventListener("click", changeCurrentRegion);
-  } else {
-    // make changes here
-  }
+export const regionEventListener = () => {
+
+  let regions = document.getElementById("svg-regions");
+  regions.addEventListener("click", changeCurrentRegion);
 };
 
 window.addEventListener("load", () => {
+  state.hasPageLoaded = true;
   regionEventListener();
   document.querySelector(".active").click();
 });
