@@ -47,22 +47,19 @@ body {
 }
 
 .activeRegion {
-  fill: #FF870080 !important;
-}
-
-.region {
-  opacity: 0.75;
+  fill: #8c00ffbb !important;
 }
 
 .regionFill {
-  fill: #FFA50050;
-  stroke:#FF8700;
+  fill: #ffba3a50;
+  stroke:#ff713d;
   stroke-width: 1;
 }
 
 .regionHover {
   opacity: 1;
   fill: #ee7700aa;
+  transition: 200ms fill;
 }
 
 #heatmap-layer {

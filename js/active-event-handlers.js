@@ -5,6 +5,7 @@ import { resetDemographicGradient } from './demographic-gradient.js'
 import { state } from './state.js';
 import { saveDemographicDataParameters } from './demographic-gradient.js'
 import { downloadDemographicSample } from './demographic-csv.js'
+import { predictSeverity } from "./extrapolation.js";
 
 /*
 * Event handlers
@@ -98,9 +99,15 @@ document.addEventListener('mousemove', function (event) {
   regionTooltip.style.left = `${event.clientX + 12}px`;
   regionTooltip.style.top = `${event.clientY + 12}px`;
 
+  let x = event.clientX + state.viewBoxCoords.min_x;
+  let y = event.clientY + state.viewBoxCoords.min_y;
+
   // Latitude and longitude
-  const latlng = state.mappingPixelCoordsToLatLng(event.clientX + state.viewBoxCoords.min_x, event.clientY + state.viewBoxCoords.min_y);
+  const latlng = state.mappingPixelCoordsToLatLng(x, y);
   tooltip.innerHTML = `<strong>Latitude:</strong> ${latlng.lat.toFixed(4)}  <strong>Longitude:</strong> ${latlng.lng.toFixed(4)}`;
+
+  //Predict severity at the current location
+  predictSeverity(latlng.lat, latlng.lng, 1);
 });
 
 // Show region name near mouse when it is hovered over
