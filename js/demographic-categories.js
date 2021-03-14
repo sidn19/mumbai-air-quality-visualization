@@ -1,4 +1,3 @@
-// religion => religion and language
 export const tabs = [
   "population",
   "family",
@@ -17,17 +16,17 @@ export const piechartCategories = (tab, region) => {
       return [
         {
           type: "Male",
-          value: region.data.population.male,
+          value: region.malePopulation,
           color: "#b5fff6",
         },
         {
           type: "Female",
-          value: region.data.population.female,
+          value: region.femalePopulation,
           color: "#ffc2e7",
         },
         {
           type: "Transgender",
-          value: region.data.population.transgender,
+          value: region.transgenderPopulation,
           color: "#fff899",
         },
       ];
@@ -35,12 +34,12 @@ export const piechartCategories = (tab, region) => {
       return [
         {
           type: "Nuclear Family",
-          value: region.data.family.nuclearFamily,
+          value: region.nuclearFamily,
           color: "#ccc",
         },
         {
           type: "Joint Family",
-          value: region.data.family.jointFamily,
+          value: region.jointFamily,
           color: "#eee",
         },
       ];
@@ -48,37 +47,37 @@ export const piechartCategories = (tab, region) => {
       return [
         {
           type: "Illiterate",
-          value: region.data.education_level.illiterate,
+          value: region.illiterate,
           color: "#aaa",
         },
         {
           type: "Primary",
-          value: region.data.education_level.primary,
+          value: region.primary,
           color: "#bbb",
         },
         {
           type: "Middle",
-          value: region.data.education_level.middle,
+          value: region.middle,
           color: "#ccc",
         },
         {
           type: "Secondary",
-          value: region.data.education_level.secondary,
+          value: region.secondary,
           color: "#ddd",
         },
         {
           type: "Higher Secondary",
-          value: region.data.education_level.higherSecondary,
+          value: region.higherSecondary,
           color: "#eee",
         },
         {
           type: "Graduation",
-          value: region.data.education_level.graduation,
+          value: region.graduation,
           color: "#abc",
         },
         {
           type: "Above Graduation",
-          value: region.data.education_level.aboveGraduation,
+          value: region.aboveGraduation,
           color: "#def",
         },
       ];
@@ -86,17 +85,17 @@ export const piechartCategories = (tab, region) => {
       return [
         {
           type: "Muslim",
-          value: region.data.religion.muslim,
+          value: region.muslim,
           color: "#abc",
         },
         {
           type: "Hindu",
-          value: region.data.religion.hindu,
+          value: region.hindu,
           color: "#def",
         },
         {
           type: "Baudha",
-          value: region.data.religion.baudha,
+          value: region.baudha,
           color: "#ace",
         },
       ];
@@ -104,32 +103,32 @@ export const piechartCategories = (tab, region) => {
       return [
         {
           type: "Hindi",
-          value: region.data.language.hindi,
+          value: region.hindi,
           color: "#aaa",
         },
         {
           type: "Bhojpuri",
-          value: region.data.language.bhojpuri,
+          value: region.bhojpuri,
           color: "#bbb",
         },
         {
           type: "Urdu",
-          value: region.data.language.urdu,
+          value: region.urdu,
           color: "#ccc",
         },
         {
           type: "Marathi",
-          value: region.data.language.marathi,
+          value: region.marathi,
           color: "#ddd",
         },
         {
           type: "Bangala",
-          value: region.data.language.bangala,
+          value: region.bangala,
           color: "#eee",
         },
         {
           type: "Other",
-          value: region.data.language.other,
+          value: region.other,
           color: "#aec",
         },
       ];
@@ -137,27 +136,27 @@ export const piechartCategories = (tab, region) => {
       return [
         {
           type: "Casual Labourer",
-          value: region.data.occupation.casualLabourer,
+          value: region.casualLabourer,
           color: "#aaa",
         },
         {
           type: "Salaried-Regular Income",
-          value: region.data.occupation.regularIncome,
+          value: region.regularIncome,
           color: "#bbb",
         },
         {
           type: "Business/Self-Employeed",
-          value: region.data.occupation.selfEmployeed,
+          value: region.selfEmployeed,
           color: "#ccc",
         },
         {
           type: "Home Based Business",
-          value: region.data.occupation.homeBasedBusiness,
+          value: region.homeBasedBusiness,
           color: "#ddd",
         },
         {
           type: "Rag Picker",
-          value: region.data.occupation.ragPicker,
+          value: region.ragPicker,
           color: "#eee",
         },
       ];
@@ -167,12 +166,12 @@ export const piechartCategories = (tab, region) => {
       return [
         {
           type: "Population accessing public hospitals/ dispensaries",
-          value: region.data.healthInfrastructure.percentPublicHosp,
+          value: region.percentPublicHosp,
           color: "#aaa",
         },
         {
           type: "Population accessing private hospitals/ dispensaries",
-          value: region.data.healthInfrastructure.percentPrivateHosp,
+          value: region.percentPrivateHosp,
           color: "#ddd",
         },
       ];
@@ -185,37 +184,37 @@ export const otherProperties = (tab, region) => {
       return [
         {
           type: "Total Population",
-          value: region.data.population.total,
+          value: region.totalPopulation,
         },
         {
           type: "Sex Ratio",
-          value: region.data.population.sexRatio,
+          value: region.sexRatio,
         },
         {
           type: "Child Sex Ratio",
-          value: region.data.population.childSexRatio,
+          value: region.childSexRatio,
         },
       ];
     case "family":
       return [
         {
           type: "Family Size",
-          value: region.data.family.familySize,
+          value: region.familySize,
         },
       ];
     case "education":
       return [
         {
           type: "Average Literacy",
-          value: region.data.education.avgLiteracy + "%",
+          value: region.avgLiteracy + "%",
         },
         {
           type: "Female Literacy",
-          value: region.data.education.femaleLiteracy + "%",
+          value: region.femaleLiteracy + "%",
         },
         {
           type: "Male Literacy",
-          value: region.data.education.maleLiteracy + "%",
+          value: region.maleLiteracy + "%",
         },
       ];
     case "religion":
@@ -224,34 +223,34 @@ export const otherProperties = (tab, region) => {
       return [
         {
           type: "Average Family Income",
-          value: region.data.income.avgFamilyIncome,
+          value: region.avgFamilyIncome,
         },
         {
           type: "Average Earning Member",
-          value: region.data.income.avgEarningMember,
+          value: region.avgEarningMember,
         },
       ];
     case "healthindi":
       return [
         {
           type: "% of Children Who Are Underweight",
-          value: region.data.healthIndicators.underweight + "%",
+          value: region.underweight + "%",
         },
         {
           type: "% of Children Who Are Stunted",
-          value: region.data.healthIndicators.stunted + "%",
+          value: region.stunted + "%",
         },
         {
           type: "% of Children Who Are Wasted",
-          value: region.data.healthIndicators.wasted + "%",
+          value: region.wasted + "%",
         },
         {
           type: "Infant Mortality (per 1000 live births, 12 clusters)",
-          value: region.data.healthIndicators.anaemia,
+          value: region.anaemia,
         },
         {
           type: "Anaemia in Pregnant Women",
-          value: region.data.healthIndicators.infantMortality + "%",
+          value: region.infantMortality + "%",
         },
       ];
     case "diseases":
@@ -259,82 +258,82 @@ export const otherProperties = (tab, region) => {
         [
           {
             type: "Fever",
-            value: region.data.commDiseases.fever,
+            value: region.fever,
           },
           {
             type: "Gastro",
-            value: region.data.commDiseases.gastro,
+            value: region.gastro,
           },
           {
             type: "URTI",
-            value: region.data.commDiseases.urti,
+            value: region.urti,
           },
           {
             type: "Hepatitis",
-            value: region.data.commDiseases.hepatitis,
+            value: region.hepatitis,
           },
           {
             type: "Malaria",
-            value: region.data.commDiseases.malaria,
+            value: region.malaria,
           },
           {
             type: "Dengue",
-            value: region.data.commDiseases.dengue,
+            value: region.dengue,
           },
           {
             type: "Tuberculosis",
-            value: region.data.commDiseases.tuberculosis,
+            value: region.tuberculosis,
           },
           {
             type: "Total",
-            value: region.data.commDiseases.total,
+            value: region.totalCommDiseases,
           }],
         [
           {
             type: "Hypertension",
-            value: region.data.nonCommDiseases.hypertension,
+            value: region.hypertension,
           },
           {
             type: "Diabetes",
-            value: region.data.nonCommDiseases.diabetes,
+            value: region.diabetes,
           },
           {
             type: "Asthma",
-            value: region.data.nonCommDiseases.asthma,
+            value: region.asthma,
           },
           {
             type: "IHD",
-            value: region.data.nonCommDiseases.ihd,
+            value: region.ihd,
           },
           {
             type: "Psychiatric Disorders",
-            value: region.data.nonCommDiseases.psychiatricDisorders,
+            value: region.psychiatricDisorders,
           },
           {
             type: "Total",
-            value: region.data.nonCommDiseases.total,
+            value: region.totalNonCommDiseases,
           }]]
     case "healthinfra":
       return [
         {
           type: "No. of Government Hospitals",
-          value: region.data.healthInfrastructure.numberGovtHospitals,
+          value: region.numberGovtHospitals,
         },
         {
           type: "Available Government Dispensaries",
-          value: region.data.healthInfrastructure.availableGovtDisp,
+          value: region.availableGovtDisp,
         },
         {
           type: "Density of government dispensaries to population",
-          value: region.data.healthInfrastructure.densityGovtDisp,
+          value: region.densityGovtDisp,
         },
         {
           type: "% households where no member has insurance",
-          value: region.data.healthInsurance.noInsurance,
+          value: region.noInsurance,
         },
         {
           type: "% of annual family income spent on health",
-          value: region.data.healthInsurance.percentIncomeHealth,
+          value: region.percentIncomeHealth,
         },
       ];
   }

@@ -614,6 +614,8 @@
             Demographic
           </button>
         </div>
+
+        <!-- AQ dataset modal -->
         <div id="aq-dataset-list" class="dataset-list active">
           <div class="modal-footer">
             <button id="download-aq-sample-dataset">Download Sample</button>
@@ -626,31 +628,26 @@
             <button class="close-dataset-modal">Close</button>
           </div>
         </div>
+
+        <!-- Demographic dataset modal -->
         <div id="demo-dataset-list" class="dataset-list">
-          <div class="dataset-item">
-            <div class="dataset-item-inner-div">
-              <img src="./assets/icons/datasheet.svg" style="height: 50px;">
-              <div class="dataset-text">
-                <div>Demo Dataset</div>
-                <div>Jan 22 2021</div>
-              </div>
-            </div>
-            <div>
-              <button class="download-button" id="download-demo-sample-dataset"></button>
-              
-            </div>
-          </div>
           <div class="modal-footer">
-            <button id="download-demo-sample-dataset">Download Sample</button>
-            
+            <button type="button" id="demo-upload-dataset-button">
+              <label for="demo-upload-dataset" class="custom-file-upload"
+                >Upload Dataset</label
+              >
+            </button>
             <input id="demo-upload-dataset" type="file" />
+            <button id="reset-dataset">Reset Dataset</button>
             <button class="close-dataset-modal">Close</button>
           </div>
         </div>
       </div>
     </div>
     <div class="air-quality-date">
-      <button id="play-button">Play &#9658;</button>
+      <section>
+        <button id="play-button">&#9658;</button>
+      </section>
       <label>
         Air Quality Date: 
         <select id="date-selection"></select>

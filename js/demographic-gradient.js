@@ -1,4 +1,3 @@
-import regionData from '../data/demographic_data.js'
 import { state } from './state.js'
 import { snackbar, closeModal } from './interface.js'
 
@@ -7,149 +6,149 @@ const getData = (param) => {
     switch (param) {
         case 'totalPopulation':
             state.currentGradientProperty = 'Total Population'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.population.total
+                data: region.totalPopulation
             }))
             return values
         case 'sexRatio':
             state.currentGradientProperty = 'Sex Ratio'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.population.sexRatio
+                data: region.sexRatio
             }))
             return values
         case 'childSexRatio':
             state.currentGradientProperty = 'Child Sex Ratio'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.population.childSexRatio
+                data: region.childSexRatio
             }))
             return values
         case 'familySize':
             state.currentGradientProperty = 'Family Size'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.family.familySize
+                data: region.familySize
             }))
             return values
         case 'averageLiteracy':
             state.currentGradientProperty = 'Average Literacy'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.education.avgLiteracy
+                data: region.avgLiteracy
             }))
             return values
         case 'femaleLiteracy':
             state.currentGradientProperty = 'Female Literacy'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.education.femaleLiteracy
+                data: region.femaleLiteracy
             }))
             return values
         case 'maleLiteracy':
             state.currentGradientProperty = 'Male Literacy'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.education.maleLiteracy
+                data: region.maleLiteracy
             }))
             return values
         case 'avgFamilyIncome':
             state.currentGradientProperty = 'Average Family Income'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.income.avgFamilyIncome
+                data: region.avgFamilyIncome
             }))
             return values
         case 'avgEarningMember':
             state.currentGradientProperty = 'Average Earning Member'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.income.avgEarningMember
+                data: region.avgEarningMember
             }))
             return values
         case 'underweight':
             state.currentGradientProperty = '% of Children Who Are Underweight'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.healthIndicators.underweight
+                data: region.underweight
             }))
             return values
         case 'stunted':
             state.currentGradientProperty = '% of Children Who Are Stunted'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.healthIndicators.stunted
+                data: region.stunted
             }))
             return values
         case 'wasted':
             state.currentGradientProperty = '% of Children Who Are Wasted'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.healthIndicators.wasted
+                data: region.wasted
             }))
             return values
         case 'anaemia':
             state.currentGradientProperty = 'Anaemia in Pregnant Women (%)'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.healthIndicators.anaemia
+                data: region.anaemia
             }))
             return values
         case 'infantMortality':
             state.currentGradientProperty = 'Infant Mortality'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.healthIndicators.infantMortality
+                data: region.infantMortality
             }))
             return values
         case 'commDiseases':
             state.currentGradientProperty = 'Total Number of Cases of Communicable Diseases'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.commDiseases.total
+                data: region.totalCommDiseases
             }))
             return values
         case 'nonCommDiseases':
             state.currentGradientProperty = 'Total Number of Cases of Non Communicable Diseases'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.nonCommDiseases.total
+                data: region.totalNonCommDiseases
             }))
             return values
         case 'densityGovtDisp':
             state.currentGradientProperty = 'Density of Government Dispensaries to Population'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.healthInfrastructure.densityGovtDisp
+                data: region.densityGovtDisp
             }))
             return values
         case 'noInsurance':
             state.currentGradientProperty = '% of Households where No Member has Insurance'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.healthInsurance.noInsurance
+                data: region.noInsurance
             }))
             return values
         case 'densityGovtDisp':
             state.currentGradientProperty = 'Density of Government Dispensaries to Population'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.healthInsurance.densityGovtDisp
+                data: region.densityGovtDisp
             }))
             return values
         case 'percentIncomeHealth':
             state.currentGradientProperty = '% of Annual Family Income Spent on Health'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.healthInsurance.percentIncomeHealth
+                data: region.percentIncomeHealth
             }))
             return values
         case 'noInsurance':
             state.currentGradientProperty = '% of Households where No Member has Insurance'
-            regionData.map(region => values.push({
+            state.datasets.demographic.data.map(region => values.push({
                 gid: region.gid,
-                data: region.data.healthInsurance.noInsurance
+                data: region.noInsurance
             }))
             return values
     }

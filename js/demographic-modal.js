@@ -1,4 +1,3 @@
-import regionData from "../data/demographic_data.js";
 import { createPieChart } from "./piechart.js";
 import {
   tabs,
@@ -9,12 +8,53 @@ import {
   populateDiseasesTable
 } from "./demographic-categories.js";
 import { state } from "./state.js";
+import { csvToObject } from './csv.js';
+import { downloadDemographicSample } from './demographic-csv.js'
+
+const addDemographicDatasetToDOM = () => {
+  const list = document.getElementById('demo-dataset-list');
+  const div = document.createElement('div');
+  div.className = 'dataset-item';
+  div.innerHTML = `
+      <div class="dataset-item-inner-div">
+        <img src="./assets/icons/datasheet.svg" style="height: 50px;">
+        <div class="dataset-text">
+          <div>${state.datasets.demographic.name}</div>
+          <div>${new Date(state.datasets.demographic.addedOn).toLocaleString()}</div>
+        </div>
+      </div>
+      <div>
+        <button class="download-button" id="download-demo-sample-dataset"></button>
+      </div>
+    `;
+  list.prepend(div);
+  document.getElementById('download-demo-sample-dataset').addEventListener('click', downloadDemographicSample)
+}
+
+// Load demographic csv data to object in state
+export const saveCSVToState = async () => {
+  await fetch('./data/demo-demographic-data.csv')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error;
+      }
+      return response.text();
+    })
+    .then(data => {
+      state.datasets.demographic = {
+        data: csvToObject(data),
+        name: 'demo-demographic-data.csv',
+        addedOn: new Date().toISOString()
+      }
+      localStorage.setItem('demographic-dataset', JSON.stringify(state.datasets.demographic))
+    })
+}
 
 let currentPiechartCategories = null;
 let currentOtherProperties = null;
 
 const findRegion = (gid) => {
-  return regionData.find((region) => region.gid == gid);
+  return state.datasets.demographic.data.find((region) => region.gid == gid);
 };
 
 const populateData = (tab, region) => {
@@ -40,7 +80,6 @@ const populateData = (tab, region) => {
 };
 
 const populateDemographicData = (region) => {
-
   // Change region name and direction
   document.getElementById("regionName").textContent = region.name;
   document.getElementById("regionDir").textContent =
@@ -101,13 +140,19 @@ const changeCurrentRegion = (event) => {
 
 // Add a click event to the whole svg region
 export const regionEventListener = () => {
-
   let regions = document.getElementById("svg-regions");
   regions.addEventListener("click", changeCurrentRegion);
 };
 
-window.addEventListener("load", () => {
-  state.hasPageLoaded = true;
+window.addEventListener("load", async () => {
+  if (!localStorage['demographic-dataset'])
+    await saveCSVToState();
+  else {
+    // save localstorage to state
+    state.datasets.demographic = JSON.parse(localStorage.getItem('demographic-dataset'))
+  }
+  // Add to DOM
+  addDemographicDatasetToDOM();
   regionEventListener();
   document.querySelector(".active").click();
 });
