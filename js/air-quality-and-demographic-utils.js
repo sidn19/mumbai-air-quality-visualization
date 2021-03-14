@@ -32,7 +32,7 @@ let JSONDatasets = {
 };
 
 for (let dataset in state.datasets) {
-  if (JSONDatasets[dataset] !== null) {
+  if (JSONDatasets[dataset] !== null && JSONDatasets[dataset].length > 2) {
     state.datasets[dataset] = JSON.parse(JSONDatasets[dataset]);
 
     if (dataset === 'airQuality') {

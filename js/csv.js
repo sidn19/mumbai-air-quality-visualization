@@ -51,9 +51,9 @@ function convertToCSV(objArray) {
   export function downloadAQSample() {
     let demoData = [
       {
-        date: "01/01/2020",
-        latitude: "19.02",
-        longitude: "72.91",
+        date: "1/1/2020",
+        latitude: "19.0084",
+        longitude: "72.9408",
         o3: "30",
         pm25: "10.5",
         pm10: "12.4",
@@ -63,16 +63,16 @@ function convertToCSV(objArray) {
         nh3: "17",
       },
       {
-        date: "01/01/2020",
-        latitude: "19.03",
-        longitude: "72.91",
-        o3: "20",
+        date: "1/1/2020",
+        latitude: "19.0080",
+        longitude: "72.9406",
+        o3: "25",
         pm25: "14.5",
-        pm10: "11.2",
-        no2: "2",
-        so2: "2.5",
-        co: "1.2",
-        nh3: "11.5",
+        pm10: "19.2",
+        no2: "20",
+        so2: "4.5",
+        co: "4.2",
+        nh3: "30.5",
       },
     ];
   
