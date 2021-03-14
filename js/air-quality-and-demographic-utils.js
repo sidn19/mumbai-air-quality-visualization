@@ -19,7 +19,7 @@ for (let parameter in state.parameters) {
   }
   else {
     // initialize with default data
-    state.parameters[parameter] = defaultParameters[parameter];
+    state.parameters[parameter] = JSON.parse(JSON.stringify(defaultParameters[parameter]));
   }
 }
 
@@ -150,7 +150,7 @@ export const saveAirQualityParameters = event => {
 }
 
 export function resetAirQualityParametersToDefault() {
-  state.parameters.airQuality = defaultParameters.airQuality
+  state.parameters.airQuality = JSON.parse(JSON.stringify(defaultParameters.airQuality));
 
   localStorage.setItem(
     "air-quality-parameters",
