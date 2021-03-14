@@ -114,7 +114,7 @@ export function csvToObject(data) {
       const dataItem = {};
 
       for (let i = 0; i < itemData.length; ++i) {
-        if (properties[i] !== 'date') {
+        if (properties[i] !== 'date' && (parseFloat(itemData[i]) || itemData[i] == "0")) {
           dataItem[properties[i]] = parseFloat(itemData[i]);
         }
         else {
