@@ -7,6 +7,7 @@ import { saveDemographicDataParameters } from './demographic-gradient.js'
 import { saveCSVToState } from "./demographic-modal.js"
 import { downloadDemographicSample } from './demographic-csv.js'
 import { predictSeverity } from "./extrapolation.js";
+import { getColorFromAlpha } from './heatmap_layer.js';
 
 /*
 * Event handlers
@@ -115,10 +116,11 @@ document.addEventListener('mousemove', function (event) {
 
   // Predict severity at the current location
   const severity = predictSeverity(latlng.lat, latlng.lng, 0.6);
+  const color = getColorFromAlpha(Math.round((severity / 5) * 255));
 
   tooltip.innerHTML = `
   <strong>Severity:</strong> 
-  ${severity.toFixed(2)}
+  ${severity.toFixed(2)} <span style="display: inline-block; width: 1rem; margin-bottom: -2px; border-radius: 50%; height: 1rem; background-color: rgb(${color.red}, ${color.green}, ${color.blue})"></span> 
   <strong>Latitude:</strong> 
   ${latlng.lat.toFixed(4)} 
   <strong>Longitude:</strong> 

@@ -20,6 +20,8 @@ body {
   position: absolute;
   bottom: 0.3rem;
   right: 5rem;
+  font-family: monospace;
+  font-size: 1.25rem;
 }
 
 #region-name-tooltip {
