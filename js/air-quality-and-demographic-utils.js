@@ -43,26 +43,26 @@ for (let dataset in state.datasets) {
   else {
     if (dataset === 'airQuality') {
       fetch('./data/demo-air-quality.csv')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error;
-        }
-        return response.text();
-      })
-      .then(data => {
-        state.datasets[dataset][0] = {
-          data: csvToObject(data),
-          name: 'demo-air-quality.csv',
-          addedOn: new Date().toISOString(),
-          id: 0
-        };
-        addDatasetsToDOM(state.datasets[dataset], dataset);
-        loadHeatmapFromAirQualityDatasets(state.datasets[dataset])
-        localStorage.setItem('air-quality-datasets', JSON.stringify(state.datasets[dataset]));
-      })
-      .catch(error => {
-        console.error(error);
-      });
+        .then(response => {
+          if (!response.ok) {
+            throw new Error;
+          }
+          return response.text();
+        })
+        .then(data => {
+          state.datasets[dataset][0] = {
+            data: csvToObject(data),
+            name: 'demo-air-quality.csv',
+            addedOn: new Date().toISOString(),
+            id: 0
+          };
+          addDatasetsToDOM(state.datasets[dataset], dataset);
+          loadHeatmapFromAirQualityDatasets(state.datasets[dataset])
+          localStorage.setItem('air-quality-datasets', JSON.stringify(state.datasets[dataset]));
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
   }
 }
@@ -112,7 +112,7 @@ function getAirQualityValueFromPollutants(pollutants) {
       if (pollutants[pollutant] < state.parameters.airQuality[pollutant].ranges[pollutantSeverity]) {
         break;
       }
-      
+
       ++pollutantSeverity;
     }
     overallSeverity += pollutantSeverity;
@@ -151,7 +151,7 @@ export const saveAirQualityParameters = event => {
 
 export function resetAirQualityParametersToDefault() {
   state.parameters.airQuality = defaultParameters.airQuality
-  
+
   localStorage.setItem(
     "air-quality-parameters",
     JSON.stringify(state.parameters.airQuality)
@@ -165,10 +165,10 @@ export function resetAirQualityParametersToDefault() {
 function loadAirQualityParametersToForm() {
   for (let pollutant in state.parameters.airQuality) {
     document.getElementById(`${pollutant}-enable`).checked =
-    state.parameters.airQuality[pollutant].enable;
+      state.parameters.airQuality[pollutant].enable;
     for (let i = 0; i < state.parameters.airQuality[pollutant].ranges.length; ++i) {
       document.getElementById(`${pollutant}-${i}`).value =
-      state.parameters.airQuality[pollutant].ranges[i];
+        state.parameters.airQuality[pollutant].ranges[i];
     }
   }
 }
@@ -207,7 +207,7 @@ function addDatesToDOM(datasets) {
       }
     }
   }
-  
+
   const dateSelection = document.getElementById('date-selection');
   const dateNodes = dateSelection.querySelectorAll('option');
   for (let date of dateNodes) {

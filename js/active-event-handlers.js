@@ -1,10 +1,11 @@
 import { downloadAQSample, csvToObject } from './csv.js';
-import { openData, changeToolbarIcon, changeModalTab, snackbar } from './interface.js';
+import { openData, changeToolbarIcon, changeModalTab, snackbar, closeModal } from './interface.js';
 import { resetAirQualityParametersToDefault, saveAirQualityParameters, addDatasetsToDOM, loadHeatmapFromAirQualityDatasets } from './air-quality-and-demographic-utils.js';
 import { resetDemographicGradient } from './demographic-gradient.js'
 import { state } from './state.js';
 import { saveDemographicDataParameters } from './demographic-gradient.js'
 import { downloadDemographicSample } from './demographic-csv.js'
+import { saveCSVToState } from "./demographic-modal.js"
 
 /*
 * Event handlers
@@ -21,12 +22,15 @@ document.getElementById('aq-parameters-form').addEventListener('submit', saveAir
 
 document.getElementById('demo-parameter-form').addEventListener('submit', saveDemographicDataParameters)
 
-document.getElementById('close-demo-parameter-modal').addEventListener('click', (event) => {
-  event.preventDefault()
-});
+document.getElementById('reset-dataset').addEventListener('click', (event) => {
+  event.preventDefault();
+  snackbar('Demographic dataset has been reset', 'success');
+  saveCSVToState(true);
+  closeModal('datasetModal');
+  location.reload()
+})
 
 document.getElementById('play-button').addEventListener('click', event => {
-
   if (state.playing) {
     clearInterval(state.playInterval);
     state.playing = false;
@@ -48,7 +52,7 @@ document.getElementById('play-button').addEventListener('click', event => {
           }
         }
       });
-  
+
       loadHeatmapFromAirQualityDatasets(state.datasets.airQuality);
     }, 500);
     state.playing = true;
@@ -79,16 +83,22 @@ document
     reader.readAsBinaryString(event.target.files[0]);
   });
 
-document
-  .getElementById("demo-upload-dataset")
-  .addEventListener("change", function (event) {
-    let reader = new FileReader();
-    reader.onload = function () {
-      console.log(reader.result);
+document.getElementById("demo-upload-dataset").addEventListener('change', (event) => {
+  let reader = new FileReader();
+  reader.onload = function () {
+    state.datasets.demographic = {
+      data: csvToObject(reader.result, true),
+      name: event.target.value.replace(/^.*?([^\\\/]*)$/, '$1'),
+      addedOn: new Date().toISOString()
     };
-    reader.readAsBinaryString(event.target.files[0]);
-  });
+    snackbar('Demographic dataset has been loaded!', 'success');
 
+    // Replace the data in localStorage by this
+    localStorage.setItem('demographic-dataset', JSON.stringify(state.datasets.demographic));
+    location.reload();
+  };
+  reader.readAsBinaryString(event.target.files[0]);
+})
 
 const tooltip = document.getElementById('location-tooltip');
 const regionTooltip = document.getElementById('region-name-tooltip')
