@@ -55,6 +55,15 @@ const brushCanvas = createBrush(brushSize, brushBlurSize);
 
 const gradientDataArray = createGradientData(gradientHeatedMetal);
 
+export function getColorFromAlpha(alpha) {
+    let index = alpha << 2;
+    return {
+        red: gradientDataArray[index],
+        green: gradientDataArray[index + 1],
+        blue: gradientDataArray[index + 2],
+    }
+}
+
 
 export function addHeatmapTiles(data, container, min_x, min_y, max_x, max_y) {
     //console.time("draw");
