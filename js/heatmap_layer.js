@@ -1,5 +1,8 @@
 "use strict";
 
+// import { predictSeverity } from "./extrapolation.js";
+// import { state } from "./state.js";
+
 import { gradientBlackAquaWhite, gradientIncandescent, gradientHeatedMetal, gradientVisibleSpectrum, gradientCustom, TILE_SIZE } from "./declarations.js";
 
 function createBrush(brushSize, brushBlurSize) {
@@ -108,6 +111,61 @@ export function addHeatmapTiles(data, container, min_x, min_y, max_x, max_y) {
     }
     //console.timeEnd("draw");
 }
+
+/*
+function getPixelCoordinates(i, width) {
+    return {
+        x: parseInt((i % (4 * width)) / 4),
+        y: parseInt(i / (4 * width))
+    }
+}
+
+
+export function addHeatmapTiles(data, container, min_x, min_y, max_x, max_y) {
+    //console.time("draw");
+
+    for (let currentLocationY = min_y; currentLocationY < max_y; currentLocationY += TILE_SIZE) {
+        for (let currentLocationX = min_x; currentLocationX < max_x; currentLocationX += TILE_SIZE) {
+            let canvasTile, canvasContext;
+
+            canvasTile = document.createElement("canvas");
+            canvasContext = canvasTile.getContext("2d");
+            canvasTile.width = TILE_SIZE;
+            canvasTile.height = TILE_SIZE;
+            canvasTile.setAttribute("class", "canvas-tile");
+            canvasTile.setAttribute("data-tx", currentLocationX);
+            canvasTile.setAttribute("data-ty", currentLocationY);
+            canvasTile.style.transform = `translate(${currentLocationX}px, ${currentLocationY}px)`;
+
+            let imageData = canvasContext.getImageData(0, 0, TILE_SIZE, TILE_SIZE);
+            let pixels = imageData.data;
+            let len = pixels.length;
+            for (let i = 0; i < len; i += 4) {;
+                let {x, y} = getPixelCoordinates(i);
+                x += currentLocationX;
+                y += currentLocationY;
+
+                let latlng = state.mappingPixelCoordsToLatLng(x, y);
+
+                let value = predictSeverity(latlng.lat, latlng.lng, 1);
+
+                let normalizedValue = Math.exp(-(1/value));
+
+                let index = parseInt(normalizedValue * 255);
+
+                pixels[i] = gradientDataArray[index];
+                pixels[i + 1] = gradientDataArray[index + 1];
+                pixels[i + 2] = gradientDataArray[index + 2];
+            }
+
+            canvasContext.putImageData(imageData, 0, 0);
+
+            container.appendChild(canvasTile);
+        }
+    }
+    //console.timeEnd("draw");
+}
+*/
 
 export function removeHeatmapTiles(container, min_x, min_y, max_x, max_y) {
     //console.time("removeCanvasTiles");
