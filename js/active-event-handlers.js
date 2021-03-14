@@ -115,7 +115,7 @@ document.addEventListener('mousemove', function (event) {
   const latlng = state.mappingPixelCoordsToLatLng(x, y);
 
   // Predict severity at the current location
-  const severity = predictSeverity(latlng.lat, latlng.lng, 0.6);
+  const severity = predictSeverity(latlng.lat, latlng.lng, 0.5);
   const color = getColorFromAlpha(Math.round((severity / 5) * 255));
 
   tooltip.innerHTML = `
