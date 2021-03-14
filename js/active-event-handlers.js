@@ -4,15 +4,12 @@ import { resetAirQualityParametersToDefault, saveAirQualityParameters, addDatase
 import { resetDemographicGradient } from './demographic-gradient.js'
 import { state } from './state.js';
 import { saveDemographicDataParameters } from './demographic-gradient.js'
-import { downloadDemographicSample } from './demographic-csv.js'
 import { saveCSVToState } from "./demographic-modal.js"
 
 /*
 * Event handlers
 */
 document.getElementById('download-aq-sample-dataset').addEventListener('click', downloadAQSample);
-
-document.getElementById('download-demo-sample-dataset').addEventListener('click', downloadDemographicSample)
 
 document.getElementById('resetAirQualityToDefaultButton').addEventListener('click', resetAirQualityParametersToDefault);
 
@@ -25,7 +22,7 @@ document.getElementById('demo-parameter-form').addEventListener('submit', saveDe
 document.getElementById('reset-dataset').addEventListener('click', (event) => {
   event.preventDefault();
   snackbar('Demographic dataset has been reset', 'success');
-  saveCSVToState(true);
+  saveCSVToState();
   closeModal('datasetModal');
   location.reload()
 })
@@ -34,7 +31,7 @@ document.getElementById('play-button').addEventListener('click', event => {
   if (state.playing) {
     clearInterval(state.playInterval);
     state.playing = false;
-    event.target.innerHTML = 'Play &#9658;';
+    event.target.innerHTML = '&#9658;';
   }
   else {
     state.playInterval = setInterval(() => {
@@ -56,7 +53,7 @@ document.getElementById('play-button').addEventListener('click', event => {
       loadHeatmapFromAirQualityDatasets(state.datasets.airQuality);
     }, 500);
     state.playing = true;
-    event.target.innerHTML = 'Pause &#10074;&#10074;';
+    event.target.innerHTML = '&#10074;&#10074;';
   }
 });
 
@@ -120,7 +117,7 @@ region.addEventListener('mouseover', (e) => {
   if (!e.target.getAttribute('class').includes('activeRegion'))
     e.target.setAttribute('class', `${e.target.getAttribute('class')} regionHover`)
 
-  if (regionTooltip.style.display == 'none' && state.hasPageLoaded) {
+  if (regionTooltip.style.display === 'none') {
     regionTooltip.style.display = 'inline-block'
     regionTooltip.textContent = e.target.getAttribute('gname')
   }

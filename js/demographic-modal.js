@@ -9,6 +9,7 @@ import {
 } from "./demographic-categories.js";
 import { state } from "./state.js";
 import { csvToObject } from './csv.js';
+import { downloadDemographicSample } from './demographic-csv.js'
 
 const addDemographicDatasetToDOM = () => {
   const list = document.getElementById('demo-dataset-list');
@@ -22,15 +23,18 @@ const addDemographicDatasetToDOM = () => {
           <div>${new Date(state.datasets.demographic.addedOn).toLocaleString()}</div>
         </div>
       </div>
+      <div>
+        <button class="download-button" id="download-demo-sample-dataset"></button>
+      </div>
     `;
   list.prepend(div);
+  document.getElementById('download-demo-sample-dataset').addEventListener('click', downloadDemographicSample)
 }
 
 // Load demographic csv data to object in state
 export const saveCSVToState = async () => {
   await fetch('./data/demo-demographic-data.csv')
     .then(response => {
-      console.log(response)
       if (!response.ok) {
         throw new Error;
       }
@@ -42,19 +46,9 @@ export const saveCSVToState = async () => {
         name: 'demo-demographic-data.csv',
         addedOn: new Date().toISOString()
       }
-      localStorage.setItem('demographic-dataset', JSON.stringify(state.datasets.demographic));
+      localStorage.setItem('demographic-dataset', JSON.stringify(state.datasets.demographic))
     })
 }
-
-if (!localStorage['demographic-dataset'])
-  saveCSVToState();
-else {
-  // save localstorage to state
-  state.datasets.demographic = JSON.parse(localStorage.getItem('demographic-dataset'))
-}
-
-// Add to DOM
-addDemographicDatasetToDOM();
 
 let currentPiechartCategories = null;
 let currentOtherProperties = null;
@@ -150,8 +144,15 @@ export const regionEventListener = () => {
   regions.addEventListener("click", changeCurrentRegion);
 };
 
-window.addEventListener("load", () => {
-  state.hasPageLoaded = true;
+window.addEventListener("load", async () => {
+  if (!localStorage['demographic-dataset'])
+    await saveCSVToState();
+  else {
+    // save localstorage to state
+    state.datasets.demographic = JSON.parse(localStorage.getItem('demographic-dataset'))
+  }
+  // Add to DOM
+  addDemographicDatasetToDOM();
   regionEventListener();
   document.querySelector(".active").click();
 });

@@ -45,10 +45,15 @@ export const changeToolbarIcon = (event) => {
       if (!state.viewHeatmap) {
         event.currentTarget.className = event.currentTarget.className.replace(' activeIcon', '')
         document.getElementsByClassName('heatmap-gradient')[0].style.display = 'none'
+        document.getElementsByClassName('air-quality-date')[0].style.display = 'none';
+        clearInterval(state.playInterval);
+        state.playing = false;
+        document.getElementById('play-button').innerHTML = '&#9658;';
       }
       else {
         event.currentTarget.className += " activeIcon";
         document.getElementsByClassName('heatmap-gradient')[0].style.display = 'flex'
+        document.getElementsByClassName('air-quality-date')[0].style.display = 'flex'
       };
       break;
   }
