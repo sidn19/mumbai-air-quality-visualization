@@ -30,7 +30,6 @@ export function predictSeverity(lat, lng, bias) {
             //console.log(distanceBetweenLocations(lat, lng, data.latitude, data.longitude).toFixed(4) + "km", data.severity, influenceOfCurrentPoint);
         }
 
-        console.log(weightedSum);
-        //return weightedSum;
+        return Math.exp(-1 / weightedSum) * 5;
     }
 }

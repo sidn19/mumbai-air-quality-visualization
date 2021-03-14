@@ -104,10 +104,18 @@ document.addEventListener('mousemove', function (event) {
 
   // Latitude and longitude
   const latlng = state.mappingPixelCoordsToLatLng(x, y);
-  tooltip.innerHTML = `<strong>Latitude:</strong> ${latlng.lat.toFixed(4)}  <strong>Longitude:</strong> ${latlng.lng.toFixed(4)}`;
 
-  //Predict severity at the current location
-  predictSeverity(latlng.lat, latlng.lng, 1);
+  // Predict severity at the current location
+  const severity = predictSeverity(latlng.lat, latlng.lng, 0.6);
+
+  tooltip.innerHTML = `
+  <strong>Severity:</strong> 
+  ${severity.toFixed(2)}
+  <strong>Latitude:</strong> 
+  ${latlng.lat.toFixed(4)} 
+  <strong>Longitude:</strong> 
+  ${latlng.lng.toFixed(4)}
+  `;
 });
 
 // Show region name near mouse when it is hovered over

@@ -94,7 +94,6 @@ export function loadHeatmapFromAirQualityDatasets(datasets) {
   if (state.viewHeatmap) {
     addHeatmapTiles(state.heatmapDataRefined, document.getElementById("heatmap-layer"), state.mapCoords.left, state.mapCoords.top, state.mapCoords.right, state.mapCoords.bottom);
   }
-  console.log(state.tileCoords, state.mapCoords);
 }
 
 function getAirQualityValueFromPollutants(pollutants) {
