@@ -209,8 +209,12 @@ const addGradientBar = (min, d) => {
         document.getElementsByClassName('gradient')[0].append(barDiv)
     }
 
-    // Add values beneath color bar
-    let gradientValues = values.map(v => Math.round(v * d + min))
+    // Add values beneath color barMath.round(number * 10) / 10
+    let gradientValues = []
+    if (state.currentGradientProperty === 'Average Earning Member')
+        gradientValues = values.map(v => Math.round((v * d + min) * 10) / 10)
+    else
+        gradientValues = values.map(v => Math.round(v * d + min))
 
     if (document.getElementsByClassName('valuesDiv').length) {
         // Update gradient values
