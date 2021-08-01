@@ -2,7 +2,9 @@ Air Quality Visualization of Mumbai M-Ward deals with the visualization of the A
 
 
 a) Generated and applied a time series database to display daily relative air quality over a particular region based on different pollutant concentrations.
+
 b) Created a custom interactive map with zooming and panning capabilities using SVG.
+
 c) Visualized air quality and demographic data using heat maps and graphs.
 
 
